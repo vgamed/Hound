@@ -1,3 +1,16 @@
+# cocos2d
+*.[oa]
+*.lib
+*.sdf
+*.opensdf
+cocos2d/
+.git*
+proj.win32/Debug.win32/
+proj.android/
+proj.ios_mac/
+proj.linux/
+proj.wp8-xaml/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -26,8 +39,7 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
-
+Icon 
 # Thumbnails
 ._*
 
