@@ -1,4 +1,5 @@
 #include "ScrollingBackground.h"
+#include "Hound.h"
 
 USING_NS_CC;
 
@@ -41,6 +42,16 @@ Scene* ScrollingBackground::createScene()
 		{
 			scene->addChild(layer);
 		}
+
+		// test for Hound movement
+		Hound *hound = Hound::create();
+		if (hound != nullptr)
+		{
+			scene->addChild(hound);
+		}
+		auto size = Director::getInstance()->getVisibleSize();
+		auto origin = Director::getInstance()->getVisibleOrigin();
+		hound->setPosition(Vec2(origin.x+size.width/2, origin.y+hound->getBoundingBox().size.height));
 	}
 	
 	return scene;
@@ -200,9 +211,9 @@ void ScrollingBackground::update(float dt)
 		return;
 
 	Vec2 pos;
-
 	Vec2 trans = m_scrollingDirection * m_scrollingSpeed * dt;
 
+	// update the position of the back and front position
 	pos = m_backSprite->getPosition() - trans;
 	m_backSprite->setPosition(pos);
 
