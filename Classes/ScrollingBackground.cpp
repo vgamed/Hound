@@ -17,41 +17,6 @@ Scene* ScrollingBackground::createScene()
 	auto scene = Scene::create();
 	if (scene != nullptr)
 	{
-		SpriteChain chain;
-		Sprite* sprite = nullptr;
-		Layer* layer = nullptr;
-		
-		sprite = Sprite::create("img_bg_1.jpg");
-		chain.push_back(sprite);
-		layer = ScrollingBackground::create(	chain,
-												Vec2(0.0f,1.0f),
-												200.0f,
-												100.0f);
-		if (layer != nullptr)
-		{
-			scene->addChild(layer);
-		}
-
-		chain.clear();
-		sprite = Sprite::create("clouds.png");
-		chain.push_back(sprite);
-		layer = ScrollingBackground::create(	chain,
-												Vec2(0.0f,1.0f),
-												100.0f);
-		if (layer != nullptr)
-		{
-			scene->addChild(layer);
-		}
-
-		// test for Hound movement
-		Hound *hound = Hound::create();
-		if (hound != nullptr)
-		{
-			scene->addChild(hound);
-		}
-		auto size = Director::getInstance()->getVisibleSize();
-		auto origin = Director::getInstance()->getVisibleOrigin();
-		hound->setPosition(Vec2(origin.x+size.width/2, origin.y+hound->getBoundingBox().size.height));
 	}
 	
 	return scene;
@@ -72,18 +37,14 @@ ScrollingBackground * ScrollingBackground::create(	SpriteChain &chain,
 	CC_ASSERT(	((abs(scrollingDir.x)>FLT_EPSILON)&&(abs(scrollingDir.y)<=FLT_EPSILON))||
 				((abs(scrollingDir.y)>FLT_EPSILON)&&(abs(scrollingDir.x)<=FLT_EPSILON)));
 
-    ScrollingBackground *pRet = new ScrollingBackground();
-	if (pRet && pRet->init(chain, scrollingDir, scrollingSpeed, startOffset, repeatingNum, isScale))
+    ScrollingBackground *sbg = new ScrollingBackground();
+	if (sbg && sbg->init(chain, scrollingDir, scrollingSpeed, startOffset, repeatingNum, isScale))
     {
-        pRet->autorelease();
-        return pRet;
+        sbg->autorelease();
+        return sbg;
     }
-	else
-    {
-        delete pRet;
-        pRet = NULL;
-        return NULL;
-    }
+	CC_SAFE_DELETE(sbg);
+	return nullptr;
 }
 
 bool ScrollingBackground::init(	SpriteChain &chain,

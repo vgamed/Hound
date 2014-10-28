@@ -1,6 +1,6 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
-#include "ScrollingBackground.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -30,7 +30,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     //auto scene = HelloWorld::createScene();
-	auto scene = ScrollingBackground::createScene();
+	LevelInfo level;
+	PlayerInfo player;
+	auto scene = GameScene::create(player, level);
+	if (scene == nullptr)
+		return false;
 
     // run
     director->runWithScene(scene);
