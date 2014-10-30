@@ -1,5 +1,5 @@
-#ifndef __GAME_SCENE_H__
-#define __GAME_SCENE_H__
+#ifndef __HOUND_GAME_SCENE_H__
+#define __HOUND_GAME_SCENE_H__
 
 #include "Common.h"
 
@@ -16,4 +16,4 @@ protected:
 	bool init(const PlayerInfo &player, const LevelInfo &level);
 };
 
-#endif //__GAME_SCENE_H__
+#endif //__HOUND_GAME_SCENE_H__

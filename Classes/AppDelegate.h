@@ -1,7 +1,7 @@
 #ifndef  _APP_DELEGATE_H_
 #define  _APP_DELEGATE_H_
 
-#include "cocos2d.h"
+#include "Common.h"
 
 /**
 @brief    The cocos2d Application.
@@ -32,6 +32,14 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground();
+
+private:
+	PlayerInfo	m_playerInfo;
+	LevelInfo	m_levelInfo;
+
+	bool loadGameResources(void);
+	bool loadPlayerInfo(void);
+	bool loadLevelInfo(void);
 };
 
 #endif // _APP_DELEGATE_H_

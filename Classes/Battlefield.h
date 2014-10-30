@@ -1,5 +1,5 @@
-#ifndef __BATTLEFIELD_H__
-#define __BATTLEFIELD_H__
+#ifndef __HOUND_BATTLEFIELD_H__
+#define __HOUND_BATTLEFIELD_H__
 
 #include "Common.h"
 
@@ -20,10 +20,10 @@ protected:
 	bool init(const PlayerInfo &player, const LevelInfo &level);
 
 private:
-	std::vector<Wave*> m_enemyWaves;
+	std::vector<WaveInfo> m_enemyWaves;
 
 	Hound* m_hound;
 	std::vector<cocos2d::Sprite*> m_curEnemies;
 };
 
-#endif //__BATTLEFIELD_H__
+#endif //__HOUND_BATTLEFIELD_H__

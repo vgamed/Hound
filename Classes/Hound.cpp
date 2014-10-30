@@ -13,10 +13,10 @@ Hound::~Hound(void)
 {
 }
 
-Hound* Hound::create(void)
+Hound* Hound::create(const HoundInfo &hdi)
 {
     Hound *hound = new (std::nothrow) Hound();
-    if (hound && hound->initWithFile("mplane.png"))
+	if (hound && hound->init(hdi))
     {
         hound->autorelease();
         return hound;
@@ -25,9 +25,11 @@ Hound* Hound::create(void)
     return nullptr;
 }
 
-bool Hound::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
+bool Hound::init(const HoundInfo &hdi)
 {
-	if (!Sprite::initWithTexture(texture, rect, rotated))
+	Texture2D *texture = 
+		Director::getInstance()->getTextureCache()->getTextureForKey(hdi.body_texture_name);
+	if (!initWithTexture(texture))
 	{
 		return false;
 	}
@@ -35,9 +37,24 @@ bool Hound::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
 	this->setTag(TAG);
 	this->setName("Hound");
 	this->setScale(0.7f);
-	
+
 	// initialize wingmen
 	//...
+
+	// initialize weapons
+	std::vector<WeaponInfo>::const_iterator it;
+	for (it=hdi.weapons.begin(); it!=hdi.weapons.end(); it++)
+	{
+		WeaponInfo const * info = (WeaponInfo const*)(&(*it));
+		Weapon* weapon = nullptr;
+		weapon = Weapon::create(*info);
+		if (weapon != nullptr)
+		{
+			m_weapons.push_back(weapon);
+			addChild(weapon);
+			weapon->setPosition(info->dock_position);
+		}
+	}
 	
 	// register touch listeners
 	auto listener = EventListenerTouchOneByOne::create();
@@ -45,6 +62,7 @@ bool Hound::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
 	listener->onTouchBegan = CC_CALLBACK_2(Hound::onTouchBegan, this);
 	listener->onTouchMoved = CC_CALLBACK_2(Hound::onTouchMoved, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
 	return true;
 }
 
@@ -52,6 +70,11 @@ bool Hound::onTouchBegan(Touch *touch, Event *event)
 {
 	auto target = static_cast<Hound *>(event->getCurrentTarget());
 	if (target == nullptr)
+		return false;
+
+	// remove the following part if you wanna control like À×öªÕ½»ú
+	Rect bb = target->getBoundingBox();
+	if (!bb.containsPoint(touch->getLocation()))
 		return false;
 
 	m_movingOffset = target->getPosition() - touch->getLocation();
@@ -62,5 +85,8 @@ bool Hound::onTouchBegan(Touch *touch, Event *event)
 void Hound::onTouchMoved(Touch *touch, Event *event)
 {
 	auto target = static_cast<Hound *>(event->getCurrentTarget());
+	if (target == nullptr)
+		return;
+	
 	target->setPosition(touch->getLocation()+m_movingOffset);
 }

@@ -33,8 +33,10 @@ bool GameScene::init(const PlayerInfo &player, const LevelInfo &level)
 	ScrollingBackground::SpriteChain chain;
 	Sprite* sprite = nullptr;
 	Layer* layer = nullptr;
-		
-	sprite = Sprite::create("img_bg_1.jpg");
+	Texture2D *texture = nullptr;
+
+	texture = Director::getInstance()->getTextureCache()->getTextureForKey("img_bg_1.jpg");
+	sprite = Sprite::createWithTexture(texture);
 	chain.push_back(sprite);
 	layer = ScrollingBackground::create(	chain,
 											Vec2(0.0f,1.0f),
@@ -46,7 +48,9 @@ bool GameScene::init(const PlayerInfo &player, const LevelInfo &level)
 	}
 
 	chain.clear();
-	sprite = Sprite::create("clouds.png");
+
+	texture = Director::getInstance()->getTextureCache()->getTextureForKey("clouds.png");
+	sprite = Sprite::createWithTexture(texture);
 	chain.push_back(sprite);
 	layer = ScrollingBackground::create(	chain,
 											Vec2(0.0f,1.0f),

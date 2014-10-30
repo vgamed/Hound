@@ -1,5 +1,5 @@
-#ifndef __WINGMAN_H__
-#define __WINGMAN_H__
+#ifndef __HOUND_WINGMAN_H__
+#define __HOUND_WINGMAN_H__
 
 #include "cocos2d.h"
 
@@ -12,5 +12,5 @@ protected:
 	~Wingman(void);
 };
 
-#endif //__WINGMAN_H__
+#endif //_HOUND__WINGMAN_H__
 

@@ -32,7 +32,7 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	m_enemyWaves = level.enemy_waves;
 
 	// create hound
-	m_hound = Hound::create();
+	m_hound = Hound::create(player.hound);
 	if (m_hound == nullptr)
 		return false;
 
