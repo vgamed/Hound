@@ -41,9 +41,24 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	return true;
 }
 
+void Battlefield::update(float dt)
+{
+	// update hound
+	m_hound->update(dt);
+
+	// update current enemies
+	//...
+	
+	// trigger new wave
+	//...
+}
+
 void Battlefield::onEnterTransitionDidFinish(void)
 {
 	auto size = getContentSize();
 	Vec2 origin(0.0f,0.0f);
 	m_hound->setPosition(Vec2(origin.x+size.width/2, origin.y+m_hound->getBoundingBox().size.height));
+	m_hound->configWeapons();
+
+	this->scheduleUpdate();
 }

@@ -42,13 +42,22 @@
     <ClCompile Include="..\Classes\EnemyFighter.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\NormalBullet.cpp">
+    <ClCompile Include="..\Classes\Weapon.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Bullet.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Laser.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Missile.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Projectile.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Weapon.cpp">
+    <ClCompile Include="..\Classes\ProjectileFactory.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,13 +95,22 @@
     <ClInclude Include="..\Classes\EnemyFighter.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\NormalBullet.h">
+    <ClInclude Include="..\Classes\Weapon.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Bullet.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Laser.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Missile.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Projectile.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Weapon.h">
+    <ClInclude Include="..\Classes\ProjectileFactory.h">
       <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>

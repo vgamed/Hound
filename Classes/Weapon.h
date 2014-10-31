@@ -11,7 +11,14 @@ public:
 	static Weapon* create(const WeaponInfo &info);
 
 	void update(float dt);
+	void configBarrells(void);
+
 	void fire(void);
+
+	cocos2d::Layer* getBattlefieldLayer(void)
+	{
+		return (cocos2d::Layer*)(getParent()->getParent());
+	}
 
 protected:
 	Weapon(void);
@@ -19,7 +26,7 @@ protected:
 
 	bool init(const WeaponInfo &info);
 
-protected:
+private:
 	unsigned int	m_level;
 	WEAPON_TYPE		m_type;
 

@@ -95,6 +95,8 @@ bool AppDelegate::loadGameResources(void)
 	tcache->addImage("n2.png");
 	tcache->addImage("n3.png");
 
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bullet.plist");
+
 	AnimationCache::getInstance()->addAnimationsWithFile("pig.plist");
 	AnimationCache::getInstance()->addAnimationsWithFile("nplane.plist");
 	AnimationCache::getInstance()->addAnimationsWithFile("bullet.plist");
@@ -120,17 +122,31 @@ bool AppDelegate::loadPlayerInfo(void)
 
 	m_playerInfo.hound.weapons.clear();
 
+	BarrelInfo barrel;
+	barrel.type = BARREL_BULLET;
+	barrel.direction = Vec2(0.0f, 1.0f);
+	barrel.effect_name = "bullet_1.png";
+
 	WeaponInfo weapon;
 	weapon.level  = 1;
 	weapon.type = WEAPON_CANNON;
+
 	weapon.texture_name = "frontgun.png";
 	weapon.dock_position = Vec2(58.0f, 81.0f);
+	weapon.barrells.clear();
+	weapon.barrells.push_back(barrel);
 	m_playerInfo.hound.weapons.push_back(weapon);
+
 	weapon.texture_name = "leftgun.png";
 	weapon.dock_position = Vec2(29.0f, 65.0f);
+	weapon.barrells.clear();
+	weapon.barrells.push_back(barrel);
 	m_playerInfo.hound.weapons.push_back(weapon);
+
 	weapon.texture_name = "rightgun.png";
 	weapon.dock_position = Vec2(87.0f, 65.0f);
+	weapon.barrells.clear();
+	weapon.barrells.push_back(barrel);
 	m_playerInfo.hound.weapons.push_back(weapon);
 
 	return true;

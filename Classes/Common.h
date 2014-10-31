@@ -32,6 +32,36 @@ enum WEAPON_TYPE
 	WEAPON_MAX
 };
 
+enum BARREL_TYPE
+{
+	BARREL_NONE = 0,
+	BARREL_BULLET,
+	BARREL_LASER,
+	BARREL_MISSILE,
+	BARREL_MAX
+};
+
+enum BULLET_TYPE
+{
+	BULLET_NONE = 0,
+	BULLET_NORMAL,
+	BULLET_MAX
+};
+
+enum LASER_TYPE
+{
+	LASER_NONE = 0,
+	LASER_NORMAL,
+	LASER_MAX
+};
+
+enum MISSILE_TYPE
+{
+	MISSILE_NONE = 0,
+	MISSILE_NORMAL,
+	MISSILE_MAX
+};
+
 enum WINGMAN_TYPE
 {
 	WINGMAN_NONE = 0,
@@ -49,29 +79,38 @@ enum ENEMY_TYPE
 };
 
 // player and hound data declarations
+struct BarrelInfo
+{
+	BARREL_TYPE		type;
+	cocos2d::Vec2	direction;
+	std::string		effect_name; // animation name or spriteframe name or texture name
+};
+
 struct WeaponInfo
 {
 	WEAPON_TYPE		type;
 	unsigned int	level;
-	std::string		texture_name;
 	cocos2d::Vec2	dock_position;
+	std::vector<BarrelInfo> barrells;
+	std::string		texture_name;
 };
 
 struct HoundInfo
 {
 	BODY_TYPE		body_type;
 	unsigned int	body_level;
-	std::string		body_texture_name;
 
 	ARMOR_TYPE		armor_type;
 	unsigned int	armor_level;
-	std::string		armor_texture_name;
 
 	ENGINE_TYPE		engine_type;
 	unsigned int	engine_level;
-	std::string		engine_texture_name;
 	
 	std::vector<WeaponInfo>	weapons;
+
+	std::string		body_texture_name;
+	std::string		armor_texture_name;
+	std::string		engine_texture_name;
 };
 
 struct PlayerInfo

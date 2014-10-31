@@ -11,6 +11,7 @@ class Battlefield :
 public:
 	static Battlefield* create(const PlayerInfo &player, const LevelInfo &level);
 
+	void update(float dt);
 	void onEnterTransitionDidFinish(void);
 
 protected:

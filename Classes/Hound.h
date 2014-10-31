@@ -10,6 +10,9 @@ class Hound : public cocos2d::Sprite
 public:
 	static Hound* create(const HoundInfo &hdi);
 
+	void update(float dt);
+	void configWeapons(void);
+
 	bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
 	void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 

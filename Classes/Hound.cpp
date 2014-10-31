@@ -66,6 +66,28 @@ bool Hound::init(const HoundInfo &hdi)
 	return true;
 }
 
+void Hound::update(float dt)
+{
+	// update hound states
+	//...
+
+	// update weapons
+	std::vector<Weapon*>::iterator it;
+	for (it=m_weapons.begin(); it!=m_weapons.end(); ++it)
+	{
+		(*it)->update(dt);
+	}
+}
+
+void Hound::configWeapons(void)
+{
+	std::vector<Weapon*>::iterator it;
+	for (it=m_weapons.begin(); it!=m_weapons.end(); ++it)
+	{
+		(*it)->configBarrells();
+	}
+}
+
 bool Hound::onTouchBegan(Touch *touch, Event *event)
 {
 	auto target = static_cast<Hound *>(event->getCurrentTarget());
@@ -74,6 +96,7 @@ bool Hound::onTouchBegan(Touch *touch, Event *event)
 
 	// remove the following part if you wanna control like À×öªÕ½»ú
 	Rect bb = target->getBoundingBox();
+	Size s = target->getContentSize();
 	if (!bb.containsPoint(touch->getLocation()))
 		return false;
 
@@ -89,4 +112,5 @@ void Hound::onTouchMoved(Touch *touch, Event *event)
 		return;
 	
 	target->setPosition(touch->getLocation()+m_movingOffset);
+	configWeapons();
 }
