@@ -36,9 +36,6 @@
     <ClCompile Include="..\Classes\GameScene.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Barrel.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\EnemyFighter.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
@@ -87,9 +84,6 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Common.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Barrel.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\EnemyFighter.h">

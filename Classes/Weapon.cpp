@@ -1,4 +1,7 @@
 #include "Weapon.h"
+#include "Bullet.h"
+#include "Laser.h"
+#include "Missile.h"
 
 USING_NS_CC;
 
@@ -9,12 +12,6 @@ Weapon::Weapon(void)
 
 Weapon::~Weapon(void)
 {
-	std::vector<Barrel*>::iterator it;
-	for (it=m_barrells.begin(); it!=m_barrells.end(); ++it)
-	{
-		delete (*it);
-	}
-	m_barrells.clear();
 }
 
 Weapon* Weapon::create(const WeaponInfo &info)
@@ -50,23 +47,30 @@ bool Weapon::init(const WeaponInfo &info)
 	m_bulletDamage = 10.0f;
 
 	// initialize barrells
+	Barrel barrel;
+	barrel.projectile_startpoint = Vec2(0.0f,0.0f);
 	std::vector<BarrelInfo>::const_iterator cit;
 	for (cit=info.barrells.begin(); cit!=info.barrells.end(); ++cit)
 	{
-		Barrel *barrel = new Barrel(this, (*cit).type, (*cit).direction, (*cit).effect_name);
+		barrel.type = (*cit).type;
+		barrel.direction  = (*cit).direction;
+		barrel.effect_name = (*cit).effect_name;
+		switch(barrel.type)
+		{
+		case BARREL_BULLET:
+			barrel.projectile_creator = Bullet::create;
+			break;
+		case BARREL_LASER:
+			barrel.projectile_creator = Laser::create;
+			break;
+		case BARREL_MISSILE:
+			barrel.projectile_creator = Missile::create;
+			break;
+		}
 		m_barrells.push_back(barrel);
 	}
 
 	return true;
-}
-
-void Weapon::configBarrells(void)
-{
-	std::vector<Barrel*>::iterator it;
-	for (it=m_barrells.begin(); it!=m_barrells.end(); it++)
-	{
-		(*it)->updateProjectileStartPoint();
-	}
 }
 
 void Weapon::update(float dt)
@@ -81,9 +85,30 @@ void Weapon::update(float dt)
 
 void Weapon::fire(void)
 {
-	std::vector<Barrel*>::iterator it;
+	std::vector<Barrel>::iterator it;
 	for (it=m_barrells.begin(); it!=m_barrells.end(); it++)
 	{
-		(*it)->fire(m_bulletDamage, m_bulletSpeed);
+		Barrel *b = &(*it);
+		Projectile *proj = b->projectile_creator(b->effect_name, b->direction, m_bulletDamage, m_bulletSpeed);
+		if (proj != nullptr)
+		{
+			getParent()->getParent()->addChild(proj); // bullet should be child of Battlefield
+			proj->setPosition(b->projectile_startpoint);
+		}
+	}
+}
+
+void Weapon::updateProjectileStartPoints(void)
+{
+	CC_ASSERT(this->getParent()!=nullptr);
+
+	std::vector<Barrel>::iterator it;
+	for (it=m_barrells.begin(); it!=m_barrells.end(); it++)
+	{
+		// projectile start point needs to be updated after the hound moved
+		Barrel *p = &(*it);
+		p->projectile_startpoint = getPosition();
+		p->projectile_startpoint = getParent()->convertToWorldSpace(p->projectile_startpoint);
+		p->projectile_startpoint = getParent()->getParent()->convertToNodeSpace(p->projectile_startpoint);
 	}
 }

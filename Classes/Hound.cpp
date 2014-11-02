@@ -84,7 +84,7 @@ void Hound::configWeapons(void)
 	std::vector<Weapon*>::iterator it;
 	for (it=m_weapons.begin(); it!=m_weapons.end(); ++it)
 	{
-		(*it)->configBarrells();
+		(*it)->updateProjectileStartPoints();
 	}
 }
 
