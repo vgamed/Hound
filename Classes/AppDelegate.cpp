@@ -124,7 +124,6 @@ bool AppDelegate::loadPlayerInfo(void)
 
 	BarrelInfo barrel;
 	barrel.type = BARREL_BULLET;
-	barrel.direction = Vec2(0.0f, 1.0f);
 	barrel.effect_name = "bullet_1.png";
 
 	WeaponInfo weapon;
@@ -134,18 +133,29 @@ bool AppDelegate::loadPlayerInfo(void)
 	weapon.texture_name = "frontgun.png";
 	weapon.dock_position = Vec2(58.0f, 81.0f);
 	weapon.barrells.clear();
+	barrel.rotate_angle = 0.0f;
 	weapon.barrells.push_back(barrel);
 	m_playerInfo.hound.weapons.push_back(weapon);
 
 	weapon.texture_name = "leftgun.png";
 	weapon.dock_position = Vec2(29.0f, 65.0f);
 	weapon.barrells.clear();
+	barrel.rotate_angle = 0.0f;
+	weapon.barrells.push_back(barrel);
+	barrel.rotate_angle = -30.0f;
+	weapon.barrells.push_back(barrel);
+	barrel.rotate_angle = 30.0f;
 	weapon.barrells.push_back(barrel);
 	m_playerInfo.hound.weapons.push_back(weapon);
 
 	weapon.texture_name = "rightgun.png";
 	weapon.dock_position = Vec2(87.0f, 65.0f);
 	weapon.barrells.clear();
+	barrel.rotate_angle = 0.0f;
+	weapon.barrells.push_back(barrel);
+	barrel.rotate_angle = -30.0f;
+	weapon.barrells.push_back(barrel);
+	barrel.rotate_angle = 30.0f;
 	weapon.barrells.push_back(barrel);
 	m_playerInfo.hound.weapons.push_back(weapon);
 

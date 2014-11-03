@@ -41,6 +41,15 @@ enum BARREL_TYPE
 	BARREL_MAX
 };
 
+enum EFFECT_TYPE
+{
+	EFFECT_NONE = 0,
+	EFFECT_TEXTURE,
+	EFFECT_SPRITEFRAME,
+	EFFECT_ANIMATION,
+	EFFECT_MAX
+};
+
 enum BULLET_TYPE
 {
 	BULLET_NONE = 0,
@@ -82,8 +91,12 @@ enum ENEMY_TYPE
 struct BarrelInfo
 {
 	BARREL_TYPE		type;
-	cocos2d::Vec2	direction;
-	std::string		effect_name; // animation name or spriteframe name or texture name
+	// the angle from positive Y direction, in degrees.
+	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
+	float			rotate_angle;
+	// animation name or spriteframe name or texture name
+	EFFECT_TYPE		effect_type;
+	std::string		effect_name;
 };
 
 struct WeaponInfo

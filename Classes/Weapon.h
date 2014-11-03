@@ -2,7 +2,8 @@
 #define __HOUND_WEAPON_H__
 
 #include "Common.h"
-#include "Barrel.h"
+
+class Projectile;
 
 class Weapon :
 	public cocos2d::Sprite
@@ -24,6 +25,7 @@ protected:
 	{
 		BARREL_TYPE		type;
 		cocos2d::Vec2	direction;
+		float			rotate_angle;
 		std::string		effect_name;
 		cocos2d::Vec2	projectile_startpoint;
 		PROJECTILE_CREATOR projectile_creator;

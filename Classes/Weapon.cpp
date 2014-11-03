@@ -53,7 +53,8 @@ bool Weapon::init(const WeaponInfo &info)
 	for (cit=info.barrells.begin(); cit!=info.barrells.end(); ++cit)
 	{
 		barrel.type = (*cit).type;
-		barrel.direction  = (*cit).direction;
+		barrel.rotate_angle = (*cit).rotate_angle;
+		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(barrel.rotate_angle));
 		barrel.effect_name = (*cit).effect_name;
 		switch(barrel.type)
 		{
@@ -93,6 +94,7 @@ void Weapon::fire(void)
 		if (proj != nullptr)
 		{
 			getParent()->getParent()->addChild(proj); // bullet should be child of Battlefield
+			proj->setRotation(b->rotate_angle);
 			proj->setPosition(b->projectile_startpoint);
 		}
 	}
