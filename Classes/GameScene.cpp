@@ -38,8 +38,9 @@ bool GameScene::init(const PlayerInfo &player, const LevelInfo &level)
 	texture = Director::getInstance()->getTextureCache()->getTextureForKey("img_bg_1.jpg");
 	sprite = Sprite::createWithTexture(texture);
 	chain.push_back(sprite);
+	Vec2 direction(0.0f, 1.0f);
 	layer = ScrollingBackground::create(	chain,
-											Vec2(0.0f,1.0f),
+											direction,
 											200.0f,
 											100.0f);
 	if (layer != nullptr)
@@ -53,7 +54,7 @@ bool GameScene::init(const PlayerInfo &player, const LevelInfo &level)
 	sprite = Sprite::createWithTexture(texture);
 	chain.push_back(sprite);
 	layer = ScrollingBackground::create(	chain,
-											Vec2(0.0f,1.0f),
+											direction,
 											100.0f);
 	if (layer != nullptr)
 	{

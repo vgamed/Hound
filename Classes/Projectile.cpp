@@ -26,7 +26,7 @@ bool Projectile::init(const std::string &effect, const cocos2d::Vec2 &direction,
 
 	m_direction.normalize();
 	setLocalZOrder(-100);
-	setScale(0.4f);
+	setScale(0.8f);
 
 	Rect bb = getBoundingBox();
 	Size s = getContentSize();

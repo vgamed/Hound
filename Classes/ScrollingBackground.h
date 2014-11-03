@@ -14,7 +14,7 @@ public:
 	void update(float dt);
 
 	static ScrollingBackground* create(	SpriteChain &chain,
-										cocos2d::Vec2 &scrollingDir = cocos2d::Vec2(0.0f,1.0f),
+										cocos2d::Vec2 &scrollingDir,
 										float scrollingSpeed = 200.0f,
 										float startOffset = 0.0f,
 										unsigned long repeatingNum = ULONG_MAX,
