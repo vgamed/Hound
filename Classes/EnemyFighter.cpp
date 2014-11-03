@@ -1,5 +1,6 @@
 #include "EnemyFighter.h"
 
+USING_NS_CC;
 
 EnemyFighter::EnemyFighter(void)
 {

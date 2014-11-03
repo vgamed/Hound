@@ -4,6 +4,7 @@
 #include "Common.h"
 
 class Hound;
+class Projectile;
 
 class Battlefield :
 	public cocos2d::Layer
@@ -13,6 +14,9 @@ public:
 
 	void update(float dt);
 	void onEnterTransitionDidFinish(void);
+
+	void addProjectile(Projectile *proj);
+	void removeProjectile(Projectile *proj);
 
 protected:
 	Battlefield(void);
@@ -25,6 +29,7 @@ private:
 
 	Hound* m_hound;
 	std::vector<cocos2d::Sprite*> m_curEnemies;
+	std::vector<Projectile*> m_activeProjectiles;
 };
 
 #endif //__HOUND_BATTLEFIELD_H__

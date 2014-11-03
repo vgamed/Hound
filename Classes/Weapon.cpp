@@ -1,4 +1,6 @@
 #include "Weapon.h"
+#include "Battlefield.h"
+#include "Hound.h"
 #include "Bullet.h"
 #include "Laser.h"
 #include "Missile.h"
@@ -86,31 +88,34 @@ void Weapon::update(float dt)
 
 void Weapon::fire(void)
 {
-	std::vector<Barrel>::iterator it;
-	for (it=m_barrells.begin(); it!=m_barrells.end(); it++)
+	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
+
+	Battlefield *bf = (Battlefield*)(getParent()->getParent());
+
+	for (Barrel &b : m_barrells)
 	{
-		Barrel *b = &(*it);
-		Projectile *proj = b->projectile_creator(b->effect_name, b->direction, m_bulletDamage, m_bulletSpeed);
+		Projectile *proj = b.projectile_creator(b.effect_name, b.direction, m_bulletDamage, m_bulletSpeed);
 		if (proj != nullptr)
 		{
-			getParent()->getParent()->addChild(proj); // bullet should be child of Battlefield
-			proj->setRotation(b->rotate_angle);
-			proj->setPosition(b->projectile_startpoint);
+			bf->addProjectile(proj); // bullet should be child of Battlefield
+			proj->setRotation(b.rotate_angle);
+			proj->setPosition(b.projectile_startpoint);
 		}
 	}
 }
 
 void Weapon::updateProjectileStartPoints(void)
 {
-	CC_ASSERT(this->getParent()!=nullptr);
+	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
 
-	std::vector<Barrel>::iterator it;
-	for (it=m_barrells.begin(); it!=m_barrells.end(); it++)
+	Hound *hd = (Hound*)getParent();
+	Battlefield *bf = (Battlefield*)(hd->getParent());
+
+	for (Barrel &b : m_barrells)
 	{
 		// projectile start point needs to be updated after the hound moved
-		Barrel *p = &(*it);
-		p->projectile_startpoint = getPosition();
-		p->projectile_startpoint = getParent()->convertToWorldSpace(p->projectile_startpoint);
-		p->projectile_startpoint = getParent()->getParent()->convertToNodeSpace(p->projectile_startpoint);
+		b.projectile_startpoint = getPosition();
+		b.projectile_startpoint = hd->convertToWorldSpace(b.projectile_startpoint);
+		b.projectile_startpoint = bf->convertToNodeSpace(b.projectile_startpoint);
 	}
 }

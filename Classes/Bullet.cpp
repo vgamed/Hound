@@ -27,9 +27,6 @@ Projectile* Bullet::create(const std::string effect,
 
 void Bullet::update(float dt)
 {
+	// movement update
 	setPosition(getPosition()+m_speed*dt*m_direction);
-	if (!getBoundingBox().intersectsRect(getParent()->getBoundingBox()))
-	{
-		getParent()->removeChild(this);
-	}
 }
