@@ -3,6 +3,13 @@
 
 #include "cocos2d.h"
 
+const int ZORDER_HOUND				= 100;
+const int ZORDER_HOUND_PROJECTILE	= 10;
+const int ZORDER_ENEMY_PROJECTILE	= -70;
+const int ZORDER_ENEMY_MINOR		= -80;
+const int ZORDER_ENEMY_FRIGATE		= -90;
+const int ZORDER_ENEMY_BOSS			= -100;
+
 // type enumerations
 enum BODY_TYPE
 {
@@ -91,6 +98,7 @@ enum ENEMY_TYPE
 struct BarrelInfo
 {
 	BARREL_TYPE		type;
+	float			projectile_scale_xy;
 	// the angle from positive Y direction, in degrees.
 	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
 	float			rotate_angle;
@@ -103,6 +111,11 @@ struct WeaponInfo
 {
 	WEAPON_TYPE		type;
 	unsigned int	level;
+
+	float			firing_interval; //second
+	float			bullet_damage;
+	float			bullet_speed;	//per second
+
 	cocos2d::Vec2	dock_position;
 	std::vector<BarrelInfo> barrells;
 	std::string		texture_name;
@@ -121,6 +134,7 @@ struct HoundInfo
 	
 	std::vector<WeaponInfo>	weapons;
 
+	float			scale_xy;
 	std::string		body_texture_name;
 	std::string		armor_texture_name;
 	std::string		engine_texture_name;

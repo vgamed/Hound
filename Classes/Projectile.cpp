@@ -11,10 +11,13 @@ Projectile::~Projectile(void)
 {
 }
 
-bool Projectile::init(const std::string &effect, const cocos2d::Vec2 &direction,
-	float damage, float speed)
+bool Projectile::init(const std::string effect, 
+		const cocos2d::Vec2 &direction,
+		float scale, float damage, 
+		float speed, bool from_hound)
 {
-	SpriteFrame *frame = SpriteFrameCache::getInstance()->getSpriteFrameByName(effect);
+	SpriteFrame *frame = 
+		SpriteFrameCache::getInstance()->getSpriteFrameByName(effect);
 	if (!initWithSpriteFrame(frame))
 	{
 		return false;
@@ -25,11 +28,10 @@ bool Projectile::init(const std::string &effect, const cocos2d::Vec2 &direction,
 	m_damage = damage;
 
 	m_direction.normalize();
-	setLocalZOrder(-100);
-	setScale(0.8f);
-
-	Rect bb = getBoundingBox();
-	Size s = getContentSize();
+	m_isFromHound = from_hound;
+	m_isFromHound ? setLocalZOrder(ZORDER_HOUND_PROJECTILE) :
+					setLocalZOrder(ZORDER_ENEMY_PROJECTILE);
+	setScale(scale);
 
 	scheduleUpdate();
 

@@ -9,7 +9,23 @@ class Weapon :
 	public cocos2d::Sprite
 {
 public:
-	static Weapon* create(const WeaponInfo &info);
+	typedef std::function<Projectile* ( const std::string&, 
+										const cocos2d::Vec2&, 
+										float, float, 
+										float, bool)>	PROJECTILE_CREATOR;
+
+	struct Barrel
+	{
+		BARREL_TYPE		type;
+		cocos2d::Vec2	direction;
+		float			rotate_angle;
+		std::string		effect_name;
+		float			projectile_scale_xy;
+		cocos2d::Vec2	projectile_startpoint;
+		PROJECTILE_CREATOR projectile_creator;
+	};
+
+	static Weapon* create(const WeaponInfo &info, bool is_hound=true);
 
 	void update(float dt);
 	void configBarrells(void);
@@ -18,19 +34,6 @@ public:
 	void fire(void);
 
 protected:
-	typedef std::function<Projectile* ( const std::string&, 
-										const cocos2d::Vec2&, 
-										float, float)>	PROJECTILE_CREATOR;
-	struct Barrel
-	{
-		BARREL_TYPE		type;
-		cocos2d::Vec2	direction;
-		float			rotate_angle;
-		std::string		effect_name;
-		cocos2d::Vec2	projectile_startpoint;
-		PROJECTILE_CREATOR projectile_creator;
-	};
-
 	Weapon(void);
 	~Weapon(void);
 
@@ -47,6 +50,8 @@ private:
 	float			m_bulletSpeed;
 
 	std::vector<Barrel> m_barrells;
+
+	bool			m_isHound;
 };
 
 #endif //__HOUND_WEAPON_H__

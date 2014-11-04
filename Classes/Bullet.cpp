@@ -13,10 +13,11 @@ Bullet::~Bullet(void)
 
 Projectile* Bullet::create(const std::string effect, 
 		const cocos2d::Vec2 &direction,
-		float damage, float speed)
+		float scale, float damage, 
+		float speed, bool from_hound)
 {
 	auto ret = new Bullet();
-	if (ret!=nullptr && ret->init(effect, direction, damage, speed))
+	if (ret!=nullptr && ret->init(effect, direction, scale, damage, speed, from_hound))
 	{
 		ret->autorelease();
 		return ret;

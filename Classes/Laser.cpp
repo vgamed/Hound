@@ -1,3 +1,4 @@
+#include "Projectile.h"
 #include "Laser.h"
 
 USING_NS_CC;
@@ -13,10 +14,12 @@ Laser::~Laser(void)
 
 Projectile* Laser::create(const std::string effect, 
 		const cocos2d::Vec2 &direction,
-		float damage, float speed)
+		float scale, float damage, 
+		float speed, bool from_hound)
 {
 	auto ret = new Laser();
-	if (ret!=nullptr && !ret->init(effect, direction, 0.0f, damage)) //speed doesn't matter for laser
+	//speed is treated as damage interval for Laser type barrells
+	if (ret!=nullptr && !ret->init(effect, direction, scale, damage, speed, from_hound))
 	{
 		ret->autorelease();
 		return ret;
@@ -27,4 +30,5 @@ Projectile* Laser::create(const std::string effect,
 
 void Laser::update(float dt)
 {
+
 }

@@ -16,11 +16,12 @@ Weapon::~Weapon(void)
 {
 }
 
-Weapon* Weapon::create(const WeaponInfo &info)
+Weapon* Weapon::create(const WeaponInfo &info, bool is_hound)
 {
 	auto weapon = new Weapon();
 	if (weapon && weapon->init(info))
 	{
+		weapon->m_isHound = is_hound;
 		weapon->autorelease();
 		return weapon;
 	}
@@ -41,23 +42,20 @@ bool Weapon::init(const WeaponInfo &info)
 	m_type = info.type;
 
 	m_firingCounter = 0.0f;
-	//m_firingInterval = info.firing_interval;
-	//m_bulletDamage = info.bullet_damage;
-	//m_bulletSpeed = info.bullet_speed;
-	m_firingInterval = 0.1f; //second
-	m_bulletSpeed = 1000.0f; //per second
-	m_bulletDamage = 10.0f;
+	m_firingInterval = info.firing_interval;
+	m_bulletDamage = info.bullet_damage;
+	m_bulletSpeed = info.bullet_speed;
 
 	// initialize barrells
 	Barrel barrel;
-	barrel.projectile_startpoint = Vec2(0.0f,0.0f);
-	std::vector<BarrelInfo>::const_iterator cit;
-	for (cit=info.barrells.begin(); cit!=info.barrells.end(); ++cit)
+	barrel.projectile_startpoint = Vec2(0.0f,0.0f); // make this customizable?
+	for (BarrelInfo binfo : info.barrells)
 	{
-		barrel.type = (*cit).type;
-		barrel.rotate_angle = (*cit).rotate_angle;
+		barrel.type = binfo.type;
+		barrel.rotate_angle = binfo.rotate_angle;
 		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(barrel.rotate_angle));
-		barrel.effect_name = (*cit).effect_name;
+		barrel.effect_name = binfo.effect_name;
+		barrel.projectile_scale_xy = binfo.projectile_scale_xy; 
 		switch(barrel.type)
 		{
 		case BARREL_BULLET:
@@ -68,6 +66,8 @@ bool Weapon::init(const WeaponInfo &info)
 			break;
 		case BARREL_MISSILE:
 			barrel.projectile_creator = Missile::create;
+			break;
+		default:
 			break;
 		}
 		m_barrells.push_back(barrel);
@@ -94,7 +94,8 @@ void Weapon::fire(void)
 
 	for (Barrel &b : m_barrells)
 	{
-		Projectile *proj = b.projectile_creator(b.effect_name, b.direction, m_bulletDamage, m_bulletSpeed);
+		Projectile *proj = b.projectile_creator(b.effect_name, b.direction, 
+			b.projectile_scale_xy, m_bulletDamage, m_bulletSpeed, m_isHound);
 		if (proj != nullptr)
 		{
 			bf->addProjectile(proj); // bullet should be child of Battlefield
@@ -108,14 +109,14 @@ void Weapon::updateProjectileStartPoints(void)
 {
 	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
 
-	Hound *hd = (Hound*)getParent();
-	Battlefield *bf = (Battlefield*)(hd->getParent());
+	Node *fighter = getParent();
+	Node *battlefield = fighter->getParent();
 
 	for (Barrel &b : m_barrells)
 	{
 		// projectile start point needs to be updated after the hound moved
 		b.projectile_startpoint = getPosition();
-		b.projectile_startpoint = hd->convertToWorldSpace(b.projectile_startpoint);
-		b.projectile_startpoint = bf->convertToNodeSpace(b.projectile_startpoint);
+		b.projectile_startpoint = fighter->convertToWorldSpace(b.projectile_startpoint);
+		b.projectile_startpoint = battlefield->convertToNodeSpace(b.projectile_startpoint);
 	}
 }

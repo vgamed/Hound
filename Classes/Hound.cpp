@@ -36,7 +36,8 @@ bool Hound::init(const HoundInfo &hdi)
 
 	this->setTag(TAG);
 	this->setName("Hound");
-	this->setScale(1.2f);
+	this->setScale(hdi.scale_xy);
+	this->setLocalZOrder(ZORDER_HOUND);
 
 	// initialize wingmen
 	//...

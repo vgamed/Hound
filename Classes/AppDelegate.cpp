@@ -119,16 +119,21 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.hound.engine_level = 1;
 	m_playerInfo.hound.engine_type = ENGINE_BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
+	m_playerInfo.hound.scale_xy = 1.2f;
 
 	m_playerInfo.hound.weapons.clear();
 
 	BarrelInfo barrel;
 	barrel.type = BARREL_BULLET;
+	barrel.projectile_scale_xy = 0.8f;
 	barrel.effect_name = "bullet_1.png";
 
 	WeaponInfo weapon;
 	weapon.level  = 1;
 	weapon.type = WEAPON_CANNON;
+	weapon.firing_interval = 0.1f; //second
+	weapon.bullet_speed = 1000.0f; //per second
+	weapon.bullet_damage = 10.0f;
 
 	weapon.texture_name = "frontgun.png";
 	weapon.dock_position = Vec2(58.0f, 81.0f);
