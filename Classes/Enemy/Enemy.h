@@ -14,6 +14,9 @@ protected:
 	~Enemy(void);
 
 	virtual bool init(const EnemyInfo &info);
+
+private:
+	float	m_timerLeave;
 };
 
 #endif //__HOUND_ENEMY_FIGHTER_H__

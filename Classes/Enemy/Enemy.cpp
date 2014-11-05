@@ -26,6 +26,8 @@ bool Enemy::init(const EnemyInfo &info)
 	// init weapons
 	// ...
 
+	m_timerLeave = 0.0f;
+
 	scheduleUpdate();
 
 	return true;
@@ -33,16 +35,15 @@ bool Enemy::init(const EnemyInfo &info)
 
 void Enemy::update(float dt)
 {
-	static float timer = 0.0f;
-	timer += dt;
-	if (timer > 10.0f)
+	m_timerLeave += dt;
+	if (m_timerLeave > 10.0f)
 	{
+		m_timerLeave = 0.0f;
 		EventCustom event(EVENT_CUSTOM_DEBUG);
 		DebugData data;
 		data.command = DEBUG_COMMAND::ENEMY_SELF_DESTROY;
 		data.target = this;
 		event.setUserData(&data);
 		_eventDispatcher->dispatchEvent(&event);
-		timer = 0.0f;
 	}
 }

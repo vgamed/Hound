@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "ScrollingBackground.h"
 #include "Battlefield.h"
+#include "UILayer.h"
 
 USING_NS_CC;
 
@@ -53,6 +54,12 @@ bool GameScene::init(const PlayerInfo &player, const LevelInfo &level)
 	}
 
 	layer = Battlefield::create(player, level);
+	if (layer != nullptr)
+	{
+		this->addChild(layer);
+	}
+
+	layer = UILayer::create();
 	if (layer != nullptr)
 	{
 		this->addChild(layer);
