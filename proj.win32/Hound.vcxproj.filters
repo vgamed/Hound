@@ -10,6 +10,12 @@
     <Filter Include="resource">
       <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Projectile">
+      <UniqueIdentifier>{6ae3d002-2189-4e1d-8f3e-f052b7517556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Enemy">
+      <UniqueIdentifier>{05d7cefb-9401-42a8-b010-2bcda0c43f62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,23 +42,35 @@
     <ClCompile Include="..\Classes\GameScene.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\EnemyFighter.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Weapon.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Bullet.cpp">
-      <Filter>Classes</Filter>
+    <ClCompile Include="..\Classes\Enemy\CarrierTiger.cpp">
+      <Filter>Classes\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Laser.cpp">
-      <Filter>Classes</Filter>
+    <ClCompile Include="..\Classes\Enemy\Enemy.cpp">
+      <Filter>Classes\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Missile.cpp">
-      <Filter>Classes</Filter>
+    <ClCompile Include="..\Classes\Enemy\FighterBee.cpp">
+      <Filter>Classes\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Projectile.cpp">
-      <Filter>Classes</Filter>
+    <ClCompile Include="..\Classes\Enemy\FrigatePuma.cpp">
+      <Filter>Classes\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Projectile\Bullet.cpp">
+      <Filter>Classes\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Projectile\Laser.cpp">
+      <Filter>Classes\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Projectile\Missile.cpp">
+      <Filter>Classes\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Projectile\Projectile.cpp">
+      <Filter>Classes\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Enemy\EnemyFactory.cpp">
+      <Filter>Classes\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,23 +101,35 @@
     <ClInclude Include="..\Classes\Common.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\EnemyFighter.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Weapon.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Bullet.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="..\Classes\Enemy\CarrierTiger.h">
+      <Filter>Classes\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Laser.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="..\Classes\Enemy\Enemy.h">
+      <Filter>Classes\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Missile.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="..\Classes\Enemy\FighterBee.h">
+      <Filter>Classes\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Projectile.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="..\Classes\Enemy\FrigatePuma.h">
+      <Filter>Classes\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Projectile\Bullet.h">
+      <Filter>Classes\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Projectile\Laser.h">
+      <Filter>Classes\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Projectile\Missile.h">
+      <Filter>Classes\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Projectile\Projectile.h">
+      <Filter>Classes\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Enemy\EnemyFactory.h">
+      <Filter>Classes\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

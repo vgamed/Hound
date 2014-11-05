@@ -34,31 +34,22 @@ bool GameScene::init(const PlayerInfo &player, const LevelInfo &level)
 	Sprite* sprite = nullptr;
 	Layer* layer = nullptr;
 	Texture2D *texture = nullptr;
-
-	texture = Director::getInstance()->getTextureCache()->getTextureForKey("img_bg_1.jpg");
-	sprite = Sprite::createWithTexture(texture);
-	chain.push_back(sprite);
 	Vec2 direction(0.0f, 1.0f);
-	layer = ScrollingBackground::create(	chain,
-											direction,
-											200.0f,
-											100.0f);
-	if (layer != nullptr)
-	{
-		this->addChild(layer);
-	}
 
-	chain.clear();
-
-	texture = Director::getInstance()->getTextureCache()->getTextureForKey("clouds.png");
-	sprite = Sprite::createWithTexture(texture);
-	chain.push_back(sprite);
-	layer = ScrollingBackground::create(	chain,
-											direction,
-											100.0f);
-	if (layer != nullptr)
+	for (const std::string &t_name : level.sbg_layer_texture_names)
 	{
-		this->addChild(layer);
+		chain.clear();
+		texture = Director::getInstance()->getTextureCache()->getTextureForKey(t_name);
+		sprite = Sprite::createWithTexture(texture);
+		chain.push_back(sprite);
+		layer = ScrollingBackground::create(	chain,
+												direction,
+												200.0f,
+												100.0f);
+		if (layer != nullptr)
+		{
+			this->addChild(layer);
+		}
 	}
 
 	layer = Battlefield::create(player, level);

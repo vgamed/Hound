@@ -46,8 +46,8 @@ private:
 	float			m_firingInterval;
 	float			m_firingCounter;
 
-	float			m_bulletDamage;
-	float			m_bulletSpeed;
+	float			m_projectileDamage;
+	float			m_projectileSpeed;
 
 	std::vector<Barrel> m_barrells;
 

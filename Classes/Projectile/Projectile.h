@@ -1,7 +1,7 @@
 #ifndef __HOUND_PROJECTILE_H__
 #define __HOUND_PROJECTILE_H__
 
-#include "Common.h"
+#include "../Common.h"
 
 class Projectile : public cocos2d::Sprite
 {

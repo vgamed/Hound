@@ -6,92 +6,92 @@
 const int ZORDER_HOUND				= 100;
 const int ZORDER_HOUND_PROJECTILE	= 10;
 const int ZORDER_ENEMY_PROJECTILE	= -70;
-const int ZORDER_ENEMY_MINOR		= -80;
+const int ZORDER_ENEMY_FIGHTER		= -80;
 const int ZORDER_ENEMY_FRIGATE		= -90;
 const int ZORDER_ENEMY_BOSS			= -100;
 
 // type enumerations
-enum BODY_TYPE
+enum class BODY_TYPE
 {
-	BODY_NONE = 0,
-	BODY_BASIC,
-	BODY_MAX
+	NONE = 0,
+	BASIC,
+	MAX_VALUE
 };
 
-enum ARMOR_TYPE
+enum class ARMOR_TYPE
 {
-	ARMOR_NONE = 0,
-	ARMOR_BASIC,
-	ARMOR_MAX
+	NONE = 0,
+	BASIC,
+	MAX_VALUE
 };
 
-enum ENGINE_TYPE
+enum class ENGINE_TYPE
 {
-	ENGINE_NONE = 0,
-	ENGINE_BASIC,
-	ENGINE_MAX
+	NONE = 0,
+	BASIC,
+	MAX_VALUE
 };
 
-enum WEAPON_TYPE
+enum class WEAPON_TYPE
 {
-	WEAPON_NONE = 0,
-	WEAPON_CANNON,
-	WEAPON_MAX
+	NONE = 0,
+	CANNON,
+	MAX_VALUE
 };
 
-enum BARREL_TYPE
+enum class BARREL_TYPE
 {
-	BARREL_NONE = 0,
-	BARREL_BULLET,
-	BARREL_LASER,
-	BARREL_MISSILE,
-	BARREL_MAX
+	NONE = 0,
+	BULLET,
+	LASER,
+	MISSILE,
+	MAX_VALUE
 };
 
-enum EFFECT_TYPE
+enum class EFFECT_TYPE
 {
-	EFFECT_NONE = 0,
-	EFFECT_TEXTURE,
-	EFFECT_SPRITEFRAME,
-	EFFECT_ANIMATION,
-	EFFECT_MAX
+	NONE = 0,
+	TEXTURE,
+	SPRITEFRAME,
+	ANIMATION,
+	MAX_VALUE
 };
 
-enum BULLET_TYPE
+enum class BULLET_TYPE
 {
-	BULLET_NONE = 0,
-	BULLET_NORMAL,
-	BULLET_MAX
+	NONE = 0,
+	NORMAL,
+	MAX_VALUE
 };
 
-enum LASER_TYPE
+enum class LASER_TYPE
 {
-	LASER_NONE = 0,
-	LASER_NORMAL,
-	LASER_MAX
+	NONE = 0,
+	NORMAL,
+	MAX_VALUE
 };
 
-enum MISSILE_TYPE
+enum class MISSILE_TYPE
 {
-	MISSILE_NONE = 0,
-	MISSILE_NORMAL,
-	MISSILE_MAX
+	NONE = 0,
+	NORMAL,
+	MAX_VALUE
 };
 
-enum WINGMAN_TYPE
+enum class WINGMAN_TYPE
 {
-	WINGMAN_NONE = 0,
-	WINGMAN_BASIC,
-	WINGMAN_MAX
+	NONE = 0,
+	BASIC,
+	MAX_VALUE
 };
 
-enum ENEMY_TYPE
+enum class ENEMY_TYPE
 {
-	ENEMY_NONE = 0,
-	ENEMY_FIGHTER_BEE,
-	ENEMY_FRIGATE_PUMA,
-	ENEMY_CARRIER_TIGER,
-	ENEMY_MAX
+	NONE = 0,
+	FIGHTER_BEE,
+	FRIGATE_PUMA,
+	CARRIER_TIGER,
+	MAX_VALUE
 };
 
 // player and hound data declarations
@@ -113,8 +113,8 @@ struct WeaponInfo
 	unsigned int	level;
 
 	float			firing_interval; //second
-	float			bullet_damage;
-	float			bullet_speed;	//per second
+	float			projectile_damage;
+	float			projectile_speed;	//per second
 
 	cocos2d::Vec2	dock_position;
 	std::vector<BarrelInfo> barrells;
@@ -154,7 +154,12 @@ struct EnemyInfo
 {
 	ENEMY_TYPE type;
 	unsigned int level;
-	std::vector<cocos2d::Vec2> positions;
+
+	float			scale_xy;
+	std::string		body_texture_name;
+	cocos2d::Vec2	start_position_offset;
+
+	std::vector<WeaponInfo>	weapons;
 };
 
 struct WaveInfo
@@ -165,10 +170,45 @@ struct WaveInfo
 
 struct LevelInfo
 {
-	unsigned long id;
-	std::string sbg_layer1_name;
-	std::string sbg_layer2_name;
-	std::vector<WaveInfo> enemy_waves;
+	unsigned long				id;
+	std::vector<std::string>	sbg_layer_texture_names;
+	cocos2d::Vec2				hound_start_offset;
+	std::vector<WaveInfo>		enemy_waves;
+};
+
+// custom cocos2d events for Hound
+extern const char * EVENT_CUSTOM_COLLISION;
+extern const char * EVENT_CUSTOM_DEBUG;
+
+enum class COLLISION_TYPE
+{
+	NONE = 0,
+	HOUND_TO_ENEMY,
+	HOUND_TO_FIELD,
+	PROJECTILE_TO_HOUND,
+	PROJECTILE_TO_ENEMY,
+	PROJECTILE_TO_FIELD,
+	MAX_VALUE
+};
+
+struct CollisionData
+{
+	COLLISION_TYPE type;
+	cocos2d::Node *who;
+	cocos2d::Node *whom;
+};
+
+enum class DEBUG_COMMAND
+{
+	NONE = 0,
+	ENEMY_SELF_DESTROY,
+	MAX_VALUE
+};
+ 
+struct DebugData
+{
+	 DEBUG_COMMAND command;
+	 cocos2d::Node *target;
 };
 
 #endif //__HOUND_COMMON_H__

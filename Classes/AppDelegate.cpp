@@ -111,29 +111,29 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.name = "player";
 	m_playerInfo.vip_level = 0;
 	m_playerInfo.hound.body_level = 1;
-	m_playerInfo.hound.body_type = BODY_BASIC;
+	m_playerInfo.hound.body_type = BODY_TYPE::BASIC;
 	m_playerInfo.hound.body_texture_name = "mplane.png";
 	m_playerInfo.hound.armor_level = 1;
-	m_playerInfo.hound.armor_type = ARMOR_BASIC;
+	m_playerInfo.hound.armor_type = ARMOR_TYPE::BASIC;
 	m_playerInfo.hound.armor_texture_name = "";
 	m_playerInfo.hound.engine_level = 1;
-	m_playerInfo.hound.engine_type = ENGINE_BASIC;
+	m_playerInfo.hound.engine_type = ENGINE_TYPE::BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
 	m_playerInfo.hound.scale_xy = 1.2f;
 
 	m_playerInfo.hound.weapons.clear();
 
 	BarrelInfo barrel;
-	barrel.type = BARREL_BULLET;
+	barrel.type = BARREL_TYPE::BULLET;
 	barrel.projectile_scale_xy = 0.8f;
 	barrel.effect_name = "bullet_1.png";
 
 	WeaponInfo weapon;
 	weapon.level  = 1;
-	weapon.type = WEAPON_CANNON;
+	weapon.type = WEAPON_TYPE::CANNON;
 	weapon.firing_interval = 0.1f; //second
-	weapon.bullet_speed = 1000.0f; //per second
-	weapon.bullet_damage = 10.0f;
+	weapon.projectile_speed = 1000.0f; //per second
+	weapon.projectile_damage = 10.0f;
 
 	weapon.texture_name = "frontgun.png";
 	weapon.dock_position = Vec2(58.0f, 81.0f);
@@ -169,5 +169,44 @@ bool AppDelegate::loadPlayerInfo(void)
 
 bool AppDelegate::loadLevelInfo(void)
 {
+	m_levelInfo.id = 0;
+	m_levelInfo.hound_start_offset = Vec2(0.0f, 200.0f);
+	m_levelInfo.sbg_layer_texture_names.push_back("img_bg_1.jpg");
+	m_levelInfo.sbg_layer_texture_names.push_back("clouds.png");
+
+	WaveInfo w_info;
+	EnemyInfo ef_info;
+
+	w_info.time_offset = 1.0f;
+	ef_info.type = ENEMY_TYPE::FIGHTER_BEE;
+	ef_info.level = 1;
+	ef_info.scale_xy = 1.0f;
+	ef_info.body_texture_name = "n1.png";
+	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
+	w_info.enemies.push_back(ef_info);
+	ef_info.start_position_offset = Vec2(100.0f, -50.0f);
+	w_info.enemies.push_back(ef_info);
+	ef_info.start_position_offset = Vec2(0.0f, 50.0f);
+	w_info.enemies.push_back(ef_info);
+	m_levelInfo.enemy_waves.push_back(w_info);	// 1st wave
+
+	w_info.enemies.clear();
+	ef_info.type = ENEMY_TYPE::FRIGATE_PUMA;
+	ef_info.body_texture_name = "n2.png";
+	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
+	w_info.enemies.push_back(ef_info);
+	ef_info.start_position_offset = Vec2(100.0f, -50.0f);
+	w_info.enemies.push_back(ef_info);
+	ef_info.start_position_offset = Vec2(0.0f, 50.0f);
+	w_info.enemies.push_back(ef_info);
+	m_levelInfo.enemy_waves.push_back(w_info);	// 2nd wave
+
+	w_info.enemies.clear();
+	ef_info.type = ENEMY_TYPE::CARRIER_TIGER;
+	ef_info.body_texture_name = "n_boss.png";
+	ef_info.start_position_offset = Vec2(0.0f, 0.0f);
+	w_info.enemies.push_back(ef_info);
+	m_levelInfo.enemy_waves.push_back(w_info);	// 3rd wave
+
 	return true;
 }

@@ -1,9 +1,9 @@
 #include "Weapon.h"
 #include "Battlefield.h"
 #include "Hound.h"
-#include "Bullet.h"
-#include "Laser.h"
-#include "Missile.h"
+#include "Projectile/Bullet.h"
+#include "Projectile/Laser.h"
+#include "Projectile/Missile.h"
 
 USING_NS_CC;
 
@@ -43,8 +43,8 @@ bool Weapon::init(const WeaponInfo &info)
 
 	m_firingCounter = 0.0f;
 	m_firingInterval = info.firing_interval;
-	m_bulletDamage = info.bullet_damage;
-	m_bulletSpeed = info.bullet_speed;
+	m_projectileDamage = info.projectile_damage;
+	m_projectileSpeed = info.projectile_speed;
 
 	// initialize barrells
 	Barrel barrel;
@@ -58,13 +58,13 @@ bool Weapon::init(const WeaponInfo &info)
 		barrel.projectile_scale_xy = binfo.projectile_scale_xy; 
 		switch(barrel.type)
 		{
-		case BARREL_BULLET:
+		case BARREL_TYPE::BULLET:
 			barrel.projectile_creator = Bullet::create;
 			break;
-		case BARREL_LASER:
+		case BARREL_TYPE::LASER:
 			barrel.projectile_creator = Laser::create;
 			break;
-		case BARREL_MISSILE:
+		case BARREL_TYPE::MISSILE:
 			barrel.projectile_creator = Missile::create;
 			break;
 		default:
@@ -95,10 +95,10 @@ void Weapon::fire(void)
 	for (Barrel &b : m_barrells)
 	{
 		Projectile *proj = b.projectile_creator(b.effect_name, b.direction, 
-			b.projectile_scale_xy, m_bulletDamage, m_bulletSpeed, m_isHound);
+			b.projectile_scale_xy, m_projectileDamage, m_projectileSpeed, m_isHound);
 		if (proj != nullptr)
 		{
-			bf->addProjectile(proj); // bullet should be child of Battlefield
+			bf->addActiveProjectile(proj); // bullet should be child of Battlefield
 			proj->setRotation(b.rotate_angle);
 			proj->setPosition(b.projectile_startpoint);
 		}
