@@ -16,6 +16,8 @@ public:
 	void update(float dt);
 	void onEnterTransitionDidFinish(void);
 
+	const std::vector<Enemy*>& getActiveEnemies(void) const { return m_activeEnemies; }
+
 	void onEventCollision(cocos2d::EventCustom* event);
 	void onEventDebug(cocos2d::EventCustom* event);
 
@@ -32,6 +34,11 @@ protected:
 	bool init(const PlayerInfo &player, const LevelInfo &level);
 
 	void spawnEnemyWave(const WaveInfo &info);
+	void processProjectileCollidesField(cocos2d::Node *who, std::vector<cocos2d::Node*> &whom);
+	void processProjectileCollidesHound(cocos2d::Node *who, std::vector<cocos2d::Node*> &whom);
+	void processProjectileCollidesEnemy(cocos2d::Node *who, std::vector<cocos2d::Node*> &whom);
+	void processHoundCollidesField(cocos2d::Node *who, std::vector<cocos2d::Node*> &whom);
+	void processHoundCollidesEnemy(cocos2d::Node *who, std::vector<cocos2d::Node*> &whom);
 
 private:
 	Hound*							m_hound;

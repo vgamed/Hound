@@ -119,12 +119,13 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.hound.engine_type = ENGINE_TYPE::BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
 	m_playerInfo.hound.scale_xy = 1.2f;
+	m_playerInfo.hound.bounding_circle_radius = 10.0f;
 
 	m_playerInfo.hound.weapons.clear();
 
 	BarrelInfo barrel;
 	barrel.type = BARREL_TYPE::BULLET;
-	barrel.projectile_scale_xy = 0.8f;
+	barrel.projectile_scale_xy = 0.4f;
 	barrel.effect_name = "bullet_1.png";
 
 	WeaponInfo weapon;
@@ -180,6 +181,7 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.type = ENEMY_TYPE::FIGHTER_BEE;
 	ef_info.level = 1;
 	ef_info.scale_xy = 1.0f;
+	ef_info.bounding_circle_radius = 50.0f;
 	ef_info.body_texture_name = "n1.png";
 	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
 	w_info.enemies.push_back(ef_info);
@@ -191,6 +193,7 @@ bool AppDelegate::loadLevelInfo(void)
 
 	w_info.enemies.clear();
 	ef_info.type = ENEMY_TYPE::FRIGATE_PUMA;
+	ef_info.bounding_circle_radius = 60.0f;
 	ef_info.body_texture_name = "n2.png";
 	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
 	w_info.enemies.push_back(ef_info);
@@ -202,6 +205,7 @@ bool AppDelegate::loadLevelInfo(void)
 
 	w_info.enemies.clear();
 	ef_info.type = ENEMY_TYPE::CARRIER_TIGER;
+	ef_info.bounding_circle_radius = 150.0f;
 	ef_info.body_texture_name = "n_boss.png";
 	ef_info.start_position_offset = Vec2(0.0f, 0.0f);
 	w_info.enemies.push_back(ef_info);

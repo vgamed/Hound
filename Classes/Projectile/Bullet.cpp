@@ -30,4 +30,7 @@ void Bullet::update(float dt)
 {
 	// movement update
 	setPosition(getPosition()+m_speed*dt*m_direction);
+
+	// collision detect
+	Projectile::update(dt);
 }

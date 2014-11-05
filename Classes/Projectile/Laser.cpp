@@ -30,5 +30,9 @@ Projectile* Laser::create(const std::string effect,
 
 void Laser::update(float dt)
 {
+	// movement update
+	//...
 
+	// collision detect
+	Projectile::update(dt);
 }

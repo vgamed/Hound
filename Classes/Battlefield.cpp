@@ -69,33 +69,6 @@ void Battlefield::update(float dt)
 	// update hound
 	m_hound->update(dt);
 
-	// update current enemies
-	//for (Enemy *enemy : m_activeEnemies)
-	//{
-	//	//enemy->update(dt);
-	//	enemy->Enemy::update(dt); // for temporarily demonstrate the enemy waves
-	//}
-	
-	// projectile collision detect
-	std::vector<Projectile*>::iterator found = std::remove_if(m_activeProjectiles.begin(), 
-		m_activeProjectiles.end(), 
-		[&](Projectile *p)->bool
-		{
-			if (p->getBoundingBox().intersectsRect(this->getBoundingBox()))
-			{
-				return false;
-			}
-			else
-			{
-				this->removeChild(p);
-				return true;
-			}
-		});
-	m_activeProjectiles.erase(found, m_activeProjectiles.end());
-
-	// if the left projectiles hitting some sprite, do damage calculation and remove the projectile
-	//...
-
 	// trigger new wave
 	if ((m_activeEnemies.size()<=0) && (m_nextWave != m_enemyWaves.end()))
 	{
@@ -120,11 +93,33 @@ void Battlefield::onEnterTransitionDidFinish(void)
 
 void Battlefield::onEventCollision(cocos2d::EventCustom* event)
 {
+	auto data = (CollisionData*)event->getUserData();
+	switch(data->type)
+	{
+	case COLLISION_TYPE::PROJECTILE_TO_FIELD:
+		processProjectileCollidesField(data->who, data->whom);
+		break;
+	case COLLISION_TYPE::PROJECTILE_TO_HOUND:
+		processProjectileCollidesHound(data->who, data->whom);
+		break;
+	case COLLISION_TYPE::PROJECTILE_TO_ENEMY:
+		processProjectileCollidesEnemy(data->who, data->whom);
+		break;
+	case COLLISION_TYPE::HOUND_TO_ENEMY:
+		processHoundCollidesEnemy(data->who, data->whom);
+		break;
+	case COLLISION_TYPE::HOUND_TO_FIELD:
+		processHoundCollidesField(data->who, data->whom);
+		break;
+		break;
+	default:
+		break;
+	}
 }
 
 void Battlefield::onEventDebug(cocos2d::EventCustom* event)
 {
-	DebugData *data = (DebugData*)event->getUserData();
+	auto data = (DebugData*)event->getUserData();
 	switch(data->command)
 	{
 	case DEBUG_COMMAND::ENEMY_SELF_DESTROY:
@@ -189,3 +184,55 @@ void Battlefield::spawnEnemyWave(const WaveInfo &info)
 		}
 	}
 }
+
+void Battlefield::processProjectileCollidesField(Node *who, std::vector<Node*> &whom)
+{
+	CC_ASSERT(dynamic_cast<Projectile*>(who) != nullptr); // who should be a projectile here
+
+	removeActiveProjectile((Projectile*)who);
+}
+
+void Battlefield::processProjectileCollidesHound(Node *who, std::vector<Node*> &whom)
+{
+	CC_ASSERT(dynamic_cast<Projectile*>(who) != nullptr); // who should be a projectile here
+	CC_ASSERT((whom.size()==1) && (dynamic_cast<Hound*>(whom[0])!=nullptr)); // whom should be the hound
+}
+
+void Battlefield::processProjectileCollidesEnemy(Node *who, std::vector<Node*> &whom)
+{
+	auto proj = dynamic_cast<Projectile*>(who);
+	CC_ASSERT(proj != nullptr); // who should be a projectile here
+	CC_ASSERT(whom.size() > 0); // whom should be active enemies
+
+	for (Node* node : whom)
+	{
+		auto enemy = dynamic_cast<Enemy*>(node);
+		CC_ASSERT(enemy != nullptr);
+		
+		// play hitting effect
+		//...
+
+		// enemy->doDamage(proj->getDamage());
+		//if (enemy->isDead())
+		//{
+		//	// remove enemy
+		//	// play explosion effect
+		//}
+	}
+
+	removeActiveProjectile(proj);
+}
+
+void Battlefield::processHoundCollidesField(Node *who, std::vector<Node*> &whom)
+{
+	CC_ASSERT(dynamic_cast<Hound*>(who) != nullptr); // who should be the hound
+
+}
+
+void Battlefield::processHoundCollidesEnemy(Node *who, std::vector<Node*> &whom)
+{
+	CC_ASSERT(dynamic_cast<Hound*>(who) != nullptr); // who should be the hound
+	CC_ASSERT(whom.size() > 0); // whom should be active enemies
+
+}
+

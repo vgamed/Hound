@@ -26,6 +26,8 @@ bool Enemy::init(const EnemyInfo &info)
 	// init weapons
 	// ...
 
+	m_boundingCircle.center = getPosition();
+	m_boundingCircle.radius = info.bounding_circle_radius;
 	m_timerLeave = 0.0f;
 
 	scheduleUpdate();
@@ -35,6 +37,9 @@ bool Enemy::init(const EnemyInfo &info)
 
 void Enemy::update(float dt)
 {
+	// update bounding circle position
+	m_boundingCircle.center = getPosition();
+
 	m_timerLeave += dt;
 	if (m_timerLeave > 10.0f)
 	{

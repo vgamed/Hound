@@ -8,6 +8,10 @@ class Enemy :
 {
 public:
 	virtual void update(float dt);
+	virtual const Circle& getBoundingCircle(void) const 
+	{
+		return m_boundingCircle; 
+	}
 
 protected:
 	Enemy(void);
@@ -17,6 +21,7 @@ protected:
 
 private:
 	float	m_timerLeave;
+	Circle	m_boundingCircle;
 };
 
 #endif //__HOUND_ENEMY_FIGHTER_H__

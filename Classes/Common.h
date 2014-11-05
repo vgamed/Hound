@@ -2,6 +2,7 @@
 #define __HOUND_COMMON_H__
 
 #include "cocos2d.h"
+#include "Circle.h"
 
 const int ZORDER_HOUND				= 100;
 const int ZORDER_HOUND_PROJECTILE	= 10;
@@ -135,6 +136,7 @@ struct HoundInfo
 	std::vector<WeaponInfo>	weapons;
 
 	float			scale_xy;
+	float			bounding_circle_radius;
 	std::string		body_texture_name;
 	std::string		armor_texture_name;
 	std::string		engine_texture_name;
@@ -156,6 +158,7 @@ struct EnemyInfo
 	unsigned int level;
 
 	float			scale_xy;
+	float			bounding_circle_radius;
 	std::string		body_texture_name;
 	cocos2d::Vec2	start_position_offset;
 
@@ -195,7 +198,7 @@ struct CollisionData
 {
 	COLLISION_TYPE type;
 	cocos2d::Node *who;
-	cocos2d::Node *whom;
+	std::vector<cocos2d::Node*> whom;
 };
 
 enum class DEBUG_COMMAND

@@ -28,4 +28,9 @@ Projectile* Missile::create(const std::string effect,
 
 void Missile::update(float dt)
 {
+	// movement update
+	//...
+
+	// collision detect
+	Projectile::update(dt);
 }
