@@ -140,12 +140,6 @@ void Battlefield::onEventDebug(cocos2d::EventCustom* event)
 	case DEBUG_COMMAND::ENEMY_SELF_DESTROY:
 		{
 			auto enemy = dynamic_cast<Enemy*>(data->target);
-			auto sfx = SFXFactory::createEnemyExplosionSFX(enemy->getType());
-			if (sfx != nullptr)
-			{
-				sfx->setPosition(enemy->getPosition());
-				this->addChild(sfx);
-			}
 			removeActiveEnemy(enemy);
 		}
 		break;
@@ -241,12 +235,19 @@ void Battlefield::processProjectileCollidesEnemy(Node *who, std::vector<Node*> &
 			this->addChild(sfx);
 		}
 
-		// enemy->doDamage(proj->getDamage());
-		//if (enemy->isDead())
-		//{
-		//	// remove enemy
-		//	// play explosion effect
-		//}
+		enemy->doDamage(proj->getDamage());
+		if (enemy->isDead())
+		{
+			// play explosion effect
+			auto sfx = SFXFactory::createEnemyExplosionSFX(enemy->getType());
+			if (sfx != nullptr)
+			{
+				sfx->setPosition(enemy->getPosition());
+				this->addChild(sfx);
+			}
+
+			removeActiveEnemy(enemy);
+		}
 	}
 
 	removeActiveProjectile(proj);

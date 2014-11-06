@@ -16,6 +16,10 @@ public:
 		return m_boundingCircle; 
 	}
 
+	virtual void doDamage(float damage);
+
+	bool isDead(void) { return (m_curLife<=0.0f); }
+
 protected:
 	Enemy(void);
 	~Enemy(void);
@@ -23,6 +27,11 @@ protected:
 	virtual bool init(const EnemyInfo &info);
 
 	ENEMY_TYPE m_type;
+
+	float	m_curLife;
+	float	m_maxLife;
+	float	m_armor;
+
 	float	m_timerLeave;
 	Circle	m_boundingCircle;
 };

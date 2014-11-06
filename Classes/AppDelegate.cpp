@@ -178,9 +178,11 @@ bool AppDelegate::loadLevelInfo(void)
 	WaveInfo w_info;
 	EnemyInfo ef_info;
 
-	w_info.time_offset = 1.0f;
+	w_info.time_offset = 2.0f;
 	ef_info.type = ENEMY_TYPE::FIGHTER_BEE;
 	ef_info.level = 1;
+	ef_info.max_life = 100.0f;
+	ef_info.armor = 100.0f;
 	ef_info.scale_xy = 1.0f;
 	ef_info.bounding_circle_radius = 50.0f;
 	ef_info.body_texture_name = "n1.png";
@@ -194,6 +196,8 @@ bool AppDelegate::loadLevelInfo(void)
 
 	w_info.enemies.clear();
 	ef_info.type = ENEMY_TYPE::FRIGATE_PUMA;
+	ef_info.max_life = 200.0f;
+	ef_info.armor = 300.0f;
 	ef_info.bounding_circle_radius = 60.0f;
 	ef_info.body_texture_name = "n2.png";
 	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
@@ -206,6 +210,8 @@ bool AppDelegate::loadLevelInfo(void)
 
 	w_info.enemies.clear();
 	ef_info.type = ENEMY_TYPE::CARRIER_TIGER;
+	ef_info.max_life = 500.0f;
+	ef_info.armor = 500.0f;
 	ef_info.bounding_circle_radius = 150.0f;
 	ef_info.body_texture_name = "n_boss.png";
 	ef_info.start_position_offset = Vec2(0.0f, 0.0f);

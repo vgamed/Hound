@@ -21,6 +21,8 @@ bool Enemy::init(const EnemyInfo &info)
 	}
 
 	m_type = info.type;
+	m_curLife = m_maxLife = info.max_life;
+	m_armor = info.armor;
 
 	this->setScale(info.scale_xy);
 	this->setLocalZOrder(ZORDER_ENEMY_FIGHTER);
@@ -43,7 +45,7 @@ void Enemy::update(float dt)
 	m_boundingCircle.center = getPosition();
 
 	m_timerLeave += dt;
-	if (m_timerLeave > 10.0f)
+	if (m_timerLeave > 30.0f)
 	{
 		m_timerLeave = 0.0f;
 		EventCustom event(EVENT_CUSTOM_DEBUG);
@@ -53,4 +55,9 @@ void Enemy::update(float dt)
 		event.setUserData(&data);
 		_eventDispatcher->dispatchEvent(&event);
 	}
+}
+
+void Enemy::doDamage(float damage)
+{
+	m_curLife -= damage*(1-m_armor/1000.0f);
 }

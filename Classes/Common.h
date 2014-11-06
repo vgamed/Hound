@@ -146,6 +146,9 @@ struct EnemyInfo
 	ENEMY_TYPE type;
 	unsigned int level;
 
+	float			max_life;
+	float			armor;
+
 	float			scale_xy;
 	float			bounding_circle_radius;
 	std::string		body_texture_name;
