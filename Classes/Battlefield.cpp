@@ -51,7 +51,7 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	m_houndStartPosition.y = m_hound->getBoundingBox().size.height + level.hound_start_offset.y;
 
 	m_enemyStartPosCenter.x = getBoundingBox().size.width/2;
-	m_enemyStartPosCenter.y = getBoundingBox().size.height - 200.0f;
+	m_enemyStartPosCenter.y = getBoundingBox().size.height - 300.0f;
 
 	m_waveTimer = 0.0f;
 	m_nextWave = m_enemyWaves.begin();

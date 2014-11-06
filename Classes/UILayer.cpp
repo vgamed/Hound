@@ -25,8 +25,9 @@ bool UILayer::init()
                                            "CloseSelected.png",
                                            CC_CALLBACK_1(UILayer::menuCloseCallback, this));
     
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
+	closeItem->setScale(2.0f);
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getBoundingBox().size.width/2 ,
+                                origin.y + closeItem->getBoundingBox().size.height/2));
 
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
