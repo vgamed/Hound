@@ -9,18 +9,14 @@ class Weapon :
 	public cocos2d::Sprite
 {
 public:
-	typedef std::function<Projectile* ( const std::string&, 
+	typedef std::function<Projectile* ( const BarrelInfo&, 
 										const cocos2d::Vec2&, 
-										float, float, 
-										float, bool)>	PROJECTILE_CREATOR;
+										float, float, bool)>	PROJECTILE_CREATOR;
 
 	struct Barrel
 	{
-		BARREL_TYPE		type;
+		BarrelInfo		info;
 		cocos2d::Vec2	direction;
-		float			rotate_angle;
-		std::string		effect_name;
-		float			projectile_scale_xy;
 		cocos2d::Vec2	projectile_startpoint;
 		PROJECTILE_CREATOR projectile_creator;
 	};

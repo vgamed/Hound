@@ -95,11 +95,11 @@ bool AppDelegate::loadGameResources(void)
 	tcache->addImage("n3.png");
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bullet.plist");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("wsparticle_p01.plist");
 
 	AnimationCache::getInstance()->addAnimationsWithFile("pig.plist");
 	AnimationCache::getInstance()->addAnimationsWithFile("nplane.plist");
 	AnimationCache::getInstance()->addAnimationsWithFile("bullet.plist");
-	AnimationCache::getInstance()->addAnimationsWithFile("wsparticle_p01.plist");
 
 	return true;
 }
@@ -125,6 +125,7 @@ bool AppDelegate::loadPlayerInfo(void)
 
 	BarrelInfo barrel;
 	barrel.type = BARREL_TYPE::BULLET;
+	barrel.projectile_type = PROJECTILE_TYPE::BULLET_NORMAL;
 	barrel.projectile_scale_xy = 0.4f;
 	barrel.effect_name = "bullet_1.png";
 

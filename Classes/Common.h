@@ -58,24 +58,12 @@ enum class EFFECT_TYPE
 	MAX_VALUE
 };
 
-enum class BULLET_TYPE
+enum class PROJECTILE_TYPE
 {
 	NONE = 0,
-	NORMAL,
-	MAX_VALUE
-};
-
-enum class LASER_TYPE
-{
-	NONE = 0,
-	NORMAL,
-	MAX_VALUE
-};
-
-enum class MISSILE_TYPE
-{
-	NONE = 0,
-	NORMAL,
+	BULLET_NORMAL,
+	LASER_NORMAL,
+	MISSILE_NORMAL,
 	MAX_VALUE
 };
 
@@ -99,6 +87,7 @@ enum class ENEMY_TYPE
 struct BarrelInfo
 {
 	BARREL_TYPE		type;
+	PROJECTILE_TYPE	projectile_type;
 	float			projectile_scale_xy;
 	// the angle from positive Y direction, in degrees.
 	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
@@ -213,5 +202,18 @@ struct DebugData
 	 DEBUG_COMMAND command;
 	 cocos2d::Node *target;
 };
+
+// data structures for special effect
+//struct SFXInfo
+//{
+//	std::string name_prefix;
+//	int			start_id;
+//	int			frame_number;
+//
+//	float		scale;
+//
+//	float		last;
+//	int			repeat;
+//};
 
 #endif //__HOUND_COMMON_H__

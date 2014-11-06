@@ -2,6 +2,7 @@
 #include "Hound.h"
 #include "Projectile/Projectile.h"
 #include "Enemy/EnemyFactory.h"
+#include "SFX/SFXFactory.h"
 
 USING_NS_CC;
 
@@ -32,15 +33,18 @@ Battlefield* Battlefield::create(const PlayerInfo &player, const LevelInfo &leve
 bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 {
 	if (!Layer::init())
+	{
 		return false;
+	}
 
 	m_enemyWaves = level.enemy_waves;
 
 	// create hound
 	m_hound = Hound::create(player.hound);
 	if (m_hound == nullptr)
+	{
 		return false;
-
+	}
 	this->addChild(m_hound);
 
 	m_houndStartPosition.x = getBoundingBox().size.width/2 + level.hound_start_offset.x;
@@ -88,6 +92,17 @@ void Battlefield::onEnterTransitionDidFinish(void)
 	m_hound->setPosition(m_houndStartPosition);
 	m_hound->configWeapons();
 
+	// test for sfx
+	//explosion = Explosion::createWithSpriteFrames("b_", 1, 8, 1.0f, 1.0f);
+	//explosion->setPosition(Vec2(150.0f, getBoundingBox().getMidY()));
+	//addChild(explosion);
+	//explosion = Explosion::createWithSpriteFrames("c_", 1, 8, 1.0f, 1.0f);
+	//explosion->setPosition(Vec2(250.0f, getBoundingBox().getMidY()));
+	//addChild(explosion);
+	//explosion = Explosion::createWithSpriteFrames("d_00", 1, 9, 2.0f, 1.0f);
+	//explosion->setPosition(Vec2(350.0f, getBoundingBox().getMidY()));
+	//addChild(explosion);
+
 	this->scheduleUpdate();
 }
 
@@ -123,7 +138,16 @@ void Battlefield::onEventDebug(cocos2d::EventCustom* event)
 	switch(data->command)
 	{
 	case DEBUG_COMMAND::ENEMY_SELF_DESTROY:
-		removeActiveEnemy((Enemy*)(data->target));
+		{
+			auto enemy = dynamic_cast<Enemy*>(data->target);
+			auto sfx = SFXFactory::createEnemyExplosionSFX(enemy->getType());
+			if (sfx != nullptr)
+			{
+				sfx->setPosition(enemy->getPosition());
+				this->addChild(sfx);
+			}
+			removeActiveEnemy(enemy);
+		}
 		break;
 	default:
 		break;
@@ -210,7 +234,12 @@ void Battlefield::processProjectileCollidesEnemy(Node *who, std::vector<Node*> &
 		CC_ASSERT(enemy != nullptr);
 		
 		// play hitting effect
-		//...
+		auto sfx = SFXFactory::createProjectileSFX(proj->getProjectileType());
+		if (sfx != nullptr)
+		{
+			sfx->setPosition(proj->getPosition());
+			this->addChild(sfx);
+		}
 
 		// enemy->doDamage(proj->getDamage());
 		//if (enemy->isDead())

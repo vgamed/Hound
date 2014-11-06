@@ -6,10 +6,8 @@
 class Missile :	public Projectile
 {
 public:
-	static Projectile* create(const std::string effect, 
-		const cocos2d::Vec2 &direction,
-		float scale, float damage, 
-		float speed, bool from_hound);
+	static Projectile* create(const BarrelInfo &info, const cocos2d::Vec2 &direction, 
+		float damage, float speed, bool from_hound);
 
 	void update(float dt);
 

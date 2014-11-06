@@ -20,6 +20,8 @@ bool Enemy::init(const EnemyInfo &info)
 		return false;
 	}
 
+	m_type = info.type;
+
 	this->setScale(info.scale_xy);
 	this->setLocalZOrder(ZORDER_ENEMY_FIGHTER);
 

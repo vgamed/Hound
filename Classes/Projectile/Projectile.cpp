@@ -13,18 +13,17 @@ Projectile::~Projectile(void)
 {
 }
 
-bool Projectile::init(const std::string effect, 
-		const cocos2d::Vec2 &direction,
-		float scale, float damage, 
-		float speed, bool from_hound)
+bool Projectile::init(const BarrelInfo &info, const cocos2d::Vec2 &direction, 
+		float damage, float speed, bool from_hound)
 {
 	SpriteFrame *frame = 
-		SpriteFrameCache::getInstance()->getSpriteFrameByName(effect);
+		SpriteFrameCache::getInstance()->getSpriteFrameByName(info.effect_name);
 	if (!initWithSpriteFrame(frame))
 	{
 		return false;
 	}
 
+	m_projectileType = info.projectile_type;
 	m_direction = direction;
 	m_speed = speed;
 	m_damage = damage;
@@ -33,7 +32,7 @@ bool Projectile::init(const std::string effect,
 	m_isFromHound = from_hound;
 	m_isFromHound ? setLocalZOrder(ZORDER_HOUND_PROJECTILE) :
 					setLocalZOrder(ZORDER_ENEMY_PROJECTILE);
-	setScale(scale);
+	setScale(info.projectile_scale_xy);
 
 	Size sz = getBoundingBox().size;
 	m_boundingCircle.radius = MIN(sz.width, sz.height)/2;

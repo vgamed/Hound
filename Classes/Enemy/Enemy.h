@@ -8,6 +8,9 @@ class Enemy :
 {
 public:
 	virtual void update(float dt);
+
+	virtual ENEMY_TYPE getType(void) { return m_type; }
+
 	virtual const Circle& getBoundingCircle(void) const 
 	{
 		return m_boundingCircle; 
@@ -19,7 +22,7 @@ protected:
 
 	virtual bool init(const EnemyInfo &info);
 
-private:
+	ENEMY_TYPE m_type;
 	float	m_timerLeave;
 	Circle	m_boundingCircle;
 };

@@ -16,6 +16,9 @@
     <Filter Include="Classes\Enemy">
       <UniqueIdentifier>{05d7cefb-9401-42a8-b010-2bcda0c43f62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\SFX">
+      <UniqueIdentifier>{38d37f16-5398-402d-90a9-1693f4971153}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +77,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\Circle.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SFX\SFXFactory.cpp">
+      <Filter>Classes\SFX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SFX\BulletExplosion.cpp">
+      <Filter>Classes\SFX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SFX\SFXExplosion.cpp">
+      <Filter>Classes\SFX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +151,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Circle.h">
       <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SFX\SFXFactory.h">
+      <Filter>Classes\SFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SFX\BulletExplosion.h">
+      <Filter>Classes\SFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SFX\SFXExplosion.h">
+      <Filter>Classes\SFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

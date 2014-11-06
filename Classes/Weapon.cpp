@@ -51,12 +51,9 @@ bool Weapon::init(const WeaponInfo &info)
 	barrel.projectile_startpoint = Vec2(0.0f,0.0f); // make this customizable?
 	for (BarrelInfo binfo : info.barrells)
 	{
-		barrel.type = binfo.type;
-		barrel.rotate_angle = binfo.rotate_angle;
-		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(barrel.rotate_angle));
-		barrel.effect_name = binfo.effect_name;
-		barrel.projectile_scale_xy = binfo.projectile_scale_xy; 
-		switch(barrel.type)
+		barrel.info = binfo;
+		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(barrel.info.rotate_angle));
+		switch(barrel.info.type)
 		{
 		case BARREL_TYPE::BULLET:
 			barrel.projectile_creator = Bullet::create;
@@ -94,12 +91,12 @@ void Weapon::fire(void)
 
 	for (Barrel &b : m_barrells)
 	{
-		Projectile *proj = b.projectile_creator(b.effect_name, b.direction, 
-			b.projectile_scale_xy, m_projectileDamage, m_projectileSpeed, m_isHound);
+		Projectile *proj = b.projectile_creator(b.info, b.direction, 
+			m_projectileDamage, m_projectileSpeed, m_isHound);
 		if (proj != nullptr)
 		{
 			bf->addActiveProjectile(proj); // bullet should be child of Battlefield
-			proj->setRotation(b.rotate_angle);
+			proj->setRotation(b.info.rotate_angle);
 			proj->setPosition(b.projectile_startpoint);
 		}
 	}
