@@ -16,9 +16,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        //glview = GLView::create("My Game");
+        //glview = GLView::create("Hound");
 		glview = GLView::createWithRect("Hound", Rect(0, 0, 640, 960));
         director->setOpenGLView(glview);
+		glview->setDesignResolutionSize(640, 960, ResolutionPolicy::SHOW_ALL);
     }
 
     // turn on display FPS
@@ -118,7 +119,7 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.hound.engine_level = 1;
 	m_playerInfo.hound.engine_type = ENGINE_TYPE::BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
-	m_playerInfo.hound.scale_xy = 1.2f;
+	m_playerInfo.hound.scale_xy = 1.5f;
 	m_playerInfo.hound.bounding_circle_radius = 10.0f;
 
 	m_playerInfo.hound.weapons.clear();

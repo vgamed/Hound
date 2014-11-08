@@ -11,8 +11,9 @@ public:
 
 	virtual ENEMY_TYPE getType(void) { return m_type; }
 
-	virtual const Circle& getBoundingCircle(void) const 
+	virtual const Circle& getBoundingCircle(void) 
 	{
+		m_boundingCircle.center = getPosition();
 		return m_boundingCircle; 
 	}
 

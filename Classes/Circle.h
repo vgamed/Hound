@@ -14,9 +14,6 @@ public:
 	Circle(const cocos2d::Vec2 &c, float r);
 	~Circle(void);
 
-	const cocos2d::Vec2& getCenter(void) const;
-	float getRadius(void) const;
-
 	bool equals(const Circle& circle) const;
 
 	bool containsPoint(const cocos2d::Vec2& point) const;

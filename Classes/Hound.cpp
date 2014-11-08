@@ -34,10 +34,12 @@ bool Hound::init(const HoundInfo &hdi)
 		return false;
 	}
 
-	this->setTag(TAG);
-	this->setName("Hound");
-	this->setScale(hdi.scale_xy);
-	this->setLocalZOrder(ZORDER_HOUND);
+	setTag(TAG);
+	setName("Hound");
+	setScale(hdi.scale_xy);
+	setLocalZOrder(ZORDER_HOUND);
+
+	m_boundingCircle.radius = hdi.bounding_circle_radius;
 
 	// initialize wingmen
 	//...
@@ -58,11 +60,11 @@ bool Hound::init(const HoundInfo &hdi)
 	}
 	
 	// register touch listeners
-	auto listener = EventListenerTouchOneByOne::create();
-	listener->setSwallowTouches(true);
-	listener->onTouchBegan = CC_CALLBACK_2(Hound::onTouchBegan, this);
-	listener->onTouchMoved = CC_CALLBACK_2(Hound::onTouchMoved, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+	//auto listener = EventListenerTouchOneByOne::create();
+	//listener->setSwallowTouches(true);
+	//listener->onTouchBegan = CC_CALLBACK_2(Hound::onTouchBegan, this);
+	//listener->onTouchMoved = CC_CALLBACK_2(Hound::onTouchMoved, this);
+	//_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
 }
@@ -80,38 +82,13 @@ void Hound::update(float dt)
 	}
 }
 
-void Hound::configWeapons(void)
-{
-	std::vector<Weapon*>::iterator it;
-	for (it=m_weapons.begin(); it!=m_weapons.end(); ++it)
-	{
-		(*it)->updateProjectileStartPoints();
-	}
-}
-
-bool Hound::onTouchBegan(Touch *touch, Event *event)
-{
-	auto target = static_cast<Hound *>(event->getCurrentTarget());
-	if (target == nullptr)
-		return false;
-
-	// remove the following part if you wanna control like À×öªÕ½»ú
-	Rect bb = target->getBoundingBox();
-	Size s = target->getContentSize();
-	if (!bb.containsPoint(touch->getLocation()))
-		return false;
-
-	m_movingOffset = target->getPosition() - touch->getLocation();
-
-	return true;
-}
-
-void Hound::onTouchMoved(Touch *touch, Event *event)
-{
-	auto target = static_cast<Hound *>(event->getCurrentTarget());
-	if (target == nullptr)
-		return;
-	
-	target->setPosition(touch->getLocation()+m_movingOffset);
-	configWeapons();
-}
+//bool Hound::onTouchBegan(Touch *touch, Event *event)
+//{
+//	m_movingOffset = getPosition() - touch->getLocation();
+//	return true;
+//}
+//
+//void Hound::onTouchMoved(Touch *touch, Event *event)
+//{
+//	setPosition(touch->getLocation()+m_movingOffset);
+//}

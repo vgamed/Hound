@@ -11,12 +11,24 @@ public:
 	static Hound* create(const HoundInfo &hdi);
 
 	void update(float dt);
-	void configWeapons(void);
 
-	bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
-	void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
+	//bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
+	//void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
+
+	const Circle& getBoundingCircle(void) 
+	{
+		m_boundingCircle.center = getPosition();
+		return m_boundingCircle; 
+	}
+	
+	float getBoundingCircleRadius(void) const
+	{
+		return m_boundingCircle.radius;
+	}
 
 	static const int TAG;
+	
+	CC_SYNTHESIZE(int, m_touchID, TouchID);
 
 protected:
 	Hound(void);
@@ -37,6 +49,7 @@ private:
 	Wingman *m_wingmanRight;
 
 	cocos2d::Vec2 m_movingOffset;
+	Circle	m_boundingCircle;
 };
 
 #endif

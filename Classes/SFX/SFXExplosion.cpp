@@ -25,10 +25,10 @@ bool SFXExplosion::initWithSpriteFrames(const std::string &sf_name, int start_id
 	char name[50] = "\0";
 	for (int i=0; i<number; ++i)
 	{
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-		sprintf_s(name, 50, "%s%03d.png", sf_name.c_str(), start_id+i);
-#else
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 		sprintf(name, "%s%03d.png", sf_name.c_str(), start_id+i);
+#else
+		sprintf_s(name, 50, "%s%03d.png", sf_name.c_str(), start_id+i);
 #endif
 		anim->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(name));
 	}

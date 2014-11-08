@@ -17,16 +17,13 @@ public:
 	{
 		BarrelInfo		info;
 		cocos2d::Vec2	direction;
-		cocos2d::Vec2	projectile_startpoint;
 		PROJECTILE_CREATOR projectile_creator;
 	};
 
 	static Weapon* create(const WeaponInfo &info, bool is_hound=true);
 
 	void update(float dt);
-	void configBarrells(void);
 
-	void updateProjectileStartPoints(void);
 	void fire(void);
 
 protected:

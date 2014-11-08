@@ -16,6 +16,10 @@ public:
 	void update(float dt);
 	void onEnterTransitionDidFinish(void);
 
+	bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
+	void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
+	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
+    
 	const std::vector<Enemy*>& getActiveEnemies(void) const { return m_activeEnemies; }
 
 	void onEventCollision(cocos2d::EventCustom* event);
@@ -26,6 +30,8 @@ public:
 
 	void addActiveEnemy(Enemy *enemy);
 	bool removeActiveEnemy(Enemy *enemy);
+
+	static const int INVALID_TOUCH_ID = -1;
 
 protected:
 	Battlefield(void);
@@ -43,6 +49,7 @@ protected:
 private:
 	Hound*							m_hound;
 	cocos2d::Vec2					m_houndStartPosition;
+	cocos2d::Vec2					m_movingOffset;
 
 	cocos2d::Vec2					m_enemyStartPosCenter;
 	std::vector<WaveInfo>			m_enemyWaves;

@@ -20,16 +20,6 @@ Circle::~Circle(void)
 {
 }
 
-const Vec2& Circle::getCenter(void) const
-{
-	return center;
-}
-
-float Circle::getRadius(void) const
-{
-	return radius;
-}
-
 bool Circle::equals(const Circle& circle) const
 {
 	return ((radius==circle.radius)&&(center==circle.center) ? true : false);

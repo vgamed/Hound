@@ -47,6 +47,8 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	}
 	this->addChild(m_hound);
 
+	m_hound->setTouchID(INVALID_TOUCH_ID); // no available touching inputs
+
 	m_houndStartPosition.x = getBoundingBox().size.width/2 + level.hound_start_offset.x;
 	m_houndStartPosition.y = m_hound->getBoundingBox().size.height + level.hound_start_offset.y;
 
@@ -56,14 +58,22 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	m_waveTimer = 0.0f;
 	m_nextWave = m_enemyWaves.begin();
 
-	// register custom event listeners
-	auto listener = EventListenerCustom::create(EVENT_CUSTOM_COLLISION, 
-		CC_CALLBACK_1(Battlefield::onEventCollision, this));
-	_eventDispatcher->addEventListenerWithFixedPriority(listener, 1);
+	// register touch listeners
+    auto listener_touch = EventListenerTouchOneByOne::create();
+    listener_touch->setSwallowTouches(true);
+    listener_touch->onTouchBegan = CC_CALLBACK_2(Battlefield::onTouchBegan, this);
+    listener_touch->onTouchMoved = CC_CALLBACK_2(Battlefield::onTouchMoved, this);
+    listener_touch->onTouchEnded = CC_CALLBACK_2(Battlefield::onTouchEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener_touch, this);
 
-	listener = EventListenerCustom::create(EVENT_CUSTOM_DEBUG, 
+	// register custom event listeners
+	auto listener_custom = EventListenerCustom::create(EVENT_CUSTOM_COLLISION, 
+		CC_CALLBACK_1(Battlefield::onEventCollision, this));
+	_eventDispatcher->addEventListenerWithFixedPriority(listener_custom, 1);
+
+	listener_custom = EventListenerCustom::create(EVENT_CUSTOM_DEBUG, 
 		CC_CALLBACK_1(Battlefield::onEventDebug, this));
-	_eventDispatcher->addEventListenerWithFixedPriority(listener, 2);
+	_eventDispatcher->addEventListenerWithFixedPriority(listener_custom, 2);
 
 	return true;
 }
@@ -88,22 +98,71 @@ void Battlefield::update(float dt)
 
 void Battlefield::onEnterTransitionDidFinish(void)
 {
-	auto size = getContentSize();
 	m_hound->setPosition(m_houndStartPosition);
-	m_hound->configWeapons();
-
-	// test for sfx
-	//explosion = Explosion::createWithSpriteFrames("b_", 1, 8, 1.0f, 1.0f);
-	//explosion->setPosition(Vec2(150.0f, getBoundingBox().getMidY()));
-	//addChild(explosion);
-	//explosion = Explosion::createWithSpriteFrames("c_", 1, 8, 1.0f, 1.0f);
-	//explosion->setPosition(Vec2(250.0f, getBoundingBox().getMidY()));
-	//addChild(explosion);
-	//explosion = Explosion::createWithSpriteFrames("d_00", 1, 9, 2.0f, 1.0f);
-	//explosion->setPosition(Vec2(350.0f, getBoundingBox().getMidY()));
-	//addChild(explosion);
 
 	this->scheduleUpdate();
+}
+
+bool Battlefield::onTouchBegan(Touch *touch, Event *event)
+{
+	// remove the following part if you wanna control like À×öªÕ½»ú
+	//Rect bb = m_hound->getBoundingBox();
+	//if (!bb.containsPoint(touch->getLocation()))
+	//	return false;
+
+	//if (!m_hound->getIsMoving())
+	//{
+	//	m_movingOffset = m_hound->getPosition() - touch->getLocation();
+	//	m_hound->setIsMoving(true);
+	//}
+
+	return true;
+}
+
+void Battlefield::onTouchMoved(Touch *touch, Event *event)
+{
+	if (m_hound->getTouchID() == INVALID_TOUCH_ID)
+	{
+		m_movingOffset = m_hound->getPosition() - touch->getLocation();
+		m_hound->setTouchID(touch->getID());
+		return ;
+	}
+
+	if (m_hound->getTouchID() == touch->getID())
+	{
+		Vec2 new_pos = touch->getLocation()+m_movingOffset;
+		Rect bb = getBoundingBox();
+		float radius = m_hound->getBoundingCircleRadius();
+
+		if (new_pos.x+radius > bb.getMaxX())
+		{
+			new_pos.x = bb.getMaxX() - radius;
+		}
+		else if (new_pos.x-radius < bb.getMinX())
+		{
+			new_pos.x = bb.getMinX() + radius;
+		}
+
+		if (new_pos.y+radius > bb.getMaxY())
+		{
+			new_pos.y = bb.getMaxY() - radius;
+		}
+		else if (new_pos.y-radius < bb.getMinY())
+		{
+			new_pos.y = bb.getMinY() + radius;
+		}
+
+		m_hound->setPosition(new_pos);
+		m_movingOffset = m_hound->getPosition() - touch->getLocation();
+	}
+}
+
+void Battlefield::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
+{
+	if (m_hound->getTouchID() == touch->getID())
+	{
+		m_hound->setTouchID(INVALID_TOUCH_ID);
+	}
 }
 
 void Battlefield::onEventCollision(cocos2d::EventCustom* event)

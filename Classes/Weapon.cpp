@@ -48,7 +48,6 @@ bool Weapon::init(const WeaponInfo &info)
 
 	// initialize barrells
 	Barrel barrel;
-	barrel.projectile_startpoint = Vec2(0.0f,0.0f); // make this customizable?
 	for (BarrelInfo binfo : info.barrells)
 	{
 		barrel.info = binfo;
@@ -88,7 +87,7 @@ void Weapon::fire(void)
 	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
 
 	Battlefield *bf = (Battlefield*)(getParent()->getParent());
-
+	Vec2 start_pos = bf->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
 	for (Barrel &b : m_barrells)
 	{
 		Projectile *proj = b.projectile_creator(b.info, b.direction, 
@@ -97,23 +96,7 @@ void Weapon::fire(void)
 		{
 			bf->addActiveProjectile(proj); // bullet should be child of Battlefield
 			proj->setRotation(b.info.rotate_angle);
-			proj->setPosition(b.projectile_startpoint);
+			proj->setPosition(start_pos);
 		}
-	}
-}
-
-void Weapon::updateProjectileStartPoints(void)
-{
-	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
-
-	Node *fighter = getParent();
-	Node *battlefield = fighter->getParent();
-
-	for (Barrel &b : m_barrells)
-	{
-		// projectile start point needs to be updated after the hound moved
-		b.projectile_startpoint = getPosition();
-		b.projectile_startpoint = fighter->convertToWorldSpace(b.projectile_startpoint);
-		b.projectile_startpoint = battlefield->convertToNodeSpace(b.projectile_startpoint);
 	}
 }
