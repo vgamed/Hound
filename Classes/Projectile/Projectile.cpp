@@ -17,7 +17,7 @@ bool Projectile::init(const BarrelInfo &info, const cocos2d::Vec2 &direction,
 		float damage, float speed, bool from_hound)
 {
 	SpriteFrame *frame = 
-		SpriteFrameCache::getInstance()->getSpriteFrameByName(info.effect_name);
+		SpriteFrameCache::getInstance()->getSpriteFrameByName(info.projectile_effect_name);
 	if (!initWithSpriteFrame(frame))
 	{
 		return false;

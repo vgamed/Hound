@@ -17,6 +17,7 @@ public:
 	{
 		BarrelInfo		info;
 		cocos2d::Vec2	direction;
+		float			firing_counter;
 		PROJECTILE_CREATOR projectile_creator;
 	};
 
@@ -24,7 +25,7 @@ public:
 
 	void update(float dt);
 
-	void fire(void);
+	void fire(float dt);
 
 protected:
 	Weapon(void);
@@ -36,11 +37,12 @@ private:
 	unsigned int	m_level;
 	WEAPON_TYPE		m_type;
 
-	float			m_firingInterval;
-	float			m_firingCounter;
+	float			m_timeOffsetFiringStart; //second
+	float			m_timeOffsetFiringStop; //second
+	float			m_timeCounter;
 
-	float			m_projectileDamage;
-	float			m_projectileSpeed;
+	float			m_damage;
+	float			m_speed;
 
 	std::vector<Barrel> m_barrells;
 

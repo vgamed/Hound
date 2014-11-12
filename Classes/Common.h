@@ -92,9 +92,14 @@ struct BarrelInfo
 	// the angle from positive Y direction, in degrees.
 	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
 	float			rotate_angle;
+
+	float			firing_interval; //second
+
+	float			projectile_damage;
+	float			projectile_speed; //per second
 	// animation name or spriteframe name or texture name
-	EFFECT_TYPE		effect_type;
-	std::string		effect_name;
+	EFFECT_TYPE		projectile_effect_type;
+	std::string		projectile_effect_name;
 };
 
 struct WeaponInfo
@@ -102,9 +107,11 @@ struct WeaponInfo
 	WEAPON_TYPE		type;
 	unsigned int	level;
 
-	float			firing_interval; //second
-	float			projectile_damage;
-	float			projectile_speed;	//per second
+	float			time_offset_firing_start; //second
+	float			time_offset_firing_stop; //second
+
+	float			damage;
+	float			speed;	//per second
 
 	cocos2d::Vec2	dock_position;
 	std::vector<BarrelInfo> barrells;

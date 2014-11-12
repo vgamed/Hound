@@ -128,14 +128,18 @@ bool AppDelegate::loadPlayerInfo(void)
 	barrel.type = BARREL_TYPE::BULLET;
 	barrel.projectile_type = PROJECTILE_TYPE::BULLET_NORMAL;
 	barrel.projectile_scale_xy = 0.4f;
-	barrel.effect_name = "bullet_1.png";
+	barrel.projectile_effect_name = "bullet_1.png";
+	barrel.projectile_damage = 2.0f;
+	barrel.projectile_speed = 200.0f;
+	barrel.firing_interval = 0.1f; //second
 
 	WeaponInfo weapon;
 	weapon.level  = 1;
 	weapon.type = WEAPON_TYPE::CANNON;
-	weapon.firing_interval = 0.1f; //second
-	weapon.projectile_speed = 1000.0f; //per second
-	weapon.projectile_damage = 10.0f;
+	weapon.time_offset_firing_start = 2.0f; //second
+	weapon.time_offset_firing_stop = FLT_MAX; //second
+	weapon.speed = 1000.0f; //per second
+	weapon.damage = 8.0f;
 
 	weapon.texture_name = "frontgun.png";
 	weapon.dock_position = Vec2(58.0f, 81.0f);

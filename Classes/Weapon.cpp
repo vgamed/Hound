@@ -41,13 +41,16 @@ bool Weapon::init(const WeaponInfo &info)
 	m_level = info.level;
 	m_type = info.type;
 
-	m_firingCounter = 0.0f;
-	m_firingInterval = info.firing_interval;
-	m_projectileDamage = info.projectile_damage;
-	m_projectileSpeed = info.projectile_speed;
+	m_timeCounter = 0.0f;
+	m_timeOffsetFiringStart = info.time_offset_firing_start;
+	m_timeOffsetFiringStop = info.time_offset_firing_stop;
+
+	m_damage = info.damage;
+	m_speed = info.speed;
 
 	// initialize barrells
 	Barrel barrel;
+	barrel.firing_counter = 0.0f;
 	for (BarrelInfo binfo : info.barrells)
 	{
 		barrel.info = binfo;
@@ -74,15 +77,19 @@ bool Weapon::init(const WeaponInfo &info)
 
 void Weapon::update(float dt)
 {
-	m_firingCounter += dt;
-	if( m_firingCounter >= m_firingInterval )
+	CC_ASSERT(m_timeOffsetFiringStart<=m_timeOffsetFiringStop);
+
+	if (m_timeCounter < m_timeOffsetFiringStop)
 	{
-		fire();
-		m_firingCounter = 0.0f;
+		m_timeCounter += dt;
+		if( m_timeCounter >= m_timeOffsetFiringStart )
+		{
+			fire(dt);
+		}
 	}
 }
 
-void Weapon::fire(void)
+void Weapon::fire(float dt)
 {
 	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
 
@@ -90,13 +97,20 @@ void Weapon::fire(void)
 	Vec2 start_pos = bf->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
 	for (Barrel &b : m_barrells)
 	{
-		Projectile *proj = b.projectile_creator(b.info, b.direction, 
-			m_projectileDamage, m_projectileSpeed, m_isHound);
-		if (proj != nullptr)
+		b.firing_counter += dt;
+		if (b.firing_counter >= b.info.firing_interval)
 		{
-			bf->addActiveProjectile(proj); // bullet should be child of Battlefield
-			proj->setRotation(b.info.rotate_angle);
-			proj->setPosition(start_pos);
+			Projectile *proj = b.projectile_creator(b.info, b.direction, 
+				m_damage+b.info.projectile_damage, 
+				m_speed+b.info.projectile_speed, m_isHound);
+			if (proj != nullptr)
+			{
+				bf->addActiveProjectile(proj); // bullet should be child of Battlefield
+				proj->setRotation(b.info.rotate_angle);
+				proj->setPosition(start_pos);
+			}
+			
+			b.firing_counter = 0.0f;
 		}
 	}
 }

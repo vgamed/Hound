@@ -1,10 +1,10 @@
 @echo off | @echo Copying PC release version...
-copy ..\Resources\*.* .\PC\
-copy ..\proj.win32\debug.win32\hound.exe .\PC\
-copy ..\proj.win32\debug.win32\*.dll .\PC\
+xcopy /D /Y ..\Resources\*.* .\PC\
+xcopy /D /Y ..\proj.win32\debug.win32\hound.exe .\PC\
+xcopy /D /Y ..\proj.win32\debug.win32\*.dll .\PC\
 
 @echo off | @echo Copying Android release verison...
-copy ..\proj.android\bin\hound.apk .\android\
+xcopy /D /Y ..\proj.android\bin\hound.apk .\android\
 
 
 @pause
