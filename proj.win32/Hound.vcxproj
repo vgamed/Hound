@@ -170,7 +170,13 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\SFX\BulletExplosion.h" />
     <ClInclude Include="..\Classes\SFX\SFXExplosion.h" />
     <ClInclude Include="..\Classes\SFX\SFXFactory.h" />
-    <ClInclude Include="..\Classes\StateMachine.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\BattleEndState.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\BattlePhaseState.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\DeadState.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\MoveState.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\LeaveState.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\StateMachine.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\TransformState.hpp" />
     <ClInclude Include="..\Classes\UILayer.h" />
     <ClInclude Include="..\Classes\Hound.h" />
     <ClInclude Include="..\Classes\Projectile\Bullet.h" />

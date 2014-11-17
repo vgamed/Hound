@@ -19,6 +19,9 @@
     <Filter Include="Classes\SFX">
       <UniqueIdentifier>{38d37f16-5398-402d-90a9-1693f4971153}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\StateMachine">
+      <UniqueIdentifier>{a42cb7d4-2c14-433d-972c-71171310a1a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -146,9 +149,6 @@
     <ClInclude Include="..\Classes\UILayer.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\StateMachine.hpp">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Circle.h">
       <Filter>Classes</Filter>
     </ClInclude>
@@ -160,6 +160,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SFX\SFXExplosion.h">
       <Filter>Classes\SFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\StateMachine.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\BattleEndState.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\BattlePhaseState.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\DeadState.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\LeaveState.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\TransformState.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\MoveState.hpp">
+      <Filter>Classes\StateMachine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

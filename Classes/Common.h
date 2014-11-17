@@ -11,7 +11,84 @@ const int ZORDER_ENEMY_FIGHTER		= -80;
 const int ZORDER_ENEMY_FRIGATE		= -90;
 const int ZORDER_ENEMY_BOSS			= -100;
 
-// type enumerations
+//////////////////////////////////////////////////////////////////////////////
+// enumerations and structures for Movement info
+//////////////////////////////////////////////////////////////////////////////
+
+enum class MOVEMENT_TYPE
+{
+	NONE = 0,
+	DISPLACEMENT,
+	ROTATION,
+	STAY,
+	MAX
+};
+
+struct MoveParamDisplacement
+{
+	float speed;
+	bool facing_dir;
+};
+
+struct MoveParamRotation
+{
+	float angle; //degree
+	float speed; //degree per second
+};
+
+struct MoveParamStay
+{
+	float angle; //degree
+	float period; // second
+};
+
+union MoveParam
+{
+	MoveParamDisplacement displmt;
+	MoveParamRotation rotation;
+	MoveParamStay stay;
+};
+
+struct Movement
+{
+	MOVEMENT_TYPE	type;
+	cocos2d::Vec2	target_position;
+	MoveParam		move_param;
+};
+
+typedef std::vector<Movement> MOVEMENTS;
+
+//////////////////////////////////////////////////////////////////////////////
+// enumerations and structures for AI state info
+//////////////////////////////////////////////////////////////////////////////
+enum class STATE_TYPE
+{
+	NONE = 0,
+	MOVE,
+	BATTLE_PHASE,
+	TRANSFORM,
+	BATTLE_END,
+	LEAVE,
+	DEAD,
+	MAX
+};
+
+typedef std::vector<int> WEAPON_GROUP;
+struct StateInfo
+{
+	int id;
+	STATE_TYPE type;
+	MOVEMENTS movements;
+	WEAPON_GROUP weapons;
+};
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+// type enumerations for Hound and fighters
+//////////////////////////////////////////////////////////////////////////////
+
 enum class BODY_TYPE
 {
 	NONE = 0,
@@ -177,8 +254,12 @@ struct LevelInfo
 	cocos2d::Vec2				hound_start_offset;
 	std::vector<WaveInfo>		enemy_waves;
 };
+//////////////////////////////////////////////////////////////////////////////
 
-// custom cocos2d events for Hound
+//////////////////////////////////////////////////////////////////////////////
+// custom cocos2d events and related enumerations and structures
+//////////////////////////////////////////////////////////////////////////////
+
 extern const char * EVENT_CUSTOM_COLLISION;
 extern const char * EVENT_CUSTOM_DEBUG;
 
@@ -212,8 +293,12 @@ struct DebugData
 	 DEBUG_COMMAND command;
 	 cocos2d::Node *target;
 };
+//////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////
 // data structures for special effect
+//////////////////////////////////////////////////////////////////////////////
+
 //struct SFXInfo
 //{
 //	std::string name_prefix;

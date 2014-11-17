@@ -3,6 +3,7 @@
 USING_NS_CC;
 
 FighterBee::FighterBee(void)
+	: m_stateMachine(*this)
 {
 }
 
