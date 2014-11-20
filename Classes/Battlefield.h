@@ -51,7 +51,6 @@ private:
 	cocos2d::Vec2					m_houndStartPosition;
 	cocos2d::Vec2					m_movingOffset;
 
-	cocos2d::Vec2					m_enemyStartPosCenter;
 	std::vector<WaveInfo>			m_enemyWaves;
 
 	float							m_waveTimer;

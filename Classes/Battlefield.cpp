@@ -52,9 +52,6 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	m_houndStartPosition.x = getBoundingBox().size.width/2 + level.hound_start_offset.x;
 	m_houndStartPosition.y = m_hound->getBoundingBox().size.height + level.hound_start_offset.y;
 
-	m_enemyStartPosCenter.x = getBoundingBox().size.width/2;
-	m_enemyStartPosCenter.y = getBoundingBox().size.height - 300.0f;
-
 	m_waveTimer = 0.0f;
 	m_nextWave = m_enemyWaves.begin();
 
@@ -256,7 +253,8 @@ void Battlefield::spawnEnemyWave(const WaveInfo &info)
 		Enemy *enemy = EnemyFactory::create(einfo);
 		if (enemy != nullptr)
 		{
-			enemy->setPosition(m_enemyStartPosCenter+einfo.start_position_offset);
+			enemy->setPosition(einfo.start_position);
+			enemy->getStateMachine().triggerEvent(0);
 			addActiveEnemy(enemy);
 		}
 	}

@@ -65,15 +65,30 @@ enum class STATE_TYPE
 {
 	NONE = 0,
 	MOVE,
+	ENTRY,
 	BATTLE_PHASE,
 	TRANSFORM,
-	BATTLE_END,
 	LEAVE,
+	BATTLE_END,
+	DEAD,
+	MAX
+};
+
+enum class STATE_MACHINE_EVENT
+{
+	START = 0,
+	MOVE_FINISHED,
+	ENTRY_FINISHED,
+	BATTLE_PHASE_FINISHED,
+	TRANSFORM_FINISHED,
+	LEAVE_FINISHED,
+	BATTLE_END,
 	DEAD,
 	MAX
 };
 
 typedef std::vector<int> WEAPON_GROUP;
+
 struct StateInfo
 {
 	int id;
@@ -81,6 +96,18 @@ struct StateInfo
 	MOVEMENTS movements;
 	WEAPON_GROUP weapons;
 };
+
+typedef std::vector<StateInfo> STATE_INFOES;
+
+struct StateMap
+{
+	int from;
+	STATE_MACHINE_EVENT event;
+	int to;
+};
+
+typedef std::vector<StateMap> STATE_MAPS;
+
 //////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////
@@ -236,9 +263,11 @@ struct EnemyInfo
 	float			scale_xy;
 	float			bounding_circle_radius;
 	std::string		body_texture_name;
-	cocos2d::Vec2	start_position_offset;
+	cocos2d::Vec2	start_position;
 
 	std::vector<WeaponInfo>	weapons;
+
+	std::vector<StateInfo> states;
 };
 
 struct WaveInfo

@@ -2,7 +2,6 @@
 #define __HOUND_FIGHTER_BEE_H__
 
 #include "Enemy.h"
-#include "../StateMachine/MoveState.hpp"
 
 class FighterBee :
 	public Enemy
@@ -15,13 +14,9 @@ protected:
 	FighterBee(void);
 	~FighterBee(void);
 
-private:
-	typedef std::vector<State<FighterBee>> FIGHTBEE_STATES;
-	
-	FIGHTBEE_STATES m_states;
-	StateMachine<FighterBee> m_stateMachine;
+	bool init(const EnemyInfo &info);
 
-	MoveState<FighterBee> state;
+	EnemyStateMachine::STATES m_states;
 };
 
 #endif //__HOUND_FIGHTER_BEE_H__

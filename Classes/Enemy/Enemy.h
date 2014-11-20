@@ -2,6 +2,7 @@
 #define __HOUND_ENEMY_FIGHTER_H__
 
 #include "../Common.h"
+#include "../StateMachine/MoveState.hpp"
 
 class Enemy :
 	public cocos2d::Sprite
@@ -16,6 +17,9 @@ public:
 		m_boundingCircle.center = getPosition();
 		return m_boundingCircle; 
 	}
+
+	virtual StateMachine<Enemy>& getStateMachine(void)
+	{ return m_stateMachine; }
 
 	virtual void doDamage(float damage);
 
@@ -33,8 +37,14 @@ protected:
 	float	m_maxLife;
 	float	m_armor;
 
-	float	m_timerLeave;
 	Circle	m_boundingCircle;
+
+	StateMachine<Enemy> m_stateMachine;
 };
+
+typedef StateMachine<Enemy> EnemyStateMachine;
+typedef StateTransit<Enemy> EnemyStateTransit;
+typedef State<Enemy> EnemyState;
+typedef MoveState<Enemy> EnemyMoveState;
 
 #endif //__HOUND_ENEMY_FIGHTER_H__

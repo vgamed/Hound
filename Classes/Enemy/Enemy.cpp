@@ -3,6 +3,7 @@
 USING_NS_CC;
 
 Enemy::Enemy(void)
+	: m_stateMachine(*this)
 {
 }
 
@@ -31,7 +32,6 @@ bool Enemy::init(const EnemyInfo &info)
 	// ...
 
 	m_boundingCircle.radius = info.bounding_circle_radius;
-	m_timerLeave = 0.0f;
 
 	scheduleUpdate();
 
@@ -40,17 +40,7 @@ bool Enemy::init(const EnemyInfo &info)
 
 void Enemy::update(float dt)
 {
-	m_timerLeave += dt;
-	if (m_timerLeave > 30.0f)
-	{
-		m_timerLeave = 0.0f;
-		EventCustom event(EVENT_CUSTOM_DEBUG);
-		DebugData data;
-		data.command = DEBUG_COMMAND::ENEMY_SELF_DESTROY;
-		data.target = this;
-		event.setUserData(&data);
-		_eventDispatcher->dispatchEvent(&event);
-	}
+	m_stateMachine.update(dt);
 }
 
 void Enemy::doDamage(float damage)

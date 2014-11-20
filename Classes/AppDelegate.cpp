@@ -191,12 +191,60 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.scale_xy = 1.0f;
 	ef_info.bounding_circle_radius = 50.0f;
 	ef_info.body_texture_name = "n1.png";
-	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
+
+	// 1st wave
+	// 1st enemy
+	ef_info.start_position = Vec2(200.0f, 960.0f);
+
+	// AI States
+	StateInfo state;
+	Movement movement;
+
+	// 1st state
+	state.id = 1;
+	state.type = STATE_TYPE::MOVE;
+	// 1st movement
+	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+	movement.target_position = Vec2(200.0f, 560.0f);
+	movement.move_param.displmt.facing_dir = true;
+	movement.move_param.displmt.speed = 100.0f;
+	state.movements.push_back(movement);
+	// 2nd movement
+	movement.type = MOVEMENT_TYPE::ROTATION;
+	movement.target_position = Vec2(200.0f, 560.0f);
+	movement.move_param.rotation.angle = 360.0f;
+	movement.move_param.rotation.speed = 20.0f;
+	state.movements.push_back(movement);
+	// 3rd movement
+	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+	movement.target_position = Vec2(450.0f, 560.0f);
+	movement.move_param.displmt.facing_dir = false;
+	movement.move_param.displmt.speed = 100.0f;
+	state.movements.push_back(movement);
+	// 4th movement
+	movement.type = MOVEMENT_TYPE::STAY;
+	movement.target_position = Vec2(450.0f, 560.0f);
+	movement.move_param.stay.period = 10.0f;
+	movement.move_param.stay.angle = 30.0f;
+	state.movements.push_back(movement);
+	// 5th movement
+	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+	movement.target_position = Vec2(450.0f, 0.0f);
+	movement.move_param.displmt.facing_dir = true;
+	movement.move_param.displmt.speed = 1000.0f;
+	state.movements.push_back(movement);
+
+	ef_info.states.push_back(state);
 	w_info.enemies.push_back(ef_info);
-	ef_info.start_position_offset = Vec2(100.0f, -50.0f);
+
+	ef_info.states.clear();
+
+	ef_info.start_position = Vec2(420.0f, 960.0f);
 	w_info.enemies.push_back(ef_info);
-	ef_info.start_position_offset = Vec2(0.0f, 50.0f);
+
+	ef_info.start_position = Vec2(320.0f, 1010.0f);
 	w_info.enemies.push_back(ef_info);
+
 	m_levelInfo.enemy_waves.push_back(w_info);	// 1st wave
 
 	w_info.enemies.clear();
@@ -205,11 +253,11 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.armor = 300.0f;
 	ef_info.bounding_circle_radius = 60.0f;
 	ef_info.body_texture_name = "n2.png";
-	ef_info.start_position_offset = Vec2(-100.0f, -50.0f);
+	ef_info.start_position = Vec2(220.0f, 610.0f);
 	w_info.enemies.push_back(ef_info);
-	ef_info.start_position_offset = Vec2(100.0f, -50.0f);
+	ef_info.start_position = Vec2(320.0f, 610.0f);
 	w_info.enemies.push_back(ef_info);
-	ef_info.start_position_offset = Vec2(0.0f, 50.0f);
+	ef_info.start_position = Vec2(420.0f, 710.0f);
 	w_info.enemies.push_back(ef_info);
 	m_levelInfo.enemy_waves.push_back(w_info);	// 2nd wave
 
@@ -219,7 +267,7 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.armor = 500.0f;
 	ef_info.bounding_circle_radius = 150.0f;
 	ef_info.body_texture_name = "n_boss.png";
-	ef_info.start_position_offset = Vec2(0.0f, 0.0f);
+	ef_info.start_position = Vec2(320.0f, 610.0f);
 	w_info.enemies.push_back(ef_info);
 	m_levelInfo.enemy_waves.push_back(w_info);	// 3rd wave
 

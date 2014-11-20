@@ -8,8 +8,7 @@ template <typename T>
 class MoveState : public State<T>
 {
 public:
-	MoveState() {}
-	MoveState(const MOVEMENTS &movements);
+	MoveState(const StateInfo &info);
 	~MoveState(void) {}
 
 	void enter(T &t);
@@ -17,6 +16,10 @@ public:
 	void exit(T &t);
 
 	bool isMoveFinished(void) { return m_moveFinished; }
+
+	static const float DISTANCE_RESOLUTION;
+	static const float ROTATION_RESOLUTION;
+	static const float STAY_PERIOD_RESOLUTION;
 
 private:
 	typedef std::function<bool (T &t, float dt)> MOVEMENT_DO_FUNC;
@@ -42,8 +45,12 @@ private:
 	bool			m_isMoveFinished;
 };
 
-template <typename T> MoveState<T>::MoveState(const MOVEMENTS &movements)
-	: m_movements(movements)
+template <typename T> const float MoveState<T>::DISTANCE_RESOLUTION = 1.0f; //pixel in design resolution
+template <typename T> const float MoveState<T>::ROTATION_RESOLUTION = 0.1f; //degree
+template <typename T> const float MoveState<T>::STAY_PERIOD_RESOLUTION = 0.1f; //second
+
+template <typename T> MoveState<T>::MoveState(const StateInfo &info)
+	: m_movements(info.movements)
 	, m_curIndexMovement(0)
 	, m_movementDoFunc(nullptr)
 	, m_displmtDir(cocos2d::Vec2::ZERO)
@@ -51,6 +58,8 @@ template <typename T> MoveState<T>::MoveState(const MOVEMENTS &movements)
 	, m_stayTimer(0.0f)
 	, m_isMoveFinished(false)
 {
+	setId(info.id);
+	setType((int)info.type);
 }
 
 template <typename T> void MoveState<T>::enter(T &t)
@@ -66,7 +75,7 @@ template <typename T> void MoveState<T>::enter(T &t)
 
 template <typename T> void MoveState<T>::exec(T &t, float dt)
 {
-	if (m_movementDoFunc(t, dt))
+	if (!m_isMoveFinished && m_movementDoFunc(t, dt))
 	{
 		m_curIndexMovement++;
 		if (m_curIndexMovement < m_movements.size())
@@ -108,55 +117,91 @@ template <typename T> void MoveState<T>::initMovement(T &t)
 
 template <typename T> void MoveState<T>::initDisplacement(T &t)
 {
-	//// settle down the start position
-	//if (m_movements.size() > 1)
-	//{
-	//	t->setPosition(m_movements[m_curIndexMovement].target_position);
-	//	m_direction = (	m_movements[m_curIndexMovement+1].target_position-
-	//					m_movements[m_curIndexMovement].target_position).normalize();
+	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::DISPLACEMENT);
 
-	//	// if the no_rotate of next waypoint is true, 
-	//	// set the rotation of the sprite to 0.0f
-	//	if (m_movements[m_curIndexMovement+1].no_rotate)
-	//	{
-	//		//t->setRotation(0.0f);
-	//	}
-	//	else // set rotation the sprite to the direction
-	//	{
-	//		float angle = m_direction.getAngle(cocos2d::Vec2::UNIT_Y);
-	//		t->setRotation(CC_RADIANS_TO_DEGREES(angle));
-	//	}
-	//}
-	//else // a static sprite
-	//{
-	//	t->setPosition(m_movements[m_curIndexMovement].target_position);
-	//	m_direction = cocos2d::Vec2::ZERO;
-	//	//t->setRotation(0.0f);
-	//}
-
+	if (m_movements[m_curIndexMovement].move_param.displmt.speed <= 0)
+	{
+		// it's a instant dispalcement
+		t.setPosition(m_movements[m_curIndexMovement].target_position);
+	}
+	else
+	{
+		// prepare for the sequent displacements
+		m_displmtDir = m_movements[m_curIndexMovement].target_position - t.getPosition();
+		m_displmtDir.normalize();
+		if (m_movements[m_curIndexMovement].move_param.displmt.facing_dir)
+		{
+			t.setRotation(CC_RADIANS_TO_DEGREES(m_displmtDir.getAngle(Vec2::UNIT_Y)));
+		}
+	}
 }
 
 template <typename T> void MoveState<T>::initRotation(T &t)
 {
+	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::ROTATION);
+
+	t.setPosition(m_movements[m_curIndexMovement].target_position);
+
+	if (m_movements[m_curIndexMovement].move_param.rotation.speed <= 0)
+	{
+		// it's a instant rotation
+		t.setRotation(m_movements[m_curIndexMovement].move_param.rotation.angle);
+	}
+	else
+	{
+		// prepare for the sequent rotation
+		m_rotateDir = m_movements[m_curIndexMovement].move_param.rotation.angle;
+		m_rotateDir = m_rotateDir/abs(m_rotateDir);
+	}
 }
 
 template <typename T> void MoveState<T>::initStay(T &t)
 {
+	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::STAY);
+
+	t.setPosition(m_movements[m_curIndexMovement].target_position);
+	t.setRotation(m_movements[m_curIndexMovement].move_param.stay.angle);
+	m_stayTimer = 0.0f;
 }
 
 template <typename T> bool MoveState<T>::doDisplacement(T &t, float dt)
 {
-//	t->setPosition(t->getPosition()+m_direction*m_movements[m_curIndexMovement+1].move_speed*dt);
+	if (m_movements[m_curIndexMovement].move_param.displmt.speed > 0)
+	{
+		t.setPosition(t.getPosition()+m_movements[m_curIndexMovement].move_param.displmt.speed*dt*m_displmtDir);
+	}
+
+	if (m_movements[m_curIndexMovement].target_position.distanceSquared(t.getPosition()) < DISTANCE_RESOLUTION)
+	{
+		return true;
+	}
+
 	return false;
 }
 
 template <typename T> bool MoveState<T>::doRotation(T &t, float dt)
 {
+	if (m_movements[m_curIndexMovement].move_param.rotation.speed > 0)
+	{
+		t.setRotation(t.getRotation()+m_movements[m_curIndexMovement].move_param.rotation.speed*dt*m_rotateDir);
+	}
+
+	if ((m_movements[m_curIndexMovement].move_param.rotation.angle - t.getRotation()) < ROTATION_RESOLUTION)
+	{
+		return true;
+	}
+
 	return false;
 }
 
 template <typename T> bool MoveState<T>::doStay(T &t, float dt)
 {
+	m_stayTimer += dt;
+	if (m_stayTimer >= m_movements[m_curIndexMovement].move_param.stay.period)
+	{
+		return true;
+	}
+
 	return false;
 }
 

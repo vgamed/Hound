@@ -1,140 +1,154 @@
 #ifndef __STATE_MACHINE_H__
 #define __STATE_MACHINE_H__
 
+// State definition
 template <typename T>
 class State
 {
 public:
-	State(void) {}
 	virtual ~State(void) {}
-	virtual void enter(T &t) = 0;
-	virtual void exec(T &t, float dt) = 0;
-	virtual void exit(T &t) = 0;
+
+	virtual void enter(T &t){}
+	virtual void exec(T &t, float dt){}
+	virtual void exit(T &t){}
+
+	int getId(void) { return m_id; }
+	void setId(int id) { m_id = id; }
+
+	int getType(void) { return m_type; }
+	void setType(int type) { m_type = type; }
+
+protected:
+	State(void) {}
+	State& operator = (const State &other);
+
+private:
+	int m_id;
+	int m_type;
 };
 
+// define the information structure of transition among states
+template <typename T>
+struct StateTransit
+{
+	int	event;
+	State<T> *from;
+	State<T> *to;
+};
+
+// StateMachine definition
 template <typename T>
 class StateMachine
 {
 public:
+	typedef std::vector<State<T>*> STATES;
+	typedef StateTransit<T> STATE_TRANSITION;
+	typedef std::multimap<int, StateTransit<T>> STATE_MAP;
+
 	StateMachine(T &owner)
 		: m_rOwner(owner)
 		, m_pPreState(nullptr)
 		, m_pCurState(nullptr)
-		, m_pGlobalState(nullptr){}
+	{}
 
-	/**
-	 * @brief set the current state
-	 * @param state pointer of the new state
-	 * @return void
-	 */
+	bool addStateTransition(const STATE_TRANSITION &trans);
+
+	void triggerEvent(int event);
+
+	void update(float dt);
+
+	State<T> &getCurrentState(void)
+	{ return *m_pCurState; }
+
+	State<T> &getPreviousState(void)
+	{ return *m_pPreState; }
+
+	bool isInState(State<T> &state) 
+	{ return (m_pCurState==&state); }
+
+private:
+	void changeState(State<T> &state);
+
 	void setCurrentState(State<T> &state) 
 	{
 		m_pCurState = &state; 
-		m_pCurState.enter(m_rOwner);
+		m_pCurState->enter(m_rOwner);
 	}
-	/**
-	 * @brief	set the global state.
-	 *			set to null to reset the whole state machine.
-	 * @param state pointer of the new state
-	 * @return void
-	 */
-	void setGlobalState(State<T> &state) 
-	{
-		changeState(nullptr);
-		setPreviousState(nullptr);
 
-		m_pGlobalState = &state; 
-		m_pGlobalState->enter(m_rOwner);
-	}
-	/**
-	 * @brief set the previous state
-	 * @param state pointer of the new state
-	 * @return void
-	 */
 	void setPreviousState(State<T> &state)
 	{
 		m_pPreState = &state; 
 	}
-	/**
-	 * @brief tick the machine
-	 * @param void
-	 * @return void
-	 */
-	void update(float dt) 
-	{
-		if( m_pGlobalState )
-			m_pGlobalState->exec(m_rOwner, dt);
 
-		if( m_pCurState )
-			m_pCurState->exec(m_rOwner, dt);
-	}
-	/**
-	 * @brief change the current state to a new state
-	 * @param state pointer of the new state
-	 * @return void
-	 */
-	void changeState(State<T> &state)
-	{
-		m_pCurState->exit(m_rOwner);
-		setPreviousState(*m_pCurState);
-		setCurrentState(state);
-	}
-	/**
-	 * @brief	change the global state to a new state
-	 *			and reset current state and previous state to null
-	 * @param state pointer of the new state
-	 * @return void
-	 */
-	void changeGlobalState(State<T> &state)
-	{
-		m_pGlobalState->exit(m_rOwner);
-		setGlobalState(state);
-	}
-	/**
-	 * @brief revert to the previous state
-	 * @param void
-	 * @return void
-	 */
 	void revertToPreviousState(void)
 	{
 		changeState(*m_pPreState);
 	}
 
-	/**
-	 * @brief get the pointer of the current state
-	 * @param void
-	 * @return pointer of the current state
-	 */
-	State<T> &getCurrentState(void) { return *m_pCurState; }
-	/**
-	 * @brief get the pointer of the previous state
-	 * @param void
-	 * @return pointer of the previous state
-	 */
-	State<T> &getPreviousState(void) { return *m_pPreState; }
-	/**
-	 * @brief get the pointer of the global state
-	 * @param void
-	 * @return pointer of the global state
-	 */
-	State<T> &getGlobalState(void) { return *m_pGlobalState; }
-	/**
-	 * @brief tell if the owner is in the state indicated by the parameter
-	 * @param state the state reference for comparison
-	 * @return bool true or false
-	 */
-	bool isInState(State<T> &state) 
-	{
-		return (m_pCurState==&state); 
-	}
-
-
 private:
 	T &m_rOwner; // owner of the state machine
+	
 	State<T> *m_pPreState; // pointer to the previous state
 	State<T> *m_pCurState; // pointer to the current state
-	State<T> *m_pGlobalState; // pointer to the global state
+
+	STATE_MAP m_stateMap;
+	STATE_MAP m_stateMapAny;
 };
+
+template <typename T> 
+bool StateMachine<T>::addStateTransition(const STATE_TRANSITION &trans)
+{
+	if (trans.from == nullptr)
+	{	// this transition doesn't care about the from state
+		// thus take the high priority
+		m_stateMapAny.insert(std::make_pair(trans.event, trans));
+	}
+	else
+	{
+		m_stateMap.insert(std::make_pair(trans.event, trans));
+	}
+	return true;
+}
+
+template <typename T> 
+void StateMachine<T>::triggerEvent(int event)
+{
+	if (m_stateMapAny.size() > 0)
+	{
+		auto range = m_stateMapAny.equal_range(event);
+		changeState(*(range.first->second.to));
+	}
+	if (m_stateMap.size() > 0)
+	{
+		auto range = m_stateMapAny.equal_range(event);
+		for (auto it=range.first; it!=range.second; ++it)
+		{
+			if (it->second.from == m_pCurState)
+			{
+				changeState(*(it->second.to));
+				break;
+			}
+		}
+	}
+}
+
+template <typename T> 
+void StateMachine<T>::update(float dt) 
+{
+	if( m_pCurState != nullptr)
+		m_pCurState->exec(m_rOwner, dt);
+}
+
+template <typename T> 
+void StateMachine<T>::changeState(State<T> &state)
+{
+	if (m_pCurState != nullptr)
+	{
+		m_pCurState->exit(m_rOwner);
+		setPreviousState(*m_pCurState);
+	}
+	setCurrentState(state);
+}
 
 #endif //__STATE_MACHINE_H__
 
