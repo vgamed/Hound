@@ -2,7 +2,7 @@
 #define __HOUND_ENEMY_FIGHTER_H__
 
 #include "../Common.h"
-#include "../StateMachine/MoveState.hpp"
+#include "../StateMachine/EntryState.hpp"
 
 class Enemy;
 
@@ -10,6 +10,7 @@ typedef StateMachine<Enemy> EnemyStateMachine;
 typedef _StateTransition<Enemy> EnemyStateTransit;
 typedef State<Enemy> EnemyState;
 typedef std::map<int, EnemyState*> EnemyStateMap;
+typedef EntryState<Enemy> EnemyEntryState;
 typedef MoveState<Enemy> EnemyMoveState;
 
 class Enemy :

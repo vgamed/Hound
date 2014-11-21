@@ -3,8 +3,11 @@
 
 USING_NS_CC;
 
-AppDelegate::AppDelegate() {
+static const Size resourceResolution(720.0f, 1280.0f);
+static const Size designResolution(640.0f, 960.0f);
 
+AppDelegate::AppDelegate() 
+{
 }
 
 AppDelegate::~AppDelegate() 
@@ -16,10 +19,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        //glview = GLView::create("Hound");
-		glview = GLView::createWithRect("Hound", Rect(0, 0, 640, 960));
+		glview = GLView::create("Hound");
+		//glview = GLView::createWithRect("Hound", Rect(0, 0, 1280, 960));
         director->setOpenGLView(glview);
-		glview->setDesignResolutionSize(640, 960, ResolutionPolicy::SHOW_ALL);
+		glview->setDesignResolutionSize(designResolution.width, designResolution.height, ResolutionPolicy::SHOW_ALL);
+		director->setContentScaleFactor(resourceResolution.width/designResolution.width);
     }
 
     // turn on display FPS
@@ -74,6 +78,31 @@ void AppDelegate::applicationWillEnterForeground() {
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }
 
+void AppDelegate::scaleByDesign(Vec2 &vec2)
+{
+	static float scale_x = Director::getInstance()->getVisibleSize().width / designResolution.width;
+	static float scale_y = Director::getInstance()->getVisibleSize().height / designResolution.height;
+
+	CCLOG("BEFORE SCALE: x=%f, y=%f", vec2.x, vec2.y);
+
+	vec2.x *= scale_x;
+	vec2.y *= scale_y;
+
+	CCLOG("AFTER SCALE: x=%f, y=%f", vec2.x, vec2.y);
+}
+
+void AppDelegate::scaleByDesign(float &flt)
+{
+	static float scale = MIN(Director::getInstance()->getVisibleSize().width / designResolution.width,
+							Director::getInstance()->getVisibleSize().height / designResolution.height);
+
+	CCLOG("BEFORE SCALE: floatValue = %f", flt);
+
+	flt *= scale;
+
+	CCLOG("AFTER SCALE: floatValue = %f", flt);
+}
+
 bool AppDelegate::loadGameResources(void)
 {
 	TextureCache *tcache = Director::getInstance()->getTextureCache();
@@ -119,7 +148,10 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.hound.engine_level = 1;
 	m_playerInfo.hound.engine_type = ENGINE_TYPE::BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
-	m_playerInfo.hound.scale_xy = 1.5f;
+
+	m_playerInfo.hound.scale_xy = 1.0f;
+	scaleByDesign(m_playerInfo.hound.scale_xy);
+
 	m_playerInfo.hound.bounding_circle_radius = 10.0f;
 
 	m_playerInfo.hound.weapons.clear();
@@ -127,7 +159,10 @@ bool AppDelegate::loadPlayerInfo(void)
 	BarrelInfo barrel;
 	barrel.type = BARREL_TYPE::BULLET;
 	barrel.projectile_type = PROJECTILE_TYPE::BULLET_NORMAL;
+	
 	barrel.projectile_scale_xy = 0.4f;
+	scaleByDesign(barrel.projectile_scale_xy);
+
 	barrel.projectile_effect_name = "bullet_1.png";
 	barrel.projectile_damage = 2.0f;
 	barrel.projectile_speed = 200.0f;
@@ -176,7 +211,10 @@ bool AppDelegate::loadPlayerInfo(void)
 bool AppDelegate::loadLevelInfo(void)
 {
 	m_levelInfo.id = 0;
-	m_levelInfo.hound_start_offset = Vec2(0.0f, 200.0f);
+
+	m_levelInfo.hound_start_offset = Vec2(0.0f, 150.0f);
+	scaleByDesign(m_levelInfo.hound_start_offset);
+
 	m_levelInfo.sbg_layer_texture_names.push_back("img_bg_1.jpg");
 	m_levelInfo.sbg_layer_texture_names.push_back("clouds.png");
 
@@ -188,13 +226,17 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.level = 1;
 	ef_info.max_life = 100.0f;
 	ef_info.armor = 100.0f;
+	
 	ef_info.scale_xy = 1.0f;
+	scaleByDesign(ef_info.scale_xy);
+
 	ef_info.bounding_circle_radius = 50.0f;
 	ef_info.body_texture_name = "n1.png";
 
 	// 1st wave
 	// 1st enemy
 	ef_info.start_position = Vec2(200.0f, 960.0f);
+	scaleByDesign(ef_info.start_position);
 
 	// AI States
 	StateInfo state;
@@ -203,34 +245,49 @@ bool AppDelegate::loadLevelInfo(void)
 
 	// 1st state
 	state.id = 1;
-	state.type = STATE_TYPE::MOVE;
+	state.type = STATE_TYPE::ENTRY;
 	// 1st movement
 	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+
 	movement.target_position = Vec2(200.0f, 560.0f);
+	scaleByDesign(movement.target_position);
+
 	movement.move_param.displmt.facing_dir = true;
 	movement.move_param.displmt.speed = 100.0f;
 	state.movements.push_back(movement);
 	// 2nd movement
 	movement.type = MOVEMENT_TYPE::ROTATION;
+
 	movement.target_position = Vec2(200.0f, 560.0f);
+	scaleByDesign(movement.target_position);
+
 	movement.move_param.rotation.angle = 360.0f;
 	movement.move_param.rotation.speed = 20.0f;
 	state.movements.push_back(movement);
 	// 3rd movement
 	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+
 	movement.target_position = Vec2(450.0f, 560.0f);
+	scaleByDesign(movement.target_position);
+
 	movement.move_param.displmt.facing_dir = false;
 	movement.move_param.displmt.speed = 100.0f;
 	state.movements.push_back(movement);
 	// 4th movement
 	movement.type = MOVEMENT_TYPE::STAY;
+
 	movement.target_position = Vec2(450.0f, 560.0f);
+	scaleByDesign(movement.target_position);
+
 	movement.move_param.stay.period = 10.0f;
 	movement.move_param.stay.angle = 30.0f;
 	state.movements.push_back(movement);
 	// 5th movement
 	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+
 	movement.target_position = Vec2(450.0f, 0.0f);
+	scaleByDesign(movement.target_position);
+
 	movement.move_param.displmt.facing_dir = true;
 	movement.move_param.displmt.speed = 1000.0f;
 	state.movements.push_back(movement);
@@ -247,10 +304,12 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.state_infoes.clear();
 	ef_info.state_map_infoes.clear();
 
-	ef_info.start_position = Vec2(420.0f, 960.0f);
+	ef_info.start_position = Vec2(420.0f, 560.0f);
+	scaleByDesign(ef_info.start_position);
 	w_info.enemies.push_back(ef_info);
 
-	ef_info.start_position = Vec2(320.0f, 1010.0f);
+	ef_info.start_position = Vec2(320.0f, 760.0f);
+	scaleByDesign(ef_info.start_position);
 	w_info.enemies.push_back(ef_info);
 
 	m_levelInfo.enemy_waves.push_back(w_info);	// 1st wave
@@ -261,11 +320,20 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.armor = 300.0f;
 	ef_info.bounding_circle_radius = 60.0f;
 	ef_info.body_texture_name = "n2.png";
+
 	ef_info.start_position = Vec2(220.0f, 610.0f);
+	scaleByDesign(ef_info.start_position);
+
 	w_info.enemies.push_back(ef_info);
-	ef_info.start_position = Vec2(320.0f, 610.0f);
+
+	ef_info.start_position = Vec2(420.0f, 610.0f);
+	scaleByDesign(ef_info.start_position);
+
 	w_info.enemies.push_back(ef_info);
-	ef_info.start_position = Vec2(420.0f, 710.0f);
+
+	ef_info.start_position = Vec2(320.0f, 710.0f);
+	scaleByDesign(ef_info.start_position);
+
 	w_info.enemies.push_back(ef_info);
 	m_levelInfo.enemy_waves.push_back(w_info);	// 2nd wave
 
@@ -276,7 +344,9 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.bounding_circle_radius = 150.0f;
 	ef_info.body_texture_name = "n_boss.png";
 	ef_info.start_position = Vec2(320.0f, 610.0f);
+	scaleByDesign(ef_info.start_position);
 	w_info.enemies.push_back(ef_info);
+
 	m_levelInfo.enemy_waves.push_back(w_info);	// 3rd wave
 
 	return true;

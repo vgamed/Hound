@@ -14,9 +14,7 @@ EnemyState* EnemyStateFactory::create(const StateInfo &info)
 	switch(info.type)
 	{
 	case STATE_TYPE::ENTRY:
-		return nullptr;
-	case STATE_TYPE::MOVE:
-		return new EnemyMoveState(info);
+		return new EnemyEntryState(info);
 	case STATE_TYPE::BATTLE_PHASE:
 		return nullptr;
 	case STATE_TYPE::TRANSFORM:
@@ -27,6 +25,8 @@ EnemyState* EnemyStateFactory::create(const StateInfo &info)
 		return nullptr;
 	case STATE_TYPE::HOUND_DEAD:
 		return nullptr;
+	case STATE_TYPE::MOVE:
+		return new EnemyMoveState(info);
 	default:
 		return nullptr;
 	}

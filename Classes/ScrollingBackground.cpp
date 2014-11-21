@@ -99,7 +99,7 @@ bool ScrollingBackground::init(	SpriteChain &chain,
 
 void ScrollingBackground::onEnterTransitionDidFinish(void)
 {
-	Size visibleSize = this->getParent()->getContentSize();
+	Size visibleSize = this->getParent()->getBoundingBox().size;
 	Vec2 origin(0.0f, 0.0f);
 
 	// scale all sprites in the chain to the size of parent

@@ -50,14 +50,14 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	m_hound->setTouchID(INVALID_TOUCH_ID); // no available touching inputs
 
 	m_houndStartPosition.x = getBoundingBox().size.width/2 + level.hound_start_offset.x;
-	m_houndStartPosition.y = m_hound->getBoundingBox().size.height + level.hound_start_offset.y;
+	m_houndStartPosition.y = m_hound->getBoundingBox().size.height/2 + level.hound_start_offset.y;
 
 	m_waveTimer = 0.0f;
 	m_nextWave = m_enemyWaves.begin();
 
 	// register touch listeners
     auto listener_touch = EventListenerTouchOneByOne::create();
-    listener_touch->setSwallowTouches(true);
+    listener_touch->setSwallowTouches(false);
     listener_touch->onTouchBegan = CC_CALLBACK_2(Battlefield::onTouchBegan, this);
     listener_touch->onTouchMoved = CC_CALLBACK_2(Battlefield::onTouchMoved, this);
     listener_touch->onTouchEnded = CC_CALLBACK_2(Battlefield::onTouchEnded, this);
@@ -253,7 +253,7 @@ void Battlefield::spawnEnemyWave(const WaveInfo &info)
 		Enemy *enemy = EnemyFactory::create(einfo);
 		if (enemy != nullptr)
 		{
-			enemy->setPosition(einfo.start_position);
+			enemy->setPosition(convertToNodeSpace(einfo.start_position));
 			enemy->getStateMachine().triggerEvent(0);
 			addActiveEnemy(enemy);
 		}

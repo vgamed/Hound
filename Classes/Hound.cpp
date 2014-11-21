@@ -41,24 +41,22 @@ bool Hound::init(const HoundInfo &hdi)
 
 	m_boundingCircle.radius = hdi.bounding_circle_radius;
 
-	// initialize wingmen
-	//...
-
 	// initialize weapons
-	std::vector<WeaponInfo>::const_iterator it;
-	for (it=hdi.weapons.begin(); it!=hdi.weapons.end(); it++)
+	auto scale = Director::getInstance()->getContentScaleFactor();
+	for (const auto &winfo : hdi.weapons)
 	{
-		WeaponInfo const * info = (WeaponInfo const*)(&(*it));
-		Weapon* weapon = nullptr;
-		weapon = Weapon::create(*info);
+		auto weapon = Weapon::create(winfo);
 		if (weapon != nullptr)
 		{
 			m_weapons.push_back(weapon);
 			addChild(weapon);
-			weapon->setPosition(info->dock_position);
+			weapon->setPosition(winfo.dock_position / scale);
 		}
 	}
 	
+	// initialize wingmen
+	//...
+
 	// register touch listeners
 	//auto listener = EventListenerTouchOneByOne::create();
 	//listener->setSwallowTouches(true);
@@ -78,7 +76,7 @@ void Hound::update(float dt)
 	std::vector<Weapon*>::iterator it;
 	for (it=m_weapons.begin(); it!=m_weapons.end(); ++it)
 	{
-		//(*it)->update(dt);
+		(*it)->update(dt);
 	}
 }
 

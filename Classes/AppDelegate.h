@@ -33,6 +33,9 @@ public:
     */
     virtual void applicationWillEnterForeground();
 
+	void scaleByDesign(cocos2d::Vec2 &design_vec2);
+	void scaleByDesign(float &design_float);
+
 private:
 	PlayerInfo	m_playerInfo;
 	LevelInfo	m_levelInfo;

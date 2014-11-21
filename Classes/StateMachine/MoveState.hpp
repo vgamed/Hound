@@ -9,11 +9,11 @@ class MoveState : public State<T>
 {
 public:
 	MoveState(const StateInfo &info);
-	~MoveState(void) {}
+	virtual ~MoveState(void) {}
 
-	void enter(T &t);
-	void exec(T &t, float dt);
-	void exit(T &t);
+	virtual void enter(T &t);
+	virtual void exec(T &t, float dt);
+	virtual void exit(T &t);
 
 	bool isMoveFinished(void) { return this->m_moveFinished; }
 

@@ -175,6 +175,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\StateMachine\BattleEndState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\BattlePhaseState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\DeadState.hpp" />
+    <ClInclude Include="..\Classes\StateMachine\EntryState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\MoveState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\LeaveState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\StateMachine.hpp" />

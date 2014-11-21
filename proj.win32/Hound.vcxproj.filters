@@ -188,6 +188,9 @@
     <ClInclude Include="..\Classes\Enemy\EnemyStateFactory.h">
       <Filter>Classes\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\StateMachine\EntryState.hpp">
+      <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

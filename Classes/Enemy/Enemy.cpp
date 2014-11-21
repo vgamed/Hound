@@ -4,6 +4,7 @@ USING_NS_CC;
 
 Enemy::Enemy(void)
 	: m_stateMachine(*this)
+	, m_invincible(false)
 {
 }
 
