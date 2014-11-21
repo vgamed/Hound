@@ -69,7 +69,7 @@ enum class STATE_TYPE
 	BATTLE_PHASE,
 	TRANSFORM,
 	LEAVE,
-	BATTLE_END,
+	HOUND_DEAD,
 	DEAD,
 	MAX
 };
@@ -99,14 +99,14 @@ struct StateInfo
 
 typedef std::vector<StateInfo> STATE_INFOES;
 
-struct StateMap
+struct StateMapInfo
 {
-	int from;
 	STATE_MACHINE_EVENT event;
+	int from;
 	int to;
 };
 
-typedef std::vector<StateMap> STATE_MAPS;
+typedef std::vector<StateMapInfo> STATE_MAP_INFOES;
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -267,7 +267,8 @@ struct EnemyInfo
 
 	std::vector<WeaponInfo>	weapons;
 
-	std::vector<StateInfo> states;
+	STATE_INFOES state_infoes;
+	STATE_MAP_INFOES state_map_infoes;
 };
 
 struct WaveInfo

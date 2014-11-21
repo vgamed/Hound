@@ -8,7 +8,6 @@ class FighterBee :
 {
 public:
 	static Enemy* create(const EnemyInfo &info);
-	void update(float dt);
 
 protected:
 	FighterBee(void);
@@ -16,7 +15,7 @@ protected:
 
 	bool init(const EnemyInfo &info);
 
-	EnemyStateMachine::STATES m_states;
+	EnemyStateMap m_stateMap;
 };
 
 #endif //__HOUND_FIGHTER_BEE_H__

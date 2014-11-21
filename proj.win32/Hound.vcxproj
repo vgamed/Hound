@@ -139,6 +139,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Enemy\CarrierTiger.cpp" />
     <ClCompile Include="..\Classes\Enemy\Enemy.cpp" />
     <ClCompile Include="..\Classes\Enemy\EnemyFactory.cpp" />
+    <ClCompile Include="..\Classes\Enemy\EnemyStateFactory.cpp" />
     <ClCompile Include="..\Classes\Enemy\FighterBee.cpp" />
     <ClCompile Include="..\Classes\Enemy\FrigatePuma.cpp" />
     <ClCompile Include="..\Classes\GameScene.cpp" />
@@ -164,6 +165,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Enemy\CarrierTiger.h" />
     <ClInclude Include="..\Classes\Enemy\Enemy.h" />
     <ClInclude Include="..\Classes\Enemy\EnemyFactory.h" />
+    <ClInclude Include="..\Classes\Enemy\EnemyStateFactory.h" />
     <ClInclude Include="..\Classes\Enemy\FighterBee.h" />
     <ClInclude Include="..\Classes\Enemy\FrigatePuma.h" />
     <ClInclude Include="..\Classes\GameScene.h" />

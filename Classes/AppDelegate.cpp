@@ -198,6 +198,7 @@ bool AppDelegate::loadLevelInfo(void)
 
 	// AI States
 	StateInfo state;
+	StateMapInfo state_map;
 	Movement movement;
 
 	// 1st state
@@ -234,10 +235,17 @@ bool AppDelegate::loadLevelInfo(void)
 	movement.move_param.displmt.speed = 1000.0f;
 	state.movements.push_back(movement);
 
-	ef_info.states.push_back(state);
+	ef_info.state_infoes.push_back(state);
+
+	state_map.event = STATE_MACHINE_EVENT::START;
+	state_map.from = -1;
+	state_map.to = 1;
+	ef_info.state_map_infoes.push_back(state_map);
+	
 	w_info.enemies.push_back(ef_info);
 
-	ef_info.states.clear();
+	ef_info.state_infoes.clear();
+	ef_info.state_map_infoes.clear();
 
 	ef_info.start_position = Vec2(420.0f, 960.0f);
 	w_info.enemies.push_back(ef_info);

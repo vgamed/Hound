@@ -1,19 +1,20 @@
 #include "FighterBee.h"
+#include "EnemyStateFactory.h"
 
 USING_NS_CC;
 
 FighterBee::FighterBee(void)
 {
-	m_states.clear();
+	m_stateMap.clear();
 }
 
 
 FighterBee::~FighterBee(void)
 {
-	for (auto state : m_states)
+	for (auto state : m_stateMap)
 	{
-		if (state != nullptr)
-			delete state;
+		if (state.second != nullptr)
+			delete state.second;
 	}
 }
 
@@ -34,25 +35,34 @@ bool FighterBee::init(const EnemyInfo &info)
 	if (!Enemy::init(info))
 		return false;
 
-	for (const auto &state_info : info.states)
+	for (const auto &state_info : info.state_infoes)
 	{
-		auto state = new EnemyMoveState(state_info);
-		m_states.push_back(state);
+		auto state = EnemyStateFactory::create(state_info);
+		m_stateMap.insert(std::make_pair(state->getId(), state));
 	}
 
-	if (m_states.size() > 0)
+	for (const auto &state_map_info : info.state_map_infoes)
 	{
 		EnemyStateTransit trans;
-		trans.event = (int)(STATE_MACHINE_EVENT::START);
-		trans.from = nullptr;
-		trans.to = m_states[0];
+		trans.event = (int)(state_map_info.event);
+		auto it = m_stateMap.find(state_map_info.from);
+		if (it == m_stateMap.end())
+		{
+			trans.from = nullptr;
+		}
+		else
+		{
+			trans.from = it->second;
+			CC_ASSERT(trans.from->getId() == state_map_info.from);
+		}
+
+		it = m_stateMap.find(state_map_info.to);
+		CC_ASSERT(it != m_stateMap.end());
+		trans.to = it->second;
+		CC_ASSERT(trans.to->getId() == state_map_info.to);
+		
 		m_stateMachine.addStateTransition(trans);
 	}
 	
 	return true;
-}
-
-void FighterBee::update(float dt)
-{
-	Enemy::update(dt);
 }

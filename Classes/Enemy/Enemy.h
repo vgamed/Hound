@@ -4,13 +4,22 @@
 #include "../Common.h"
 #include "../StateMachine/MoveState.hpp"
 
+class Enemy;
+
+typedef StateMachine<Enemy> EnemyStateMachine;
+typedef _StateTransition<Enemy> EnemyStateTransit;
+typedef State<Enemy> EnemyState;
+typedef std::map<int, EnemyState*> EnemyStateMap;
+typedef MoveState<Enemy> EnemyMoveState;
+
 class Enemy :
 	public cocos2d::Sprite
 {
 public:
 	virtual void update(float dt);
 
-	virtual ENEMY_TYPE getType(void) { return m_type; }
+	virtual ENEMY_TYPE getType(void) 
+	{ return m_type; }
 
 	virtual const Circle& getBoundingCircle(void) 
 	{
@@ -18,12 +27,16 @@ public:
 		return m_boundingCircle; 
 	}
 
-	virtual StateMachine<Enemy>& getStateMachine(void)
+	virtual EnemyStateMachine& getStateMachine(void)
 	{ return m_stateMachine; }
 
 	virtual void doDamage(float damage);
 
-	bool isDead(void) { return (m_curLife<=0.0f); }
+	void setInvincible(bool invincible)
+	{ m_invincible = invincible; }
+	
+	bool isDead(void) 
+	{ return (m_curLife<=0.0f); }
 
 protected:
 	Enemy(void);
@@ -36,15 +49,11 @@ protected:
 	float	m_curLife;
 	float	m_maxLife;
 	float	m_armor;
+	bool	m_invincible;
 
 	Circle	m_boundingCircle;
 
-	StateMachine<Enemy> m_stateMachine;
+	EnemyStateMachine m_stateMachine;
 };
-
-typedef StateMachine<Enemy> EnemyStateMachine;
-typedef StateTransit<Enemy> EnemyStateTransit;
-typedef State<Enemy> EnemyState;
-typedef MoveState<Enemy> EnemyMoveState;
 
 #endif //__HOUND_ENEMY_FIGHTER_H__

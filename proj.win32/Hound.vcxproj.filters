@@ -90,6 +90,9 @@
     <ClCompile Include="..\Classes\SFX\SFXExplosion.cpp">
       <Filter>Classes\SFX</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Enemy\EnemyStateFactory.cpp">
+      <Filter>Classes\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\StateMachine\MoveState.hpp">
       <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Enemy\EnemyStateFactory.h">
+      <Filter>Classes\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

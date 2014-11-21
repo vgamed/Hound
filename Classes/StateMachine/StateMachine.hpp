@@ -29,7 +29,7 @@ private:
 
 // define the information structure of transition among states
 template <typename T>
-struct StateTransit
+struct _StateTransition
 {
 	int	event;
 	State<T> *from;
@@ -41,9 +41,8 @@ template <typename T>
 class StateMachine
 {
 public:
-	typedef std::vector<State<T>*> STATES;
-	typedef StateTransit<T> STATE_TRANSITION;
-	typedef std::multimap<int, StateTransit<T>> STATE_MAP;
+	typedef _StateTransition<T> StateTransition;
+	typedef std::multimap<int, StateTransition> StateMultimap;
 
 	StateMachine(T &owner)
 		: m_rOwner(owner)
@@ -51,7 +50,7 @@ public:
 		, m_pCurState(nullptr)
 	{}
 
-	bool addStateTransition(const STATE_TRANSITION &trans);
+	bool addStateTransition(const StateTransition &trans);
 
 	void triggerEvent(int event);
 
@@ -91,12 +90,12 @@ private:
 	State<T> *m_pPreState; // pointer to the previous state
 	State<T> *m_pCurState; // pointer to the current state
 
-	STATE_MAP m_stateMap;
-	STATE_MAP m_stateMapAny;
+	StateMultimap m_stateMap;
+	StateMultimap m_stateMapAny;
 };
 
 template <typename T> 
-bool StateMachine<T>::addStateTransition(const STATE_TRANSITION &trans)
+bool StateMachine<T>::addStateTransition(const StateTransition &trans)
 {
 	if (trans.from == nullptr)
 	{	// this transition doesn't care about the from state

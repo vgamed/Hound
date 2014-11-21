@@ -25,13 +25,16 @@ bool Enemy::init(const EnemyInfo &info)
 	m_curLife = m_maxLife = info.max_life;
 	m_armor = info.armor;
 
-	this->setScale(info.scale_xy);
-	this->setLocalZOrder(ZORDER_ENEMY_FIGHTER);
-
-	// init weapons
-	// ...
+	setScale(info.scale_xy);
+	setLocalZOrder(ZORDER_ENEMY_FIGHTER);
 
 	m_boundingCircle.radius = info.bounding_circle_radius;
+
+	// init state transit for state machine
+	//...
+
+	// init weapons
+	//...
 
 	scheduleUpdate();
 
@@ -45,5 +48,8 @@ void Enemy::update(float dt)
 
 void Enemy::doDamage(float damage)
 {
+	if (m_invincible)
+		return;
+
 	m_curLife -= damage*(1-m_armor/1000.0f);
 }

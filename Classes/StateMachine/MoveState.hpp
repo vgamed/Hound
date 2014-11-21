@@ -15,7 +15,7 @@ public:
 	void exec(T &t, float dt);
 	void exit(T &t);
 
-	bool isMoveFinished(void) { return m_moveFinished; }
+	bool isMoveFinished(void) { return this->m_moveFinished; }
 
 	static const float DISTANCE_RESOLUTION;
 	static const float ROTATION_RESOLUTION;
@@ -58,8 +58,8 @@ template <typename T> MoveState<T>::MoveState(const StateInfo &info)
 	, m_stayTimer(0.0f)
 	, m_isMoveFinished(false)
 {
-	setId(info.id);
-	setType((int)info.type);
+	this->setId(info.id);
+	this->setType((int)info.type);
 }
 
 template <typename T> void MoveState<T>::enter(T &t)
@@ -131,7 +131,7 @@ template <typename T> void MoveState<T>::initDisplacement(T &t)
 		m_displmtDir.normalize();
 		if (m_movements[m_curIndexMovement].move_param.displmt.facing_dir)
 		{
-			t.setRotation(CC_RADIANS_TO_DEGREES(m_displmtDir.getAngle(Vec2::UNIT_Y)));
+			t.setRotation(CC_RADIANS_TO_DEGREES(m_displmtDir.getAngle(cocos2d::Vec2::UNIT_Y)));
 		}
 	}
 }
