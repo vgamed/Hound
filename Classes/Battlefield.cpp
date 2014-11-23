@@ -286,6 +286,7 @@ void Battlefield::spawnEnemyWave(const WaveInfo &info)
 		if (enemy != nullptr)
 		{
 			enemy->setPosition(convertToNodeSpace(einfo.start_position));
+			enemy->setRotation(CC_RADIANS_TO_DEGREES(einfo.facing_dir.getAngle(Vec2::UNIT_Y)));
 			enemy->getStateMachine().triggerEvent((int)STATE_MACHINE_EVENT::START);
 			addActiveEnemy(enemy);
 		}
@@ -301,8 +302,24 @@ void Battlefield::processProjectileCollidesField(Node *who, std::vector<Node*> &
 
 void Battlefield::processProjectileCollidesHound(Node *who, std::vector<Node*> &whom)
 {
-	CC_ASSERT(dynamic_cast<Projectile*>(who) != nullptr); // who should be a projectile here
-	CC_ASSERT((whom.size()==1) && (dynamic_cast<Hound*>(whom[0])!=nullptr)); // whom should be the hound
+	CC_ASSERT(whom.size()==1);
+
+	auto proj = dynamic_cast<Projectile*>(who);
+	CC_ASSERT(proj != nullptr); // who should be a projectile here
+
+	auto hound = dynamic_cast<Hound*>(whom[0]);
+	CC_ASSERT(hound!=nullptr); // whom should be the hound
+
+	auto sfx = SFXFactory::createProjectileSFX(proj->getProjectileType());
+	if (sfx != nullptr)
+	{
+		sfx->setPosition(proj->getPosition());
+		this->addChild(sfx);
+	}
+
+	hound->doDamage(proj->getDamage());
+
+	removeActiveProjectile(proj);
 }
 
 void Battlefield::processProjectileCollidesEnemy(Node *who, std::vector<Node*> &whom)

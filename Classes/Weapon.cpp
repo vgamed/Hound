@@ -33,7 +33,14 @@ bool Weapon::init(const WeaponInfo &info)
 {
 	Texture2D *texture = 
 		Director::getInstance()->getTextureCache()->getTextureForKey(info.texture_name);
-	if (!initWithTexture(texture))
+
+	bool ret = false;
+	if (texture == nullptr)
+		ret = Sprite::init();
+	else
+		ret = Sprite::initWithTexture(texture);
+
+	if (!ret)
 	{
 		return false;
 	}
@@ -54,7 +61,8 @@ bool Weapon::init(const WeaponInfo &info)
 	for (BarrelInfo binfo : info.barrells)
 	{
 		barrel.info = binfo;
-		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(barrel.info.rotate_angle));
+		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, 
+			-CC_DEGREES_TO_RADIANS(info.rotate_angle+barrel.info.rotate_angle));
 		switch(barrel.info.type)
 		{
 		case BARREL_TYPE::BULLET:
@@ -106,7 +114,7 @@ void Weapon::fire(float dt)
 			if (proj != nullptr)
 			{
 				bf->addActiveProjectile(proj); // bullet should be child of Battlefield
-				proj->setRotation(b.info.rotate_angle);
+				proj->setRotation(getRotation()+b.info.rotate_angle);
 				proj->setPosition(start_pos);
 			}
 			

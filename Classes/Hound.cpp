@@ -51,6 +51,7 @@ bool Hound::init(const HoundInfo &hdi)
 			m_weapons.push_back(weapon);
 			addChild(weapon);
 			weapon->setPosition(winfo.dock_position / scale);
+			weapon->setRotation(getRotation() + winfo.rotate_angle);
 		}
 	}
 	
@@ -73,11 +74,14 @@ void Hound::update(float dt)
 	//...
 
 	// update weapons
-	std::vector<Weapon*>::iterator it;
-	for (it=m_weapons.begin(); it!=m_weapons.end(); ++it)
+	for (auto weapon : m_weapons)
 	{
-		(*it)->update(dt);
+		//weapon->update(dt);
 	}
+}
+
+void Hound::doDamage(float damage)
+{
 }
 
 //bool Hound::onTouchBegan(Touch *touch, Event *event)

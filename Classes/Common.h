@@ -194,7 +194,8 @@ struct BarrelInfo
 	BARREL_TYPE		type;
 	PROJECTILE_TYPE	projectile_type;
 	float			projectile_scale_xy;
-	// the angle from positive Y direction, in degrees.
+
+	// the angle from weapon direction, in degrees.
 	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
 	float			rotate_angle;
 
@@ -219,6 +220,11 @@ struct WeaponInfo
 	float			speed;	//per second
 
 	cocos2d::Vec2	dock_position;
+
+	// the angle from fighter facing direction, in degrees.
+	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
+	float			rotate_angle;
+
 	std::vector<BarrelInfo> barrells;
 	std::string		texture_name;
 };
@@ -265,6 +271,7 @@ struct EnemyInfo
 	float			bounding_circle_radius;
 	std::string		body_texture_name;
 	cocos2d::Vec2	start_position;
+	cocos2d::Vec2	facing_dir;
 
 	std::vector<WeaponInfo>	weapons;
 

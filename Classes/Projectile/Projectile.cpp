@@ -1,4 +1,5 @@
 #include "Projectile.h"
+#include "../Hound.h"
 #include "../Battlefield.h"
 #include "../Enemy/Enemy.h"
 
@@ -55,19 +56,30 @@ void Projectile::update(float dt)
 	if (getBoundingBox().intersectsRect(bf->getBoundingBox()))
 	{	// detect collision with objects in battlefield
 		CollisionData data;
-		for (Enemy *enemy : bf->getActiveEnemies())
+		data.who = this;
+		if (m_isFromHound)
 		{
-			//if (enemy->getBoundingCircle().intersectsRect(getBoundingBox()))
-			if (enemy->getBoundingCircle().intersectsCircle(getBoundingCircle()))
+			data.type = COLLISION_TYPE::PROJECTILE_TO_ENEMY;
+			for (Enemy *enemy : bf->getActiveEnemies())
 			{
-				data.whom.push_back(enemy);
+				//if (enemy->getBoundingCircle().intersectsRect(getBoundingBox()))
+				if (enemy->getBoundingCircle().intersectsCircle(getBoundingCircle()))
+				{
+					data.whom.push_back(enemy);
+				}
+			}
+		}
+		else
+		{
+			data.type = COLLISION_TYPE::PROJECTILE_TO_HOUND;
+			if (bf->getHound()->getBoundingCircle().intersectsCircle(getBoundingCircle()))
+			{
+				data.whom.push_back(bf->getHound());
 			}
 		}
 
 		if (data.whom.size() > 0)
 		{
-			data.type = COLLISION_TYPE::PROJECTILE_TO_ENEMY;
-			data.who = this;
 
 			EventCustom event(EVENT_CUSTOM_COLLISION);
 			event.setUserData(&data);

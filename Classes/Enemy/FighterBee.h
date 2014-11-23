@@ -14,8 +14,6 @@ protected:
 	~FighterBee(void);
 
 	bool init(const EnemyInfo &info);
-
-	EnemyStateMap m_stateMap;
 };
 
 #endif //__HOUND_FIGHTER_BEE_H__

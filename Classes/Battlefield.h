@@ -20,7 +20,8 @@ public:
 	void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
     
-	const std::vector<Enemy*>& getActiveEnemies(void) const { return m_activeEnemies; }
+	const std::vector<Enemy*>& getActiveEnemies(void) const 
+	{ return m_activeEnemies; }
 
 	void onEventCollision(cocos2d::EventCustom* event);
 	void onEventDebug(cocos2d::EventCustom* event);
@@ -31,6 +32,9 @@ public:
 	void addActiveEnemy(Enemy *enemy);
 	bool removeActiveEnemy(Enemy *enemy);
 	bool removeInactiveEnemies(void);
+
+	Hound* getHound(void) const
+	{ return m_hound; }
 
 	static const int INVALID_TOUCH_ID = -1;
 

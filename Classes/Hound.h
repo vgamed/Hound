@@ -14,6 +14,8 @@ public:
 
 	//bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
 	//void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
+	
+	void doDamage(float damage);
 
 	const Circle& getBoundingCircle(void) 
 	{
@@ -42,13 +44,16 @@ private:
 
 	//Armor*			m_armor;
 	//Engine*			m_engine;
+	float	m_curLife;
+	float	m_maxLife;
+	float	m_armor;
 
 	std::vector<Weapon*>	m_weapons;
 
 	Wingman *m_wingmanLeft;
 	Wingman *m_wingmanRight;
 
-	cocos2d::Vec2 m_movingOffset;
+	cocos2d::Vec2 m_movingOffset; //for record touch position offset from the hound
 	Circle	m_boundingCircle;
 };
 

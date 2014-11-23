@@ -178,6 +178,7 @@ bool AppDelegate::loadPlayerInfo(void)
 
 	weapon.texture_name = "frontgun.png";
 	weapon.dock_position = Vec2(58.0f, 81.0f);
+	weapon.rotate_angle = 0.0f;
 	weapon.barrells.clear();
 	barrel.rotate_angle = 0.0f;
 	weapon.barrells.push_back(barrel);
@@ -185,6 +186,7 @@ bool AppDelegate::loadPlayerInfo(void)
 
 	weapon.texture_name = "leftgun.png";
 	weapon.dock_position = Vec2(29.0f, 65.0f);
+	weapon.rotate_angle = -30.0f;
 	weapon.barrells.clear();
 	barrel.rotate_angle = 0.0f;
 	weapon.barrells.push_back(barrel);
@@ -196,6 +198,7 @@ bool AppDelegate::loadPlayerInfo(void)
 
 	weapon.texture_name = "rightgun.png";
 	weapon.dock_position = Vec2(87.0f, 65.0f);
+	weapon.rotate_angle = 30.0f;
 	weapon.barrells.clear();
 	barrel.rotate_angle = 0.0f;
 	weapon.barrells.push_back(barrel);
@@ -220,7 +223,10 @@ bool AppDelegate::loadLevelInfo(void)
 
 	WaveInfo w_info;
 	EnemyInfo ef_info;
+	StateInfo state;
+	Movement movement;
 
+	// 1st wave
 	w_info.time_offset = 2.0f;
 	ef_info.type = ENEMY_TYPE::FIGHTER_BEE;
 	ef_info.level = 1;
@@ -232,102 +238,143 @@ bool AppDelegate::loadLevelInfo(void)
 
 	ef_info.bounding_circle_radius = 50.0f;
 	ef_info.body_texture_name = "n1.png";
+	ef_info.facing_dir = -Vec2::UNIT_Y;
 
-	// 1st wave
-	// 1st enemy
+	// weapons
+	BarrelInfo barrel;
+	barrel.type = BARREL_TYPE::BULLET;
+	barrel.projectile_type = PROJECTILE_TYPE::BULLET_NORMAL;
+	
+	barrel.projectile_scale_xy = 0.6f;
+	scaleByDesign(barrel.projectile_scale_xy);
+
+	barrel.projectile_effect_name = "bullet_1.png";
+	barrel.projectile_damage = 2.0f;
+	barrel.projectile_speed = 100.0f;
+	barrel.firing_interval = 1.0f; //second
+
+	WeaponInfo weapon;
+	weapon.level  = 1;
+	weapon.type = WEAPON_TYPE::CANNON;
+	weapon.time_offset_firing_start = 0.5f; //second
+	weapon.time_offset_firing_stop = 3.5f; //second
+	weapon.speed = 0.0f; //per second
+	weapon.damage = 0.0f;
+	weapon.texture_name = "";
+
+	barrel.rotate_angle = 0.0f;
+	weapon.barrells.push_back(barrel);
+
+	//1st weapon
+	weapon.dock_position = Vec2(60.0f, 100.0f);
+	weapon.rotate_angle = +160.0f;
+	ef_info.weapons.push_back(weapon);
+
+	//2nd weapon
+	weapon.dock_position = Vec2(98.0f, 100.0f);
+	weapon.rotate_angle = -160.0f;
+	ef_info.weapons.push_back(weapon);
+	//
+
+	// enemy 1
 	ef_info.start_position = Vec2(200.0f, 960.0f);
 	scaleByDesign(ef_info.start_position);
 
-	// AI States
-	StateInfo state;
-	Movement movement;
-
-	// 1st state - Entry State
-	state.id = 1;
-	state.type = STATE_TYPE::ENTRY;
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
 	
-		// 1st movement
-		movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+			// 1st movement
+			movement.type = MOVEMENT_TYPE::DISPLACEMENT;
 
-		movement.target_position = Vec2(200.0f, 560.0f);
-		scaleByDesign(movement.target_position);
+			movement.target_position = Vec2(200.0f, 560.0f);
+			scaleByDesign(movement.target_position);
 
-		movement.move_param.displmt.facing_dir = true;
-		movement.move_param.displmt.speed = 100.0f;
-		state.movements.push_back(movement);
-		// 2nd movement
-		movement.type = MOVEMENT_TYPE::ROTATION;
+			movement.move_param.displmt.facing_dir = true;
+			movement.move_param.displmt.speed = 100.0f;
+			state.movements.push_back(movement);
+			// 2nd movement
+			movement.type = MOVEMENT_TYPE::ROTATION;
 
-		movement.target_position = Vec2(200.0f, 560.0f);
-		scaleByDesign(movement.target_position);
+			movement.target_position = Vec2(200.0f, 560.0f);
+			scaleByDesign(movement.target_position);
 
-		movement.move_param.rotation.angle = 360.0f;
-		movement.move_param.rotation.speed = 40.0f;
-		state.movements.push_back(movement);
-		// 3rd movement
-		movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+			movement.move_param.rotation.angle = 360.0f;
+			movement.move_param.rotation.speed = 40.0f;
+			state.movements.push_back(movement);
+			// 3rd movement
+			movement.type = MOVEMENT_TYPE::DISPLACEMENT;
 
-		movement.target_position = Vec2(450.0f, 560.0f);
-		scaleByDesign(movement.target_position);
+			movement.target_position = Vec2(450.0f, 560.0f);
+			scaleByDesign(movement.target_position);
 
-		movement.move_param.displmt.facing_dir = false;
-		movement.move_param.displmt.speed = 100.0f;
-		state.movements.push_back(movement);
-		// 4th movement
-		movement.type = MOVEMENT_TYPE::STAY;
+			movement.move_param.displmt.facing_dir = false;
+			movement.move_param.displmt.speed = 100.0f;
+			state.movements.push_back(movement);
+			// 4th movement
+			movement.type = MOVEMENT_TYPE::STAY;
 
-		movement.target_position = Vec2(450.0f, 560.0f);
-		scaleByDesign(movement.target_position);
+			movement.target_position = Vec2(450.0f, 560.0f);
+			scaleByDesign(movement.target_position);
 
-		movement.move_param.stay.period = 10.0f;
-		movement.move_param.stay.angle = 30.0f;
-		state.movements.push_back(movement);
+			movement.move_param.stay.period = 10.0f;
+			movement.move_param.stay.angle = 30.0f;
+			state.movements.push_back(movement);
 
-	ef_info.state_infoes.push_back(state);
-	//
+		ef_info.state_infoes.push_back(state);
+		//
 
-	// 2nd state - Leave State
-	state.id = 3;
-	state.type = STATE_TYPE::LEAVE;
-	state.movements.clear();
-	state.weapons.clear();
-	ef_info.state_infoes.push_back(state);
-	//
+		// 2nd state - Leave State
+		state.id = 3;
+		state.type = STATE_TYPE::LEAVE;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
 
-	// state maps
-	StateMapInfo state_map;
-	state_map.event = STATE_MACHINE_EVENT::START;
-	state_map.from = -1;
-	state_map.to = 1;
-	ef_info.state_map_infoes.push_back(state_map);
+		// state maps
+		StateMapInfo state_map;
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
 
-	state_map.event = STATE_MACHINE_EVENT::ENTRY_FINISHED;
-	state_map.from = 1;
-	state_map.to = 3;
-	ef_info.state_map_infoes.push_back(state_map);
-	//
+		state_map.event = STATE_MACHINE_EVENT::ENTRY_FINISHED;
+		state_map.from = 1;
+		state_map.to = 3;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	
 	w_info.enemies.push_back(ef_info);
 
 	ef_info.state_infoes.clear();
 	ef_info.state_map_infoes.clear();
 
+	// enemy 2
 	ef_info.start_position = Vec2(420.0f, 560.0f);
 	scaleByDesign(ef_info.start_position);
 	w_info.enemies.push_back(ef_info);
 
+	// enemy 3
 	ef_info.start_position = Vec2(320.0f, 760.0f);
 	scaleByDesign(ef_info.start_position);
 	w_info.enemies.push_back(ef_info);
 
-	m_levelInfo.enemy_waves.push_back(w_info);	// 1st wave
+	m_levelInfo.enemy_waves.push_back(w_info);	
+	// end of 1st wave
 
 	w_info.enemies.clear();
+	ef_info.state_infoes.clear();
+	ef_info.state_map_infoes.clear();
+	ef_info.weapons.clear();
+
+	// 2nd wave
 	ef_info.type = ENEMY_TYPE::FRIGATE_PUMA;
 	ef_info.max_life = 200.0f;
 	ef_info.armor = 300.0f;
 	ef_info.bounding_circle_radius = 60.0f;
 	ef_info.body_texture_name = "n2.png";
+	ef_info.facing_dir = Vec2::UNIT_Y;
 
 	ef_info.start_position = Vec2(220.0f, 610.0f);
 	scaleByDesign(ef_info.start_position);
@@ -343,9 +390,15 @@ bool AppDelegate::loadLevelInfo(void)
 	scaleByDesign(ef_info.start_position);
 
 	w_info.enemies.push_back(ef_info);
-	m_levelInfo.enemy_waves.push_back(w_info);	// 2nd wave
+	m_levelInfo.enemy_waves.push_back(w_info);	
+	// end of 2nd wave
 
 	w_info.enemies.clear();
+	ef_info.state_infoes.clear();
+	ef_info.state_map_infoes.clear();
+	ef_info.weapons.clear();
+
+	// 3rd wave
 	ef_info.type = ENEMY_TYPE::CARRIER_TIGER;
 	ef_info.max_life = 500.0f;
 	ef_info.armor = 500.0f;
@@ -353,9 +406,11 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.body_texture_name = "n_boss.png";
 	ef_info.start_position = Vec2(320.0f, 610.0f);
 	scaleByDesign(ef_info.start_position);
+	ef_info.facing_dir = Vec2::UNIT_Y;
 	w_info.enemies.push_back(ef_info);
 
-	m_levelInfo.enemy_waves.push_back(w_info);	// 3rd wave
+	m_levelInfo.enemy_waves.push_back(w_info);	
+	// end of 3rd wave
 
 	return true;
 }

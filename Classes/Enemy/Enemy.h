@@ -2,6 +2,7 @@
 #define __HOUND_ENEMY_FIGHTER_H__
 
 #include "../Common.h"
+#include "Weapon.h"
 #include "../StateMachine/EntryState.hpp"
 #include "../StateMachine/LeaveState.hpp"
 
@@ -65,6 +66,9 @@ protected:
 
 	Circle	m_boundingCircle;
 
+	std::vector<Weapon*>	m_weapons;
+
+	EnemyStateMap m_stateMap;
 	EnemyStateMachine m_stateMachine;
 };
 
