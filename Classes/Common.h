@@ -76,6 +76,7 @@ enum class STATE_TYPE
 
 enum class STATE_MACHINE_EVENT
 {
+	NONE = -1,
 	START = 0,
 	MOVE_FINISHED,
 	ENTRY_FINISHED,

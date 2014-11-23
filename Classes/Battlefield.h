@@ -30,6 +30,7 @@ public:
 
 	void addActiveEnemy(Enemy *enemy);
 	bool removeActiveEnemy(Enemy *enemy);
+	bool removeInactiveEnemies(void);
 
 	static const int INVALID_TOUCH_ID = -1;
 

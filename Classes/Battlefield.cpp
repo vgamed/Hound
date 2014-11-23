@@ -80,6 +80,8 @@ void Battlefield::update(float dt)
 	// update hound
 	m_hound->update(dt);
 
+	removeInactiveEnemies();
+
 	// trigger new wave
 	if ((m_activeEnemies.size()<=0) && (m_nextWave != m_enemyWaves.end()))
 	{
@@ -246,6 +248,36 @@ bool Battlefield::removeActiveEnemy(Enemy *enemy)
 	return true;
 }
 
+bool Battlefield::removeInactiveEnemies(void)
+{
+	std::vector<Enemy*>::iterator found = std::remove_if(m_activeEnemies.begin(), 
+		m_activeEnemies.end(), 
+		[&](Enemy *p)->bool 
+		{
+			if (p->isDead())
+			{	// play explosion effect
+				auto sfx = SFXFactory::createEnemyExplosionSFX(p->getType());
+				if (sfx != nullptr)
+				{
+					sfx->setPosition(p->getPosition());
+					this->addChild(sfx);
+				}
+				this->removeChild(p);
+				return true;
+			}
+			if (p->isLeftDone())
+			{
+				this->removeChild(p);
+				return true;
+			}
+			return false;
+		});
+	
+	m_activeEnemies.erase(found, m_activeEnemies.end());
+	
+	return true;
+}
+
 void Battlefield::spawnEnemyWave(const WaveInfo &info)
 {
 	for (const EnemyInfo &einfo : info.enemies)
@@ -254,7 +286,7 @@ void Battlefield::spawnEnemyWave(const WaveInfo &info)
 		if (enemy != nullptr)
 		{
 			enemy->setPosition(convertToNodeSpace(einfo.start_position));
-			enemy->getStateMachine().triggerEvent(0);
+			enemy->getStateMachine().triggerEvent((int)STATE_MACHINE_EVENT::START);
 			addActiveEnemy(enemy);
 		}
 	}
@@ -293,18 +325,6 @@ void Battlefield::processProjectileCollidesEnemy(Node *who, std::vector<Node*> &
 		}
 
 		enemy->doDamage(proj->getDamage());
-		if (enemy->isDead())
-		{
-			// play explosion effect
-			auto sfx = SFXFactory::createEnemyExplosionSFX(enemy->getType());
-			if (sfx != nullptr)
-			{
-				sfx->setPosition(enemy->getPosition());
-				this->addChild(sfx);
-			}
-
-			removeActiveEnemy(enemy);
-		}
 	}
 
 	removeActiveProjectile(proj);

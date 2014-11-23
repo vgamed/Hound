@@ -240,64 +240,72 @@ bool AppDelegate::loadLevelInfo(void)
 
 	// AI States
 	StateInfo state;
-	StateMapInfo state_map;
 	Movement movement;
 
-	// 1st state
+	// 1st state - Entry State
 	state.id = 1;
 	state.type = STATE_TYPE::ENTRY;
-	// 1st movement
-	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+	
+		// 1st movement
+		movement.type = MOVEMENT_TYPE::DISPLACEMENT;
 
-	movement.target_position = Vec2(200.0f, 560.0f);
-	scaleByDesign(movement.target_position);
+		movement.target_position = Vec2(200.0f, 560.0f);
+		scaleByDesign(movement.target_position);
 
-	movement.move_param.displmt.facing_dir = true;
-	movement.move_param.displmt.speed = 100.0f;
-	state.movements.push_back(movement);
-	// 2nd movement
-	movement.type = MOVEMENT_TYPE::ROTATION;
+		movement.move_param.displmt.facing_dir = true;
+		movement.move_param.displmt.speed = 100.0f;
+		state.movements.push_back(movement);
+		// 2nd movement
+		movement.type = MOVEMENT_TYPE::ROTATION;
 
-	movement.target_position = Vec2(200.0f, 560.0f);
-	scaleByDesign(movement.target_position);
+		movement.target_position = Vec2(200.0f, 560.0f);
+		scaleByDesign(movement.target_position);
 
-	movement.move_param.rotation.angle = 360.0f;
-	movement.move_param.rotation.speed = 20.0f;
-	state.movements.push_back(movement);
-	// 3rd movement
-	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+		movement.move_param.rotation.angle = 360.0f;
+		movement.move_param.rotation.speed = 40.0f;
+		state.movements.push_back(movement);
+		// 3rd movement
+		movement.type = MOVEMENT_TYPE::DISPLACEMENT;
 
-	movement.target_position = Vec2(450.0f, 560.0f);
-	scaleByDesign(movement.target_position);
+		movement.target_position = Vec2(450.0f, 560.0f);
+		scaleByDesign(movement.target_position);
 
-	movement.move_param.displmt.facing_dir = false;
-	movement.move_param.displmt.speed = 100.0f;
-	state.movements.push_back(movement);
-	// 4th movement
-	movement.type = MOVEMENT_TYPE::STAY;
+		movement.move_param.displmt.facing_dir = false;
+		movement.move_param.displmt.speed = 100.0f;
+		state.movements.push_back(movement);
+		// 4th movement
+		movement.type = MOVEMENT_TYPE::STAY;
 
-	movement.target_position = Vec2(450.0f, 560.0f);
-	scaleByDesign(movement.target_position);
+		movement.target_position = Vec2(450.0f, 560.0f);
+		scaleByDesign(movement.target_position);
 
-	movement.move_param.stay.period = 10.0f;
-	movement.move_param.stay.angle = 30.0f;
-	state.movements.push_back(movement);
-	// 5th movement
-	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
-
-	movement.target_position = Vec2(450.0f, 0.0f);
-	scaleByDesign(movement.target_position);
-
-	movement.move_param.displmt.facing_dir = true;
-	movement.move_param.displmt.speed = 1000.0f;
-	state.movements.push_back(movement);
+		movement.move_param.stay.period = 10.0f;
+		movement.move_param.stay.angle = 30.0f;
+		state.movements.push_back(movement);
 
 	ef_info.state_infoes.push_back(state);
+	//
 
+	// 2nd state - Leave State
+	state.id = 3;
+	state.type = STATE_TYPE::LEAVE;
+	state.movements.clear();
+	state.weapons.clear();
+	ef_info.state_infoes.push_back(state);
+	//
+
+	// state maps
+	StateMapInfo state_map;
 	state_map.event = STATE_MACHINE_EVENT::START;
 	state_map.from = -1;
 	state_map.to = 1;
 	ef_info.state_map_infoes.push_back(state_map);
+
+	state_map.event = STATE_MACHINE_EVENT::ENTRY_FINISHED;
+	state_map.from = 1;
+	state_map.to = 3;
+	ef_info.state_map_infoes.push_back(state_map);
+	//
 	
 	w_info.enemies.push_back(ef_info);
 

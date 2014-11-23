@@ -2,37 +2,55 @@
 #define __HOUND_LEAVE_STATE_H__
 
 #include "cocos2d.h"
-#include "StateMachine.hpp"
+#include "MoveState.hpp"
 
-template <typename T>
-class LeaveState : public State<T>
+template <typename T, STATE_MACHINE_EVENT finishEvent = STATE_MACHINE_EVENT::NONE>
+class LeaveState : public MoveState<T>
 {
 public:
-	typedef std::vector<cocos2d::Vec2> WAYPOINTS;
-	LeaveState(void) {}
+	LeaveState(const StateInfo &info)
+		: MoveState<T>(info)
+	{}
 	~LeaveState(void) {}
 
-	void enter( T* t );
-	void exec( T* t, float dt );
-	void exit( T* t );
-
-private:
-	cocos2d::Vec2	m_startPostion;
-	WAYPOINTS		m_waypoints;
-	float			m_rotationZ;
-	float			m_speed;
+	void enter(T &t);
+	void exec(T &t, float dt);
+	void exit(T &t);
 };
 
-template <typename T> void LeaveState<T>::enter( T* t )
+template <typename T, STATE_MACHINE_EVENT finishEvent>
+void LeaveState<T, finishEvent>::enter(T &t)
 {
+	t.setInvincible(true);
+
+	Movement move;
+	move.type = MOVEMENT_TYPE::DISPLACEMENT;
+	move.target_position = cocos2d::Vec2(t.getPosition().x, -t.getBoundingBox().size.height);
+	move.move_param.displmt.facing_dir = true;
+	move.move_param.displmt.speed = 1000.0f;
+	MoveState<T>::addMovement(move);
+
+	MoveState<T>::enter(t);
 }
 
-template <typename T> void LeaveState<T>::exec( T* t, float dt )
+template <typename T, STATE_MACHINE_EVENT finishEvent>
+void LeaveState<T, finishEvent>::exec(T &t, float dt )
 {
+	MoveState<T>::exec(t, dt);
+
+	if (MoveState<T>::isMoveFinished())
+	{
+		t.getStateMachine().triggerEvent((int)finishEvent);
+		t.signalLeftDone();
+	}
 }
 
-template <typename T> void LeaveState<T>::exit( T* t )
+template <typename T, STATE_MACHINE_EVENT finishEvent>
+void LeaveState<T, finishEvent>::exit(T &t)
 {
+	t.setInvincible(false);
+
+	MoveState<T>::exit(t);
 }
 
 #endif //__HOUND_LEAVE_STATE_H__

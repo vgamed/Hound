@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "MoveState.hpp"
 
-template <typename T>
+template <typename T, STATE_MACHINE_EVENT finishEvent = STATE_MACHINE_EVENT::NONE>
 class EntryState : public MoveState<T>
 {
 public:
@@ -13,19 +13,35 @@ public:
 	{}
 	~EntryState(void) {}
 
-	void enter( T &t );
-	void exit( T &t );
+	void enter(T &t);
+	void exec(T &t, float dt);
+	void exit(T &t);
 };
 
-template <typename T> void EntryState<T>::enter( T &t )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void EntryState<T, finishEvent>::enter(T &t)
 {
 	t.setInvincible(true);
+
 	MoveState<T>::enter(t);
 }
 
-template <typename T> void EntryState<T>::exit( T &t )
+template <typename T, STATE_MACHINE_EVENT finishEvent>
+void EntryState<T, finishEvent>::exec(T &t, float dt)
+{
+	MoveState<T>::exec(t, dt);
+
+	if (MoveState<T>::isMoveFinished())
+	{
+		t.getStateMachine().triggerEvent((int)finishEvent);
+	}
+}
+
+template <typename T, STATE_MACHINE_EVENT finishEvent>
+void EntryState<T, finishEvent>::exit(T &t)
 {
 	t.setInvincible(false);
+
 	MoveState<T>::exit(t);
 }
 

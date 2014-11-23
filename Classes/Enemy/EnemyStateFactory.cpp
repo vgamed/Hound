@@ -20,7 +20,7 @@ EnemyState* EnemyStateFactory::create(const StateInfo &info)
 	case STATE_TYPE::TRANSFORM:
 		return nullptr;
 	case STATE_TYPE::LEAVE:
-		return nullptr;
+		return new EnemyLeaveState(info);
 	case STATE_TYPE::DEAD:
 		return nullptr;
 	case STATE_TYPE::HOUND_DEAD:

@@ -4,17 +4,16 @@
 #include "cocos2d.h"
 #include "StateMachine.hpp"
 
-template <typename T>
+template <typename T, STATE_MACHINE_EVENT finishEvent = STATE_MACHINE_EVENT::NONE>
 class BattleEndState : public State<T>
 {
 public:
-	typedef std::vector<cocos2d::Vec2> WAYPOINTS;
 	BattleEndState(void) {}
 	~BattleEndState(void) {}
 
-	void enter( T* t );
-	void exec( T* t, float dt );
-	void exit( T* t );
+	void enter(T &t);
+	void exec(T &t, float dt);
+	void exit(T &t);
 
 private:
 	cocos2d::Vec2	m_startPostion;
@@ -23,15 +22,18 @@ private:
 	float			m_speed;
 };
 
-template <typename T> void BattleEndState<T>::enter( T* t )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void BattleEndState<T, finishEvent>::enter(T &t)
 {
 }
 
-template <typename T> void BattleEndState<T>::exec( T* t, float dt )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void BattleEndState<T, finishEvent>::exec(T &t, float dt)
 {
 }
 
-template <typename T> void BattleEndState<T>::exit( T* t )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void BattleEndState<T, finishEvent>::exit(T &t)
 {
 }
 

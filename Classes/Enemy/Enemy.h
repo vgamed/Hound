@@ -3,6 +3,7 @@
 
 #include "../Common.h"
 #include "../StateMachine/EntryState.hpp"
+#include "../StateMachine/LeaveState.hpp"
 
 class Enemy;
 
@@ -10,7 +11,8 @@ typedef StateMachine<Enemy> EnemyStateMachine;
 typedef _StateTransition<Enemy> EnemyStateTransit;
 typedef State<Enemy> EnemyState;
 typedef std::map<int, EnemyState*> EnemyStateMap;
-typedef EntryState<Enemy> EnemyEntryState;
+typedef EntryState<Enemy, STATE_MACHINE_EVENT::ENTRY_FINISHED> EnemyEntryState;
+typedef LeaveState<Enemy, STATE_MACHINE_EVENT::LEAVE_FINISHED> EnemyLeaveState;
 typedef MoveState<Enemy> EnemyMoveState;
 
 class Enemy :
@@ -39,6 +41,12 @@ public:
 	bool isDead(void) 
 	{ return (m_curLife<=0.0f); }
 
+	bool isLeftDone(void)
+	{ return m_leftDone; }
+
+	void signalLeftDone(void)
+	{ m_leftDone = true; }
+
 protected:
 	Enemy(void);
 	~Enemy(void);
@@ -50,7 +58,10 @@ protected:
 	float	m_curLife;
 	float	m_maxLife;
 	float	m_armor;
-	bool	m_invincible;
+	
+	bool	m_invincible; // true - this enemy can not be hurt
+
+	bool	m_leftDone; // the left state has been finished, wating for battlefield's removing
 
 	Circle	m_boundingCircle;
 

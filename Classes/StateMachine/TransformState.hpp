@@ -2,36 +2,32 @@
 #define __HOUND_TRANSFORM_STATE_H__
 
 #include "cocos2d.h"
-#include "StateMachine.hpp"
+#include "MoveState.hpp"
 
-template <typename T>
-class TransformState: public State<T>
+template <typename T, STATE_MACHINE_EVENT finishEvent = STATE_MACHINE_EVENT::NONE>
+class TransformState : public MoveState<T>
 {
 public:
-	typedef std::vector<cocos2d::Vec2> WAYPOINTS;
 	TransformState(void) {}
 	~TransformState(void) {}
 
-	void enter( T* t );
-	void exec( T* t, float dt );
-	void exit( T* t );
-
-private:
-	cocos2d::Vec2	m_startPostion;
-	WAYPOINTS		m_waypoints;
-	float			m_rotationZ;
-	float			m_speed;
+	void enter(T &t);
+	void exec(T &t, float dt);
+	void exit(T &t);
 };
 
-template <typename T> void TransformState<T>::enter( T* t )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void TransformState<T, finishEvent>::enter(T &t)
 {
 }
 
-template <typename T> void TransformState<T>::exec( T* t, float dt )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void TransformState<T, finishEvent>::exec(T &t, float dt)
 {
 }
 
-template <typename T> void TransformState<T>::exit( T* t )
+template <typename T, STATE_MACHINE_EVENT finishEvent> 
+void TransformState<T, finishEvent>::exit(T &t)
 {
 }
 

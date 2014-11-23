@@ -15,11 +15,10 @@ public:
 	virtual void exec(T &t, float dt);
 	virtual void exit(T &t);
 
-	bool isMoveFinished(void) { return this->m_moveFinished; }
+	void addMovement(const Movement &move);
 
-	static const float DISTANCE_RESOLUTION;
-	static const float ROTATION_RESOLUTION;
-	static const float STAY_PERIOD_RESOLUTION;
+	bool isMoveFinished(void) 
+	{ return this->m_isMoveFinished; }
 
 private:
 	typedef std::function<bool (T &t, float dt)> MOVEMENT_DO_FUNC;
@@ -45,11 +44,8 @@ private:
 	bool			m_isMoveFinished;
 };
 
-template <typename T> const float MoveState<T>::DISTANCE_RESOLUTION = 1.0f; //pixel in design resolution
-template <typename T> const float MoveState<T>::ROTATION_RESOLUTION = 0.1f; //degree
-template <typename T> const float MoveState<T>::STAY_PERIOD_RESOLUTION = 0.1f; //second
-
-template <typename T> MoveState<T>::MoveState(const StateInfo &info)
+template <typename T> 
+MoveState<T>::MoveState(const StateInfo &info)
 	: m_movements(info.movements)
 	, m_curIndexMovement(0)
 	, m_movementDoFunc(nullptr)
@@ -62,7 +58,8 @@ template <typename T> MoveState<T>::MoveState(const StateInfo &info)
 	this->setType((int)info.type);
 }
 
-template <typename T> void MoveState<T>::enter(T &t)
+template <typename T>
+void MoveState<T>::enter(T &t)
 {
 	CC_ASSERT(m_movements.size() > 0);
 
@@ -73,7 +70,8 @@ template <typename T> void MoveState<T>::enter(T &t)
 	m_isMoveFinished = false; // start the movement
 }
 
-template <typename T> void MoveState<T>::exec(T &t, float dt)
+template <typename T>
+void MoveState<T>::exec(T &t, float dt)
 {
 	if (!m_isMoveFinished && m_movementDoFunc(t, dt))
 	{
@@ -89,11 +87,21 @@ template <typename T> void MoveState<T>::exec(T &t, float dt)
 	}
 }
 
-template <typename T> void MoveState<T>::exit(T &t)
+template <typename T>
+void MoveState<T>::exit(T &t)
 {
 }
 
-template <typename T> void MoveState<T>::initMovement(T &t)
+template <typename T>
+void MoveState<T>::addMovement(const Movement &move)
+{
+	CC_ASSERT((move.type > MOVEMENT_TYPE::NONE)&&
+		(move.type < MOVEMENT_TYPE::MAX));
+	m_movements.push_back(move);
+}
+
+template <typename T>
+void MoveState<T>::initMovement(T &t)
 {
 	switch (m_movements[m_curIndexMovement].type)
 	{
@@ -115,7 +123,8 @@ template <typename T> void MoveState<T>::initMovement(T &t)
 	}
 }
 
-template <typename T> void MoveState<T>::initDisplacement(T &t)
+template <typename T>
+void MoveState<T>::initDisplacement(T &t)
 {
 	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::DISPLACEMENT);
 
@@ -136,7 +145,8 @@ template <typename T> void MoveState<T>::initDisplacement(T &t)
 	}
 }
 
-template <typename T> void MoveState<T>::initRotation(T &t)
+template <typename T>
+void MoveState<T>::initRotation(T &t)
 {
 	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::ROTATION);
 
@@ -155,7 +165,8 @@ template <typename T> void MoveState<T>::initRotation(T &t)
 	}
 }
 
-template <typename T> void MoveState<T>::initStay(T &t)
+template <typename T>
+void MoveState<T>::initStay(T &t)
 {
 	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::STAY);
 
@@ -164,14 +175,15 @@ template <typename T> void MoveState<T>::initStay(T &t)
 	m_stayTimer = 0.0f;
 }
 
-template <typename T> bool MoveState<T>::doDisplacement(T &t, float dt)
+template <typename T>
+bool MoveState<T>::doDisplacement(T &t, float dt)
 {
-	if (m_movements[m_curIndexMovement].move_param.displmt.speed > 0)
-	{
-		t.setPosition(t.getPosition()+m_movements[m_curIndexMovement].move_param.displmt.speed*dt*m_displmtDir);
-	}
+	float step = m_movements[m_curIndexMovement].move_param.displmt.speed*dt;
+	float dist = m_movements[m_curIndexMovement].target_position.distance(t.getPosition());
 
-	if (m_movements[m_curIndexMovement].target_position.distanceSquared(t.getPosition()) < DISTANCE_RESOLUTION)
+	t.setPosition(t.getPosition() + step * m_displmtDir);
+
+	if (step > dist)
 	{
 		return true;
 	}
@@ -181,12 +193,12 @@ template <typename T> bool MoveState<T>::doDisplacement(T &t, float dt)
 
 template <typename T> bool MoveState<T>::doRotation(T &t, float dt)
 {
-	if (m_movements[m_curIndexMovement].move_param.rotation.speed > 0)
-	{
-		t.setRotation(t.getRotation()+m_movements[m_curIndexMovement].move_param.rotation.speed*dt*m_rotateDir);
-	}
+	float step = m_movements[m_curIndexMovement].move_param.rotation.speed * dt;
+	float dist = m_movements[m_curIndexMovement].move_param.rotation.angle - t.getRotation();
 
-	if ((m_movements[m_curIndexMovement].move_param.rotation.angle - t.getRotation()) < ROTATION_RESOLUTION)
+	t.setRotation(t.getRotation() + step*m_rotateDir);
+
+	if (step > dist)
 	{
 		return true;
 	}
@@ -194,7 +206,8 @@ template <typename T> bool MoveState<T>::doRotation(T &t, float dt)
 	return false;
 }
 
-template <typename T> bool MoveState<T>::doStay(T &t, float dt)
+template <typename T>
+bool MoveState<T>::doStay(T &t, float dt)
 {
 	m_stayTimer += dt;
 	if (m_stayTimer >= m_movements[m_curIndexMovement].move_param.stay.period)

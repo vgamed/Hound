@@ -48,6 +48,7 @@ public:
 		: m_rOwner(owner)
 		, m_pPreState(nullptr)
 		, m_pCurState(nullptr)
+		, m_eventReceived(-1)
 	{}
 
 	bool addStateTransition(const StateTransition &trans);
@@ -84,8 +85,12 @@ private:
 		changeState(*m_pPreState);
 	}
 
+	void processEvent(int event);
+
 private:
 	T &m_rOwner; // owner of the state machine
+
+	int m_eventReceived;
 	
 	State<T> *m_pPreState; // pointer to the previous state
 	State<T> *m_pCurState; // pointer to the current state
@@ -112,14 +117,26 @@ bool StateMachine<T>::addStateTransition(const StateTransition &trans)
 template <typename T> 
 void StateMachine<T>::triggerEvent(int event)
 {
+	// cache the event and process it in the update()
+	if (event >= 0)
+		m_eventReceived = event;
+}
+
+template <typename T>
+void StateMachine<T>::processEvent(int event)
+{
 	if (m_stateMapAny.size() > 0)
 	{
 		auto range = m_stateMapAny.equal_range(event);
-		changeState(*(range.first->second.to));
+		if (range.first != range.second)
+		{
+			changeState(*(range.first->second.to));
+		}
 	}
+
 	if (m_stateMap.size() > 0)
 	{
-		auto range = m_stateMapAny.equal_range(event);
+		auto range = m_stateMap.equal_range(event);
 		for (auto it=range.first; it!=range.second; ++it)
 		{
 			if (it->second.from == m_pCurState)
@@ -134,6 +151,12 @@ void StateMachine<T>::triggerEvent(int event)
 template <typename T> 
 void StateMachine<T>::update(float dt) 
 {
+	if (m_eventReceived >= 0)
+	{
+		processEvent(m_eventReceived);
+		m_eventReceived = -1;
+	}
+
 	if( m_pCurState != nullptr)
 		m_pCurState->exec(m_rOwner, dt);
 }
