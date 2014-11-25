@@ -23,6 +23,9 @@ public:
 
 	static Weapon* create(const WeaponInfo &info, bool is_hound=true);
 
+	void reset(void)
+	{ m_timeCounter = 0; }
+
 	void update(float dt);
 
 	void fire(float dt);
@@ -39,10 +42,13 @@ protected:
 
 	bool init(const WeaponInfo &info);
 
+	void aim(void);
+
 private:
 	int				m_id;
 	unsigned int	m_level;
 	WEAPON_TYPE		m_type;
+	bool			m_autoAim;
 
 	float			m_timeOffsetFiringStart; //second
 	float			m_timeOffsetFiringStop; //second

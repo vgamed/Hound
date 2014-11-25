@@ -1,15 +1,19 @@
 #include "Weapon.h"
+#include "DrawNodeShape.h"
 #include "Battlefield.h"
 #include "Hound.h"
 #include "Projectile/Bullet.h"
 #include "Projectile/Laser.h"
 #include "Projectile/Missile.h"
 
+#define WEAPON_DEBUG 1
+
 USING_NS_CC;
 
 Weapon::Weapon(void)
 	: m_id(-1)
 	, m_type(WEAPON_TYPE::NONE)
+	, m_autoAim(false)
 {
 }
 
@@ -50,6 +54,7 @@ bool Weapon::init(const WeaponInfo &info)
 	m_id = info.id;
 	m_level = info.level;
 	m_type = info.type;
+	m_autoAim = info.auto_aim;
 
 	m_timeCounter = 0.0f;
 	m_timeOffsetFiringStart = info.time_offset_firing_start;
@@ -64,8 +69,7 @@ bool Weapon::init(const WeaponInfo &info)
 	for (BarrelInfo binfo : info.barrells)
 	{
 		barrel.info = binfo;
-		barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, 
-			-CC_DEGREES_TO_RADIANS(info.rotate_angle+barrel.info.rotate_angle));
+		barrel.direction  = Vec2::UNIT_Y;
 		switch(barrel.info.type)
 		{
 		case BARREL_TYPE::BULLET:
@@ -83,11 +87,23 @@ bool Weapon::init(const WeaponInfo &info)
 		m_barrells.push_back(barrel);
 	}
 
+#if WEAPON_DEBUG
+	// display a dot at the weapon position for debugging
+	if (texture == nullptr)
+	{
+		auto shape = DrawNodeShape::create(DrawNodeShape::SHAPE_TYPE::ARROW, 
+			getPosition(), 3.0f, Color4F(1.0f,0.0f,0.0f,1.0f));
+		addChild(shape);
+	}
+#endif //WEAPON_DEBUG
+
 	return true;
 }
 
 void Weapon::update(float dt)
 {
+	aim();
+
 	CC_ASSERT(m_timeOffsetFiringStart<=m_timeOffsetFiringStop);
 
 	if (m_timeCounter < m_timeOffsetFiringStop)
@@ -97,6 +113,18 @@ void Weapon::update(float dt)
 		{
 			fire(dt);
 		}
+	}
+}
+
+void Weapon::aim(void)
+{
+	if (m_autoAim)
+	{
+		CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
+		auto bf = dynamic_cast<Battlefield*>(getParent()->getParent());
+		auto hound = bf->getHound();
+		Vec2 dir = bf->convertToWorldSpace(hound->getPosition()) - getParent()->convertToWorldSpace(getPosition());
+		setRotation(CC_RADIANS_TO_DEGREES(dir.getAngle(Vec2::UNIT_Y))-getParent()->getRotation());
 	}
 }
 
@@ -112,7 +140,7 @@ void Weapon::fire(float dt)
 		if (barrel.firing_counter >= barrel.info.firing_interval)
 		{
 			float angle = getParent()->getRotation() + getRotation() + barrel.info.rotate_angle;
-			barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(angle));
+			barrel.direction = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(angle));
 			Projectile *proj = barrel.projectile_creator(barrel.info, 
 														barrel.direction, 
 														m_damage + barrel.info.projectile_damage, 

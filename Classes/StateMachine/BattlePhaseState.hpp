@@ -35,6 +35,7 @@ void BattlePhaseState<T, finishEvent>::enter(T &t)
 	{
 		if (id == weapon->getId())
 		{
+			weapon->reset();
 			m_weapons.push_back(weapon);
 		}
 	}

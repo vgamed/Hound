@@ -171,6 +171,7 @@ bool AppDelegate::loadPlayerInfo(void)
 	WeaponInfo weapon;
 	weapon.level  = 1;
 	weapon.type = WEAPON_TYPE::CANNON;
+	weapon.auto_aim = false;
 	weapon.time_offset_firing_start = 2.0f; //second
 	weapon.time_offset_firing_stop = FLT_MAX; //second
 	weapon.speed = 1000.0f; //per second
@@ -268,6 +269,7 @@ bool AppDelegate::loadLevelInfo(void)
 	//1st weapon
 	weapon.time_offset_firing_start = 0.5f; //second
 	weapon.time_offset_firing_stop = 1.5f; //second
+	weapon.auto_aim = true;
 	weapon.id = 1;
 	weapon.dock_position = Vec2(60.0f, 100.0f);
 	weapon.rotate_angle = -20.0f;
@@ -282,6 +284,7 @@ bool AppDelegate::loadLevelInfo(void)
 	//3rd weapon
 	weapon.time_offset_firing_start = 0.1f; //second
 	weapon.time_offset_firing_stop = 7.5f; //second
+	weapon.auto_aim = false;
 	weapon.id = 3;
 	weapon.dock_position = Vec2(60.0f, 50.0f);
 	weapon.rotate_angle = -90.0f;

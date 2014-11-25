@@ -228,9 +228,11 @@ struct WeaponInfo
 
 	cocos2d::Vec2	dock_position;
 
-	// the angle from fighter facing direction, in degrees.
+	// the angle from Y+ direction, in degrees.
 	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
 	float			rotate_angle;
+	// if auto_aim is true, the rotate_angle doesn't matter
+	bool			auto_aim;
 
 	std::vector<BarrelInfo> barrells;
 	std::string		texture_name;

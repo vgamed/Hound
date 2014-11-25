@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include "../DrawNodeCircle.h"
 #include "EnemyStateFactory.h"
 
 USING_NS_CC;
@@ -80,14 +79,7 @@ bool Enemy::init(const EnemyInfo &info)
 			m_weapons.push_back(weapon);
 			addChild(weapon);
 			weapon->setPosition(winfo.dock_position / scale);
-			weapon->setRotation(getRotation() + winfo.rotate_angle);
-
-			// display a dot at the weapon position for debugging
-			if (winfo.texture_name.size() == 0)
-			{
-				auto dot = DrawNodeCircle::create(weapon->getPosition(), 2.0f, Color4F(1.0f, 0.0f, 0.0f, 1.0f));
-				addChild(dot);
-			}
+			weapon->setRotation(winfo.rotate_angle);
 		}
 	}
 
