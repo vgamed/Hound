@@ -76,7 +76,7 @@ void Hound::update(float dt)
 	// update weapons
 	for (auto weapon : m_weapons)
 	{
-		//weapon->update(dt);
+		weapon->update(dt);
 	}
 }
 

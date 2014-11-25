@@ -265,7 +265,7 @@ bool Battlefield::removeInactiveEnemies(void)
 				this->removeChild(p);
 				return true;
 			}
-			if (p->isLeftDone())
+			if (p->isLeavingDone())
 			{
 				this->removeChild(p);
 				return true;

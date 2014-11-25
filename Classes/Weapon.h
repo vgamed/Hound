@@ -27,6 +27,12 @@ public:
 
 	void fire(float dt);
 
+	int getId(void) const
+	{ return m_id; }
+
+	WEAPON_TYPE getType(void) const
+	{ return m_type; }
+
 protected:
 	Weapon(void);
 	~Weapon(void);
@@ -34,6 +40,7 @@ protected:
 	bool init(const WeaponInfo &info);
 
 private:
+	int				m_id;
 	unsigned int	m_level;
 	WEAPON_TYPE		m_type;
 

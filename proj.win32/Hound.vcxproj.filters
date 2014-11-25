@@ -93,6 +93,9 @@
     <ClCompile Include="..\Classes\Enemy\EnemyStateFactory.cpp">
       <Filter>Classes\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\DrawNodeCircle.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\StateMachine\EntryState.hpp">
       <Filter>Classes\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DrawNodeCircle.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

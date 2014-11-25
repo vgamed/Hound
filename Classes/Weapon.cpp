@@ -8,6 +8,8 @@
 USING_NS_CC;
 
 Weapon::Weapon(void)
+	: m_id(-1)
+	, m_type(WEAPON_TYPE::NONE)
 {
 }
 
@@ -45,6 +47,7 @@ bool Weapon::init(const WeaponInfo &info)
 		return false;
 	}
 
+	m_id = info.id;
 	m_level = info.level;
 	m_type = info.type;
 
@@ -103,22 +106,26 @@ void Weapon::fire(float dt)
 
 	Battlefield *bf = (Battlefield*)(getParent()->getParent());
 	Vec2 start_pos = bf->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
-	for (Barrel &b : m_barrells)
+	for (Barrel &barrel : m_barrells)
 	{
-		b.firing_counter += dt;
-		if (b.firing_counter >= b.info.firing_interval)
+		barrel.firing_counter += dt;
+		if (barrel.firing_counter >= barrel.info.firing_interval)
 		{
-			Projectile *proj = b.projectile_creator(b.info, b.direction, 
-				m_damage+b.info.projectile_damage, 
-				m_speed+b.info.projectile_speed, m_isHound);
+			float angle = getParent()->getRotation() + getRotation() + barrel.info.rotate_angle;
+			barrel.direction  = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(angle));
+			Projectile *proj = barrel.projectile_creator(barrel.info, 
+														barrel.direction, 
+														m_damage + barrel.info.projectile_damage, 
+														m_speed + barrel.info.projectile_speed, 
+														m_isHound);
 			if (proj != nullptr)
 			{
 				bf->addActiveProjectile(proj); // bullet should be child of Battlefield
-				proj->setRotation(getRotation()+b.info.rotate_angle);
+				proj->setRotation(angle);
 				proj->setPosition(start_pos);
 			}
 			
-			b.firing_counter = 0.0f;
+			barrel.firing_counter = 0.0f;
 		}
 	}
 }

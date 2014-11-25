@@ -150,7 +150,8 @@ void MoveState<T>::initRotation(T &t)
 {
 	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::ROTATION);
 
-	t.setPosition(m_movements[m_curIndexMovement].target_position);
+	if (m_movements[m_curIndexMovement].move_param.rotation.jump)
+		t.setPosition(m_movements[m_curIndexMovement].target_position);
 
 	if (m_movements[m_curIndexMovement].move_param.rotation.speed <= 0)
 	{
@@ -170,8 +171,12 @@ void MoveState<T>::initStay(T &t)
 {
 	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::STAY);
 
-	t.setPosition(m_movements[m_curIndexMovement].target_position);
-	t.setRotation(m_movements[m_curIndexMovement].move_param.stay.angle);
+	if (m_movements[m_curIndexMovement].move_param.stay.jump_rotate)
+	{
+		t.setPosition(m_movements[m_curIndexMovement].target_position);
+		t.setRotation(m_movements[m_curIndexMovement].move_param.stay.angle);
+	}
+	
 	m_stayTimer = 0.0f;
 }
 

@@ -16,7 +16,7 @@ EnemyState* EnemyStateFactory::create(const StateInfo &info)
 	case STATE_TYPE::ENTRY:
 		return new EnemyEntryState(info);
 	case STATE_TYPE::BATTLE_PHASE:
-		return nullptr;
+		return new EnemyBattlePhaseState(info);
 	case STATE_TYPE::TRANSFORM:
 		return nullptr;
 	case STATE_TYPE::LEAVE:

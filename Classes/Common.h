@@ -34,19 +34,21 @@ struct MoveParamRotation
 {
 	float angle; //degree
 	float speed; //degree per second
+	bool jump; // if jump to the target position before rotation
 };
 
 struct MoveParamStay
 {
 	float angle; //degree
 	float period; // second
+	bool jump_rotate; // if jump to the target position before stay
 };
 
 union MoveParam
 {
-	MoveParamDisplacement displmt;
-	MoveParamRotation rotation;
-	MoveParamStay stay;
+	MoveParamDisplacement	displmt;
+	MoveParamRotation		rotation;
+	MoveParamStay			stay;
 };
 
 struct Movement
@@ -83,7 +85,8 @@ enum class STATE_MACHINE_EVENT
 	BATTLE_PHASE_FINISHED,
 	TRANSFORM_FINISHED,
 	LEAVE_FINISHED,
-	BATTLE_END,
+	HOUND_DEAD,
+	LEVEL_QUIT,
 	DEAD,
 	MAX
 };
@@ -92,10 +95,13 @@ typedef std::vector<int> WEAPON_GROUP;
 
 struct StateInfo
 {
-	int id;
-	STATE_TYPE type;
-	MOVEMENTS movements;
-	WEAPON_GROUP weapons;
+	int				id;
+	STATE_TYPE		type;
+	float			life_threshold;
+	bool			repeat_movements;
+
+	MOVEMENTS		movements;
+	WEAPON_GROUP	weapons;
 };
 
 typedef std::vector<StateInfo> STATE_INFOES;
@@ -103,8 +109,8 @@ typedef std::vector<StateInfo> STATE_INFOES;
 struct StateMapInfo
 {
 	STATE_MACHINE_EVENT event;
-	int from;
-	int to;
+	int					from;
+	int					to;
 };
 
 typedef std::vector<StateMapInfo> STATE_MAP_INFOES;
@@ -210,6 +216,7 @@ struct BarrelInfo
 
 struct WeaponInfo
 {
+	int				id;
 	WEAPON_TYPE		type;
 	unsigned int	level;
 

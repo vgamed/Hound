@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "../DrawNodeCircle.h"
 #include "EnemyStateFactory.h"
 
 USING_NS_CC;
@@ -6,7 +7,7 @@ USING_NS_CC;
 Enemy::Enemy(void)
 	: m_stateMachine(*this)
 	, m_invincible(false)
-	, m_leftDone(false)
+	, m_leavingDone(false)
 {
 	m_stateMap.clear();
 }
@@ -80,6 +81,13 @@ bool Enemy::init(const EnemyInfo &info)
 			addChild(weapon);
 			weapon->setPosition(winfo.dock_position / scale);
 			weapon->setRotation(getRotation() + winfo.rotate_angle);
+
+			// display a dot at the weapon position for debugging
+			if (winfo.texture_name.size() == 0)
+			{
+				auto dot = DrawNodeCircle::create(weapon->getPosition(), 2.0f, Color4F(1.0f, 0.0f, 0.0f, 1.0f));
+				addChild(dot);
+			}
 		}
 	}
 
@@ -91,12 +99,6 @@ bool Enemy::init(const EnemyInfo &info)
 void Enemy::update(float dt)
 {
 	m_stateMachine.update(dt);
-
-	// update weapons
-	for (auto weapon : m_weapons)
-	{
-		weapon->update(dt);
-	}
 }
 
 void Enemy::doDamage(float damage)
