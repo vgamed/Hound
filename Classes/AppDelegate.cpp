@@ -105,6 +105,9 @@ void AppDelegate::scaleByDesign(float &flt)
 
 bool AppDelegate::loadGameResources(void)
 {
+	FileUtils::getInstance()->addSearchPath("bullet");
+	FileUtils::getInstance()->addSearchPath("fonts");
+	
 	TextureCache *tcache = Director::getInstance()->getTextureCache();
 	tcache->addImage("img_bg_1.jpg");
 	tcache->addImage("img_bg_2.jpg");
@@ -123,25 +126,25 @@ bool AppDelegate::loadGameResources(void)
 	tcache->addImage("n1.png");
 	tcache->addImage("n2.png");
 	tcache->addImage("n3.png");
-	tcache->addImage("bullet\\bullet0.png");
-	tcache->addImage("bullet\\bullet1.png");
-	tcache->addImage("bullet\\bullet2.png");
-	tcache->addImage("bullet\\bullet3.png");
-	tcache->addImage("bullet\\bullet4.png");
-	tcache->addImage("bullet\\bullet5.png");
-	tcache->addImage("bullet\\bullet6.png");
-	tcache->addImage("bullet\\bullet7.png");
-	tcache->addImage("bullet\\bullet8.png");
-	tcache->addImage("bullet\\bullet9.png");
-	tcache->addImage("bullet\\bullet10.png");
-	tcache->addImage("bullet\\bullet11.png");
-	tcache->addImage("bullet\\bullet12.png");
-	tcache->addImage("bullet\\bullet13.png");
-	tcache->addImage("bullet\\bullet14.png");
-	tcache->addImage("bullet\\bullet15.png");
-	tcache->addImage("bullet\\bullet16.png");
-	tcache->addImage("bullet\\bullet17.png");
-	tcache->addImage("bullet\\bullet18.png");
+	tcache->addImage("bullet0.png");
+	tcache->addImage("bullet1.png");
+	tcache->addImage("bullet2.png");
+	tcache->addImage("bullet3.png");
+	tcache->addImage("bullet4.png");
+	tcache->addImage("bullet5.png");
+	tcache->addImage("bullet6.png");
+	tcache->addImage("bullet7.png");
+	tcache->addImage("bullet8.png");
+	tcache->addImage("bullet9.png");
+	tcache->addImage("bullet10.png");
+	tcache->addImage("bullet11.png");
+	tcache->addImage("bullet12.png");
+	tcache->addImage("bullet13.png");
+	tcache->addImage("bullet14.png");
+	tcache->addImage("bullet15.png");
+	tcache->addImage("bullet16.png");
+	tcache->addImage("bullet17.png");
+	tcache->addImage("bullet18.png");
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bullet.plist");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("wsparticle_p01.plist");
@@ -183,7 +186,7 @@ bool AppDelegate::loadPlayerInfo(void)
 	scaleByDesign(barrel.projectile_scale_xy);
 
 	//barrel.projectile_effect_name = "bullet_1.png";
-	barrel.projectile_effect_name = "bullet\\bullet18.png";
+	barrel.projectile_effect_name = "bullet18.png";
 	barrel.projectile_damage = 2.0f;
 	barrel.projectile_speed = 200.0f;
 	barrel.firing_interval = 0.1f; //second
@@ -272,7 +275,7 @@ bool AppDelegate::loadLevelInfo(void)
 	barrel.projectile_scale_xy = 0.6f;
 	scaleByDesign(barrel.projectile_scale_xy);
 
-	barrel.projectile_effect_name = "bullet\\bullet0.png";
+	barrel.projectile_effect_name = "bullet0.png";
 	barrel.rotate_angle = 0.0f;
 	barrel.projectile_damage = 2.0f;
 	barrel.projectile_speed = 200.0f;

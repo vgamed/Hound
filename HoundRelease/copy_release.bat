@@ -1,5 +1,5 @@
 @echo off | @echo Copying PC release version...
-xcopy /D /Y ..\Resources\*.* .\PC\
+xcopy /E /D /Y ..\Resources\*.* .\PC\
 xcopy /D /Y ..\proj.win32\debug.win32\hound.exe .\PC\
 xcopy /D /Y ..\proj.win32\debug.win32\*.dll .\PC\
 
