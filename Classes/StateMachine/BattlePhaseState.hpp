@@ -53,7 +53,15 @@ void BattlePhaseState<T, finishEvent>::exec(T &t, float dt)
 
 	MoveState<T>::exec(t, dt);
 
-	if ((MoveState<T>::isMoveFinished())||
+	// if life is below 0, trigger the dead event
+	if (t.getCurLife() <= 0.0f)
+	{
+		t.getStateMachine().triggerEvent((int)STATE_MACHINE_EVENT::DEAD);
+		return;
+	}
+
+	// if movement is finished, or life is below the predefined threshold, trigger the finish event
+	if ((MoveState<T>::isDone())||
 		(t.getCurLife() <= m_lifeThreshold))
 	{
 		t.getStateMachine().triggerEvent((int)finishEvent);

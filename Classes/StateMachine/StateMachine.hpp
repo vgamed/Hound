@@ -6,6 +6,11 @@ template <typename T>
 class State
 {
 public:
+	State(void)
+		: m_done(false)
+		, m_id(-1)
+		, m_type(0)
+	{}
 	virtual ~State(void) {}
 
 	virtual void enter(T &t){}
@@ -13,18 +18,18 @@ public:
 	virtual void exit(T &t){}
 
 	int getId(void) { return m_id; }
-	void setId(int id) { m_id = id; }
 
 	int getType(void) { return m_type; }
-	void setType(int type) { m_type = type; }
+
+	bool isDone(void)
+	{ return m_done; }
 
 protected:
-	State(void) {}
 	State& operator = (const State &other);
 
-private:
 	int m_id;
 	int m_type;
+	bool m_done;
 };
 
 // define the information structure of transition among states
@@ -46,8 +51,8 @@ public:
 
 	StateMachine(T &owner)
 		: m_rOwner(owner)
-		, m_pPreState(nullptr)
-		, m_pCurState(nullptr)
+		, m_pPreState(&STATE_NONE)
+		, m_pCurState(&STATE_NONE)
 		, m_eventReceived(-1)
 	{}
 
@@ -63,8 +68,8 @@ public:
 	State<T> &getPreviousState(void)
 	{ return *m_pPreState; }
 
-	bool isInState(State<T> &state) 
-	{ return (m_pCurState==&state); }
+	bool isInState(int type) 
+	{ return (m_pCurState->getType() == type); }
 
 private:
 	void changeState(State<T> &state);
@@ -97,7 +102,12 @@ private:
 
 	StateMultimap m_stateMap;
 	StateMultimap m_stateMapAny;
+
+	static State<T> STATE_NONE;
 };
+
+template <typename T>
+State<T> StateMachine<T>::STATE_NONE;
 
 template <typename T> 
 bool StateMachine<T>::addStateTransition(const StateTransition &trans)
@@ -118,8 +128,7 @@ template <typename T>
 void StateMachine<T>::triggerEvent(int event)
 {
 	// cache the event and process it in the update()
-	if (event >= 0)
-		m_eventReceived = event;
+	m_eventReceived = event;
 }
 
 template <typename T>
@@ -157,18 +166,14 @@ void StateMachine<T>::update(float dt)
 		m_eventReceived = -1;
 	}
 
-	if( m_pCurState != nullptr)
-		m_pCurState->exec(m_rOwner, dt);
+	m_pCurState->exec(m_rOwner, dt);
 }
 
 template <typename T> 
 void StateMachine<T>::changeState(State<T> &state)
 {
-	if (m_pCurState != nullptr)
-	{
-		m_pCurState->exit(m_rOwner);
-		setPreviousState(*m_pCurState);
-	}
+	m_pCurState->exit(m_rOwner);
+	setPreviousState(*m_pCurState);
 	setCurrentState(state);
 }
 

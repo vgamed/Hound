@@ -5,7 +5,10 @@
 #include "Weapon.h"
 #include "../StateMachine/EntryState.hpp"
 #include "../StateMachine/BattlePhaseState.hpp"
+#include "../StateMachine/TransformState.hpp"
 #include "../StateMachine/LeaveState.hpp"
+#include "../StateMachine/DeadState.hpp"
+#include "../StateMachine/BattleEndState.hpp"
 
 class Enemy;
 
@@ -15,7 +18,10 @@ typedef State<Enemy> EnemyState;
 typedef std::map<int, EnemyState*> EnemyStateMap;
 typedef EntryState<Enemy, STATE_MACHINE_EVENT::ENTRY_FINISHED> EnemyEntryState;
 typedef BattlePhaseState<Enemy, STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED> EnemyBattlePhaseState;
+typedef TransformState<Enemy, STATE_MACHINE_EVENT::TRANSFORM_FINISHED> EnemyTransformState;
 typedef LeaveState<Enemy, STATE_MACHINE_EVENT::LEAVE_FINISHED> EnemyLeaveState;
+typedef DeadState<Enemy> EnemyDeadState;
+typedef BattleEndState<Enemy> EnemyBattleEndState;
 typedef MoveState<Enemy> EnemyMoveState;
 
 class Enemy :
@@ -44,15 +50,6 @@ public:
 	void setInvincible(bool invincible)
 	{ m_invincible = invincible; }
 	
-	bool isDead(void) 
-	{ return (m_curLife<=0.0f); }
-
-	bool isLeavingDone(void)
-	{ return m_leavingDone; }
-
-	void signalLeftDone(void)
-	{ m_leavingDone = true; }
-
 	float getCurLife(void) const
 	{ return m_curLife; }
 
@@ -69,8 +66,6 @@ protected:
 	float	m_armor;
 	
 	bool	m_invincible; // true - this enemy can not be hurt
-
-	bool	m_leavingDone; // the left state has been finished, wating for battlefield's removing
 
 	Circle	m_boundingCircle;
 

@@ -123,6 +123,25 @@ bool AppDelegate::loadGameResources(void)
 	tcache->addImage("n1.png");
 	tcache->addImage("n2.png");
 	tcache->addImage("n3.png");
+	tcache->addImage("bullet\\bullet0.png");
+	tcache->addImage("bullet\\bullet1.png");
+	tcache->addImage("bullet\\bullet2.png");
+	tcache->addImage("bullet\\bullet3.png");
+	tcache->addImage("bullet\\bullet4.png");
+	tcache->addImage("bullet\\bullet5.png");
+	tcache->addImage("bullet\\bullet6.png");
+	tcache->addImage("bullet\\bullet7.png");
+	tcache->addImage("bullet\\bullet8.png");
+	tcache->addImage("bullet\\bullet9.png");
+	tcache->addImage("bullet\\bullet10.png");
+	tcache->addImage("bullet\\bullet11.png");
+	tcache->addImage("bullet\\bullet12.png");
+	tcache->addImage("bullet\\bullet13.png");
+	tcache->addImage("bullet\\bullet14.png");
+	tcache->addImage("bullet\\bullet15.png");
+	tcache->addImage("bullet\\bullet16.png");
+	tcache->addImage("bullet\\bullet17.png");
+	tcache->addImage("bullet\\bullet18.png");
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bullet.plist");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("wsparticle_p01.plist");
@@ -160,10 +179,11 @@ bool AppDelegate::loadPlayerInfo(void)
 	barrel.type = BARREL_TYPE::BULLET;
 	barrel.projectile_type = PROJECTILE_TYPE::BULLET_NORMAL;
 	
-	barrel.projectile_scale_xy = 0.4f;
+	barrel.projectile_scale_xy = 0.6f;
 	scaleByDesign(barrel.projectile_scale_xy);
 
-	barrel.projectile_effect_name = "bullet_1.png";
+	//barrel.projectile_effect_name = "bullet_1.png";
+	barrel.projectile_effect_name = "bullet\\bullet18.png";
 	barrel.projectile_damage = 2.0f;
 	barrel.projectile_speed = 200.0f;
 	barrel.firing_interval = 0.1f; //second
@@ -252,7 +272,7 @@ bool AppDelegate::loadLevelInfo(void)
 	barrel.projectile_scale_xy = 0.6f;
 	scaleByDesign(barrel.projectile_scale_xy);
 
-	barrel.projectile_effect_name = "bullet_1.png";
+	barrel.projectile_effect_name = "bullet\\bullet0.png";
 	barrel.rotate_angle = 0.0f;
 	barrel.projectile_damage = 2.0f;
 	barrel.projectile_speed = 200.0f;
@@ -394,11 +414,42 @@ bool AppDelegate::loadLevelInfo(void)
 		ef_info.state_infoes.push_back(state);
 		//
 
+		// 6th state - Dead State
+		state.id = 6;
+		state.type = STATE_TYPE::DEAD;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+
+		// 7th state - BattleEnd State
+		state.id = 7;
+		state.type = STATE_TYPE::BATTLE_END;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+
 		// state maps
 		StateMapInfo state_map;
 		state_map.event = STATE_MACHINE_EVENT::START;
 		state_map.from = -1;
 		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+
+		state_map.event = STATE_MACHINE_EVENT::DEAD;
+		state_map.from = -1;
+		state_map.to = 6;
+		ef_info.state_map_infoes.push_back(state_map);
+
+		state_map.event = STATE_MACHINE_EVENT::HOUND_DEAD;
+		state_map.from = -1;
+		state_map.to = 7;
+		ef_info.state_map_infoes.push_back(state_map);
+
+		state_map.event = STATE_MACHINE_EVENT::LEVEL_QUIT;
+		state_map.from = -1;
+		state_map.to = 7;
 		ef_info.state_map_infoes.push_back(state_map);
 
 		state_map.event = STATE_MACHINE_EVENT::ENTRY_FINISHED;

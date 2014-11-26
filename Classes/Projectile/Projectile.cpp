@@ -17,12 +17,20 @@ Projectile::~Projectile(void)
 bool Projectile::init(const BarrelInfo &info, const cocos2d::Vec2 &direction, 
 		float damage, float speed, bool from_hound)
 {
-	SpriteFrame *frame = 
-		SpriteFrameCache::getInstance()->getSpriteFrameByName(info.projectile_effect_name);
-	if (!initWithSpriteFrame(frame))
-	{
-		return false;
-	}
+	do{
+		SpriteFrame *frame = 
+			SpriteFrameCache::getInstance()->getSpriteFrameByName(info.projectile_effect_name);
+		if ((frame!=nullptr) && (initWithSpriteFrame(frame)))
+		{
+			break;
+		}
+		Texture2D *texture = 
+			Director::getInstance()->getTextureCache()->getTextureForKey(info.projectile_effect_name);
+		if ((texture==nullptr) || (!initWithTexture(texture)))
+		{
+			return false;
+		}
+	}while(0);
 
 	m_projectileType = info.projectile_type;
 	m_direction = direction;

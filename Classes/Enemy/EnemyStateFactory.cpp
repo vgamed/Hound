@@ -22,9 +22,9 @@ EnemyState* EnemyStateFactory::create(const StateInfo &info)
 	case STATE_TYPE::LEAVE:
 		return new EnemyLeaveState(info);
 	case STATE_TYPE::DEAD:
-		return nullptr;
-	case STATE_TYPE::HOUND_DEAD:
-		return nullptr;
+		return new EnemyDeadState(info);
+	case STATE_TYPE::BATTLE_END:
+		return new EnemyBattleEndState(info);
 	case STATE_TYPE::MOVE:
 		return new EnemyMoveState(info);
 	default:

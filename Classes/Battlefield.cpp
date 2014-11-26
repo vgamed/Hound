@@ -254,7 +254,7 @@ bool Battlefield::removeInactiveEnemies(void)
 		m_activeEnemies.end(), 
 		[&](Enemy *p)->bool 
 		{
-			if (p->isDead())
+			if (p->getStateMachine().isInState((int)STATE_TYPE::DEAD))
 			{	// play explosion effect
 				auto sfx = SFXFactory::createEnemyExplosionSFX(p->getType());
 				if (sfx != nullptr)
@@ -265,7 +265,8 @@ bool Battlefield::removeInactiveEnemies(void)
 				this->removeChild(p);
 				return true;
 			}
-			if (p->isLeavingDone())
+			if (p->getStateMachine().isInState((int)STATE_TYPE::LEAVE) &&
+				p->getStateMachine().getCurrentState().isDone())
 			{
 				this->removeChild(p);
 				return true;

@@ -31,7 +31,7 @@ void EntryState<T, finishEvent>::exec(T &t, float dt)
 {
 	MoveState<T>::exec(t, dt);
 
-	if (MoveState<T>::isMoveFinished())
+	if (State<T>::isDone())
 	{
 		t.getStateMachine().triggerEvent((int)finishEvent);
 	}

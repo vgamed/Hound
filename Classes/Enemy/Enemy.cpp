@@ -6,7 +6,6 @@ USING_NS_CC;
 Enemy::Enemy(void)
 	: m_stateMachine(*this)
 	, m_invincible(false)
-	, m_leavingDone(false)
 {
 	m_stateMap.clear();
 }
@@ -43,7 +42,10 @@ bool Enemy::init(const EnemyInfo &info)
 	for (const auto &state_info : info.state_infoes)
 	{
 		auto state = EnemyStateFactory::create(state_info);
-		m_stateMap.insert(std::make_pair(state->getId(), state));
+		if (state != nullptr)
+		{
+			m_stateMap.insert(std::make_pair(state->getId(), state));
+		}
 	}
 
 	for (const auto &state_map_info : info.state_map_infoes)

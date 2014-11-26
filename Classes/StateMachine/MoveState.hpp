@@ -17,9 +17,6 @@ public:
 
 	void addMovement(const Movement &move);
 
-	bool isMoveFinished(void) 
-	{ return this->m_isMoveFinished; }
-
 private:
 	typedef std::function<bool (T &t, float dt)> MOVEMENT_DO_FUNC;
 
@@ -40,8 +37,6 @@ private:
 	cocos2d::Vec2	m_displmtDir;
 	float			m_rotateDir;
 	float			m_stayTimer;
-
-	bool			m_isMoveFinished;
 };
 
 template <typename T> 
@@ -52,10 +47,9 @@ MoveState<T>::MoveState(const StateInfo &info)
 	, m_displmtDir(cocos2d::Vec2::ZERO)
 	, m_rotateDir(0.0f)
 	, m_stayTimer(0.0f)
-	, m_isMoveFinished(false)
 {
-	this->setId(info.id);
-	this->setType((int)info.type);
+	State<T>::m_id = info.id;
+	State<T>::m_type = (int)(info.type);
 }
 
 template <typename T>
@@ -67,13 +61,13 @@ void MoveState<T>::enter(T &t)
 	
 	initMovement(t);
 
-	m_isMoveFinished = false; // start the movement
+	State<T>::m_done = false; // start the movement
 }
 
 template <typename T>
 void MoveState<T>::exec(T &t, float dt)
 {
-	if (!m_isMoveFinished && m_movementDoFunc(t, dt))
+	if (!State<T>::m_done && m_movementDoFunc(t, dt))
 	{
 		m_curIndexMovement++;
 		if (m_curIndexMovement < m_movements.size())
@@ -82,7 +76,7 @@ void MoveState<T>::exec(T &t, float dt)
 		}
 		else
 		{
-			m_isMoveFinished = true;
+			State<T>::m_done = true;
 		}
 	}
 }
@@ -190,7 +184,7 @@ bool MoveState<T>::doDisplacement(T &t, float dt)
 
 	if (step > dist)
 	{
-		return true;
+		return true; //the current movement is finished
 	}
 
 	return false;
@@ -205,7 +199,7 @@ template <typename T> bool MoveState<T>::doRotation(T &t, float dt)
 
 	if (step > dist)
 	{
-		return true;
+		return true; //the current movement is finished
 	}
 
 	return false;
@@ -217,7 +211,7 @@ bool MoveState<T>::doStay(T &t, float dt)
 	m_stayTimer += dt;
 	if (m_stayTimer >= m_movements[m_curIndexMovement].move_param.stay.period)
 	{
-		return true;
+		return true; //the current movement is finished
 	}
 
 	return false;
