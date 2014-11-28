@@ -45,12 +45,12 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 	{
 		return false;
 	}
+
 	this->addChild(m_hound);
+	// hound will fly into the battlefield, so set the initial position Y out of the screen
+	m_hound->setPosition(Vec2(player.hound.start_position.x, -50.0f));
 
 	m_hound->setTouchID(INVALID_TOUCH_ID); // no available touching inputs
-
-	m_houndStartPosition.x = getBoundingBox().size.width/2 + level.hound_start_offset.x;
-	m_houndStartPosition.y = m_hound->getBoundingBox().size.height/2 + level.hound_start_offset.y;
 
 	m_waveTimer = 0.0f;
 	m_nextWave = m_enemyWaves.begin();
@@ -78,7 +78,22 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 void Battlefield::update(float dt)
 {
 	// update hound
-	m_hound->update(dt);
+	if (m_hound != nullptr)
+	{
+		m_hound->update(dt);
+		// remove hound if it's in dead state
+		if (m_hound->getStateMachine().isInState((int)STATE_TYPE::DEAD))
+		{
+			auto sfx = SFXFactory::createHoundExplosionSFX();
+			if (sfx != nullptr)
+			{
+				sfx->setPosition(m_hound->getPosition());
+				this->addChild(sfx);
+			}
+			removeChild(m_hound);
+			m_hound = nullptr;
+		}
+	}
 
 	removeInactiveEnemies();
 
@@ -97,29 +112,27 @@ void Battlefield::update(float dt)
 
 void Battlefield::onEnterTransitionDidFinish(void)
 {
-	m_hound->setPosition(m_houndStartPosition);
+	if (m_hound != nullptr)
+	{
+		m_hound->getStateMachine().triggerEvent((int)STATE_MACHINE_EVENT::START);
+	}
 
 	this->scheduleUpdate();
 }
 
 bool Battlefield::onTouchBegan(Touch *touch, Event *event)
 {
-	// remove the following part if you wanna control like À×öªÕ½»ú
-	//Rect bb = m_hound->getBoundingBox();
-	//if (!bb.containsPoint(touch->getLocation()))
-	//	return false;
-
-	//if (!m_hound->getIsMoving())
-	//{
-	//	m_movingOffset = m_hound->getPosition() - touch->getLocation();
-	//	m_hound->setIsMoving(true);
-	//}
-
 	return true;
 }
 
 void Battlefield::onTouchMoved(Touch *touch, Event *event)
 {
+	if (m_hound == nullptr)
+		return;
+
+	if (!m_hound->getStateMachine().isInState((int)STATE_TYPE::BATTLE_PHASE))
+		return;
+
 	if (m_hound->getTouchID() == INVALID_TOUCH_ID)
 	{
 		m_movingOffset = m_hound->getPosition() - touch->getLocation();
@@ -158,6 +171,12 @@ void Battlefield::onTouchMoved(Touch *touch, Event *event)
 
 void Battlefield::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event)
 {
+	if (m_hound == nullptr)
+		return;
+
+	if (!m_hound->getStateMachine().isInState((int)STATE_TYPE::BATTLE_PHASE))
+		return;
+
 	if (m_hound->getTouchID() == touch->getID())
 	{
 		m_hound->setTouchID(INVALID_TOUCH_ID);

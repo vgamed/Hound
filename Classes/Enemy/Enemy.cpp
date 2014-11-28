@@ -38,7 +38,7 @@ bool Enemy::init(const EnemyInfo &info)
 
 	m_boundingCircle.radius = info.bounding_circle_radius;
 
-	// init state transit for state machine
+	// init states and state transitions for state machine
 	for (const auto &state_info : info.state_infoes)
 	{
 		auto state = EnemyStateFactory::create(state_info);

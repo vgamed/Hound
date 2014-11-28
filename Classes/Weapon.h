@@ -42,7 +42,7 @@ protected:
 
 	bool init(const WeaponInfo &info);
 
-	void aim(void);
+	void aimHound(void);
 
 private:
 	int				m_id;

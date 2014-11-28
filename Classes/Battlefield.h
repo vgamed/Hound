@@ -54,7 +54,7 @@ protected:
 private:
 	Hound*							m_hound;
 	cocos2d::Vec2					m_houndStartPosition;
-	cocos2d::Vec2					m_movingOffset;
+	cocos2d::Vec2					m_movingOffset; //for record touch position offset from the hound
 
 	std::vector<WaveInfo>			m_enemyWaves;
 

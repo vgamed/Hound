@@ -80,7 +80,8 @@ void Projectile::update(float dt)
 		else
 		{
 			data.type = COLLISION_TYPE::PROJECTILE_TO_HOUND;
-			if (bf->getHound()->getBoundingCircle().intersectsCircle(getBoundingCircle()))
+			if ((bf->getHound() != nullptr) &&
+				bf->getHound()->getBoundingCircle().intersectsCircle(getBoundingCircle()))
 			{
 				data.whom.push_back(bf->getHound());
 			}
@@ -88,7 +89,6 @@ void Projectile::update(float dt)
 
 		if (data.whom.size() > 0)
 		{
-
 			EventCustom event(EVENT_CUSTOM_COLLISION);
 			event.setUserData(&data);
 

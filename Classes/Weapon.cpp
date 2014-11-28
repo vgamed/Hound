@@ -102,7 +102,10 @@ bool Weapon::init(const WeaponInfo &info)
 
 void Weapon::update(float dt)
 {
-	aim();
+	if (m_autoAim) // hound weapon will not aim automatically
+	{
+		aimHound();
+	}
 
 	CC_ASSERT(m_timeOffsetFiringStart<=m_timeOffsetFiringStop);
 
@@ -116,13 +119,13 @@ void Weapon::update(float dt)
 	}
 }
 
-void Weapon::aim(void)
+void Weapon::aimHound(void)
 {
-	if (m_autoAim)
+	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
+	auto bf = dynamic_cast<Battlefield*>(getParent()->getParent());
+	auto hound = bf->getHound();
+	if (hound != nullptr)
 	{
-		CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
-		auto bf = dynamic_cast<Battlefield*>(getParent()->getParent());
-		auto hound = bf->getHound();
 		Vec2 dir = bf->convertToWorldSpace(hound->getPosition()) - getParent()->convertToWorldSpace(getPosition());
 		setRotation(CC_RADIANS_TO_DEGREES(dir.getAngle(Vec2::UNIT_Y))-getParent()->getRotation());
 	}

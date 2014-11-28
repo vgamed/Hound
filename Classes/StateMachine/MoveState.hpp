@@ -55,11 +55,12 @@ MoveState<T>::MoveState(const StateInfo &info)
 template <typename T>
 void MoveState<T>::enter(T &t)
 {
-	CC_ASSERT(m_movements.size() > 0);
-
 	m_curIndexMovement = 0;
 	
-	initMovement(t);
+	if (m_movements.size() > 0)
+	{
+		initMovement(t);
+	}
 
 	State<T>::m_done = false; // start the movement
 }
@@ -67,7 +68,12 @@ void MoveState<T>::enter(T &t)
 template <typename T>
 void MoveState<T>::exec(T &t, float dt)
 {
-	if (!State<T>::m_done && m_movementDoFunc(t, dt))
+	if (m_movements.size() <= 0)
+		return;
+
+	if (!State<T>::m_done && 
+		(m_movementDoFunc != nullptr) && 
+		m_movementDoFunc(t, dt))
 	{
 		m_curIndexMovement++;
 		if (m_curIndexMovement < m_movements.size())

@@ -1,7 +1,10 @@
 #include "AppDelegate.h"
+#include "cocos-ext.h"
+#include "tinyxml2\tinyxml2.h"
 #include "GameScene.h"
 
 USING_NS_CC;
+using namespace tinyxml2;
 
 static const Size resourceResolution(720.0f, 1280.0f);
 static const Size designResolution(640.0f, 960.0f);
@@ -165,11 +168,17 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.hound.body_type = BODY_TYPE::BASIC;
 	m_playerInfo.hound.body_texture_name = "mplane.png";
 	m_playerInfo.hound.armor_level = 1;
-	m_playerInfo.hound.armor_type = ARMOR_TYPE::BASIC;
+	m_playerInfo.hound.armor_type = ARMOR_TYPE::ENEGY_SHIELD;
 	m_playerInfo.hound.armor_texture_name = "";
 	m_playerInfo.hound.engine_level = 1;
 	m_playerInfo.hound.engine_type = ENGINE_TYPE::BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
+
+	m_playerInfo.hound.start_position = Vec2(320.0f, 150.0f);
+	scaleByDesign(m_playerInfo.hound.start_position);
+
+	m_playerInfo.hound.entry_speed = 300.0f;
+	m_playerInfo.hound.leave_speed = 300.0f;
 
 	m_playerInfo.hound.scale_xy = 1.0f;
 	scaleByDesign(m_playerInfo.hound.scale_xy);
@@ -277,7 +286,7 @@ bool AppDelegate::loadLevelInfo(void)
 
 	barrel.projectile_effect_name = "bullet0.png";
 	barrel.rotate_angle = 0.0f;
-	barrel.projectile_damage = 2.0f;
+	barrel.projectile_damage = 200.0f;
 	barrel.projectile_speed = 200.0f;
 	barrel.firing_interval = 0.2f; //second
 
@@ -412,6 +421,7 @@ bool AppDelegate::loadLevelInfo(void)
 		// 5th state - Leave State
 		state.id = 5;
 		state.type = STATE_TYPE::LEAVE;
+		state.leave_speed = 1000.0f;
 		state.movements.clear();
 		state.weapons.clear();
 		ef_info.state_infoes.push_back(state);
@@ -440,7 +450,7 @@ bool AppDelegate::loadLevelInfo(void)
 		state_map.to = 1;
 		ef_info.state_map_infoes.push_back(state_map);
 
-		state_map.event = STATE_MACHINE_EVENT::DEAD;
+		state_map.event = STATE_MACHINE_EVENT::AI_DEAD;
 		state_map.from = -1;
 		state_map.to = 6;
 		ef_info.state_map_infoes.push_back(state_map);
@@ -544,4 +554,24 @@ bool AppDelegate::loadLevelInfo(void)
 	// end of 3rd wave
 
 	return true;
+}
+
+float AppDelegate::getHoundMaxLife(void)
+{
+	return 1000.0f;
+}
+
+float AppDelegate::getHoundArmor(void)
+{
+	return 500.0f;
+}
+
+const std::pair<float, float> AppDelegate::getEnemyMaxLifeAndArmor(ENEMY_TYPE type, int level)
+{
+	return std::make_pair<float, float>(2000.0f, 300.0f);
+}
+
+float AppDelegate::getDamageRatio(PROJECTILE_TYPE proj_type, ARMOR_TYPE armor_type)
+{
+	return 1.0f;
 }

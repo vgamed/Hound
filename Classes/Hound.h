@@ -5,6 +5,27 @@
 #include "Wingman.h"
 #include "Weapon.h"
 
+#include "StateMachine/EntryState.hpp"
+#include "StateMachine/BattlePhaseState.hpp"
+#include "StateMachine/TransformState.hpp"
+#include "StateMachine/LeaveState.hpp"
+#include "StateMachine/DeadState.hpp"
+#include "StateMachine/BattleEndState.hpp"
+
+class Hound;
+
+typedef StateMachine<Hound> HoundStateMachine;
+typedef _StateTransition<Hound> HoundStateTransit;
+typedef State<Hound> HoundState;
+typedef std::map<int, HoundState*> HoundStateMap;
+typedef EntryState<Hound, STATE_MACHINE_EVENT::ENTRY_FINISHED> HoundEntryState;
+typedef BattlePhaseState<Hound, STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED, STATE_MACHINE_EVENT::HOUND_DEAD> HoundBattlePhaseState;
+typedef TransformState<Hound, STATE_MACHINE_EVENT::TRANSFORM_FINISHED> HoundTransformState;
+typedef LeaveState<Hound, STATE_MACHINE_EVENT::LEAVE_FINISHED> HoundLeaveState;
+typedef DeadState<Hound> HoundDeadState;
+typedef BattleEndState<Hound> HoundBattleEndState;
+typedef MoveState<Hound> HoundMoveState;
+
 class Hound : public cocos2d::Sprite
 {
 public:
@@ -28,6 +49,18 @@ public:
 		return m_boundingCircle.radius;
 	}
 
+	virtual const std::vector<Weapon*>& getWeapons(void)
+	{ return m_weapons;	}
+
+	virtual HoundStateMachine& getStateMachine(void)
+	{ return m_stateMachine; }
+
+	void setInvincible(bool invincible)
+	{ m_invincible = invincible; }
+
+	float getCurLife(void) const
+	{ return m_curLife; }
+
 	static const int TAG;
 	
 	CC_SYNTHESIZE(int, m_touchID, TouchID);
@@ -47,14 +80,17 @@ private:
 	float	m_curLife;
 	float	m_maxLife;
 	float	m_armor;
+	bool	m_invincible; // true - Hound can not be hurt
+
+	Circle	m_boundingCircle;
 
 	std::vector<Weapon*>	m_weapons;
 
 	Wingman *m_wingmanLeft;
 	Wingman *m_wingmanRight;
 
-	cocos2d::Vec2 m_movingOffset; //for record touch position offset from the hound
-	Circle	m_boundingCircle;
+	HoundStateMap m_stateMap;
+	HoundStateMachine m_stateMachine;
 };
 
 #endif

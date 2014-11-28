@@ -39,3 +39,8 @@ SFXExplosion* SFXFactory::createEnemyExplosionSFX(ENEMY_TYPE type)
 		return nullptr;
 	}
 }
+
+SFXExplosion* SFXFactory::createHoundExplosionSFX(void)
+{
+	return BulletExplosion::createWithSpriteFrames("b_", 1, 8, 1.0f, 2.0f);
+}

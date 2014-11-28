@@ -33,8 +33,15 @@ public:
     */
     virtual void applicationWillEnterForeground();
 
+	// for multi-resolution scaling
 	void scaleByDesign(cocos2d::Vec2 &design_vec2);
 	void scaleByDesign(float &design_float);
+
+	// for finding max life, armor and damage ratio by various types
+	float getHoundMaxLife(void);
+	float getHoundArmor(void);
+	const std::pair<float, float> getEnemyMaxLifeAndArmor(ENEMY_TYPE type, int level);
+	float getDamageRatio(PROJECTILE_TYPE proj_type, ARMOR_TYPE armor_type);
 
 private:
 	PlayerInfo	m_playerInfo;

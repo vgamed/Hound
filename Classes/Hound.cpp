@@ -1,11 +1,15 @@
 #include "Hound.h"
+#include "AppDelegate.h"
 
 USING_NS_CC;
 
 const int Hound::TAG = 1001;
 
 Hound::Hound(void)
+	: m_stateMachine(*this)
+	, m_invincible(false)
 {
+	m_stateMap.clear();
 }
 
 
@@ -41,6 +45,10 @@ bool Hound::init(const HoundInfo &hdi)
 
 	m_boundingCircle.radius = hdi.bounding_circle_radius;
 
+	auto app = dynamic_cast<AppDelegate*>(Application::getInstance());
+	m_curLife = m_maxLife = app->getHoundMaxLife();
+	m_armor = app->getHoundArmor();
+
 	// initialize weapons
 	auto scale = Director::getInstance()->getContentScaleFactor();
 	for (const auto &winfo : hdi.weapons)
@@ -58,12 +66,81 @@ bool Hound::init(const HoundInfo &hdi)
 	// initialize wingmen
 	//...
 
-	// register touch listeners
-	//auto listener = EventListenerTouchOneByOne::create();
-	//listener->setSwallowTouches(true);
-	//listener->onTouchBegan = CC_CALLBACK_2(Hound::onTouchBegan, this);
-	//listener->onTouchMoved = CC_CALLBACK_2(Hound::onTouchMoved, this);
-	//_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+	// init states and state transitions for state machine
+	StateInfo state;
+	Movement movement;
+
+	// Entry State
+	state.id = 1;
+	state.type = STATE_TYPE::ENTRY;
+	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
+	movement.target_position = hdi.start_position;
+	movement.move_param.displmt.facing_dir = false;
+	movement.move_param.displmt.speed = hdi.entry_speed;
+	state.movements.push_back(movement);
+	m_stateMap.insert(std::make_pair(state.id, new HoundEntryState(state)));
+
+	// Battle State
+	state.id = 2;
+	state.type = STATE_TYPE::BATTLE_PHASE;
+	state.movements.clear();
+	for (auto weapon : m_weapons)
+	{
+		state.weapons.push_back(weapon->getId());
+	}
+	m_stateMap.insert(std::make_pair(state.id, new HoundBattlePhaseState(state)));
+
+	// Leave State
+	state.id = 3;
+	state.type = STATE_TYPE::LEAVE;
+	state.leave_speed = 1000.0f;
+	state.movements.clear();
+	state.weapons.clear();
+	m_stateMap.insert(std::make_pair(state.id, new HoundLeaveState(state)));
+
+	// Dead State
+	state.id = 4;
+	state.type = STATE_TYPE::DEAD;
+	state.movements.clear();
+	state.weapons.clear();
+	m_stateMap.insert(std::make_pair(state.id, new HoundDeadState(state)));
+	//
+
+	// BattleEnd State
+	state.id = 5;
+	state.type = STATE_TYPE::BATTLE_END;
+	state.movements.clear();
+	state.weapons.clear();
+	m_stateMap.insert(std::make_pair(state.id, new HoundBattleEndState(state)));
+	//
+
+	// state transitions
+	HoundStateTransit trans;
+	trans.event = (int)(STATE_MACHINE_EVENT::START);
+	trans.from = nullptr;
+	trans.to = m_stateMap.find(1)->second;
+	m_stateMachine.addStateTransition(trans);
+
+	trans.event = (int)(STATE_MACHINE_EVENT::ENTRY_FINISHED);
+	trans.from = m_stateMap.find(1)->second;
+	trans.to = m_stateMap.find(2)->second;
+	m_stateMachine.addStateTransition(trans);
+
+	trans.event = (int)(STATE_MACHINE_EVENT::VICTORY);
+	trans.from = nullptr;
+	trans.to = m_stateMap.find(3)->second;
+	m_stateMachine.addStateTransition(trans);
+
+	trans.event = (int)(STATE_MACHINE_EVENT::HOUND_DEAD);
+	trans.from = nullptr;
+	trans.to = m_stateMap.find(4)->second;
+	m_stateMachine.addStateTransition(trans);
+
+	trans.event = (int)(STATE_MACHINE_EVENT::LEVEL_QUIT);
+	trans.from = nullptr;
+	trans.to = m_stateMap.find(5)->second;
+	m_stateMachine.addStateTransition(trans);
+	//
 
 	return true;
 }
@@ -71,26 +148,19 @@ bool Hound::init(const HoundInfo &hdi)
 void Hound::update(float dt)
 {
 	// update hound states
-	//...
+	m_stateMachine.update(dt);
 
-	// update weapons
-	for (auto weapon : m_weapons)
-	{
-		weapon->update(dt);
-	}
+	//// update weapons
+	//for (auto weapon : m_weapons)
+	//{
+	//	weapon->update(dt);
+	//}
 }
 
 void Hound::doDamage(float damage)
 {
-}
+	if (m_invincible)
+		return;
 
-//bool Hound::onTouchBegan(Touch *touch, Event *event)
-//{
-//	m_movingOffset = getPosition() - touch->getLocation();
-//	return true;
-//}
-//
-//void Hound::onTouchMoved(Touch *touch, Event *event)
-//{
-//	setPosition(touch->getLocation()+m_movingOffset);
-//}
+	m_curLife -= damage*(1-m_armor/1000.0f);
+}

@@ -4,7 +4,9 @@
 #include "cocos2d.h"
 #include "MoveState.hpp"
 
-template <typename T, STATE_MACHINE_EVENT finishEvent = STATE_MACHINE_EVENT::NONE>
+template <typename T, 
+	STATE_MACHINE_EVENT finishEvent = STATE_MACHINE_EVENT::NONE, 
+	STATE_MACHINE_EVENT deadEvent = STATE_MACHINE_EVENT::NONE> 
 class BattlePhaseState : public MoveState<T>
 {
 public:
@@ -26,8 +28,8 @@ private:
 	std::vector<Weapon*>	m_weapons;
 };
 
-template <typename T, STATE_MACHINE_EVENT finishEvent> 
-void BattlePhaseState<T, finishEvent>::enter(T &t)
+template <typename T, STATE_MACHINE_EVENT finishEvent, STATE_MACHINE_EVENT deadEvent> 
+void BattlePhaseState<T, finishEvent, deadEvent>::enter(T &t)
 {
 	auto total_weapons = t.getWeapons();
 	for (const auto id : m_weaponGroup)
@@ -37,14 +39,15 @@ void BattlePhaseState<T, finishEvent>::enter(T &t)
 		{
 			weapon->reset();
 			m_weapons.push_back(weapon);
+			break;
 		}
 	}
 	
 	MoveState<T>::enter(t);
 }
 
-template <typename T, STATE_MACHINE_EVENT finishEvent> 
-void BattlePhaseState<T, finishEvent>::exec(T &t, float dt)
+template <typename T, STATE_MACHINE_EVENT finishEvent, STATE_MACHINE_EVENT deadEvent> 
+void BattlePhaseState<T, finishEvent, deadEvent>::exec(T &t, float dt)
 {
 	for (auto weapon : m_weapons)
 	{
@@ -56,7 +59,7 @@ void BattlePhaseState<T, finishEvent>::exec(T &t, float dt)
 	// if life is below 0, trigger the dead event
 	if (t.getCurLife() <= 0.0f)
 	{
-		t.getStateMachine().triggerEvent((int)STATE_MACHINE_EVENT::DEAD);
+		t.getStateMachine().triggerEvent((int)deadEvent);
 		return;
 	}
 
@@ -68,8 +71,8 @@ void BattlePhaseState<T, finishEvent>::exec(T &t, float dt)
 	}
 }
 
-template <typename T, STATE_MACHINE_EVENT finishEvent> 
-void BattlePhaseState<T, finishEvent>::exit(T &t)
+template <typename T, STATE_MACHINE_EVENT finishEvent, STATE_MACHINE_EVENT deadEvent> 
+void BattlePhaseState<T, finishEvent, deadEvent>::exit(T &t)
 {
 	MoveState<T>::exit(t);
 }

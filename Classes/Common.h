@@ -4,9 +4,10 @@
 #include "cocos2d.h"
 #include "Circle.h"
 
-const int ZORDER_HOUND				= 100;
-const int ZORDER_HOUND_PROJECTILE	= 10;
-const int ZORDER_ENEMY_PROJECTILE	= -70;
+const int ZORDER_SFX_EXPLOSION		= 100;
+const int ZORDER_HOUND_PROJECTILE	= 50;
+const int ZORDER_ENEMY_PROJECTILE	= 50;
+const int ZORDER_HOUND				= 10;
 const int ZORDER_ENEMY_FIGHTER		= -80;
 const int ZORDER_ENEMY_FRIGATE		= -90;
 const int ZORDER_ENEMY_BOSS			= -100;
@@ -86,8 +87,9 @@ enum class STATE_MACHINE_EVENT
 	TRANSFORM_FINISHED,
 	LEAVE_FINISHED,
 	HOUND_DEAD,
+	AI_DEAD,
 	LEVEL_QUIT,
-	DEAD,
+	VICTORY,
 	MAX
 };
 
@@ -98,6 +100,7 @@ struct StateInfo
 	int				id;
 	STATE_TYPE		type;
 	float			life_threshold;
+	float			leave_speed;
 	bool			repeat_movements;
 
 	MOVEMENTS		movements;
@@ -133,7 +136,9 @@ enum class BODY_TYPE
 enum class ARMOR_TYPE
 {
 	NONE = 0,
-	BASIC,
+	ENEGY_SHIELD,
+	REACTIVE_ARMOR,
+	CERAMIC_ARMOR,
 	MAX_VALUE
 };
 
@@ -251,8 +256,12 @@ struct HoundInfo
 	
 	std::vector<WeaponInfo>	weapons;
 
+	cocos2d::Vec2	start_position;
+	float			entry_speed;
+	float			leave_speed;
 	float			scale_xy;
 	float			bounding_circle_radius;
+
 	std::string		body_texture_name;
 	std::string		armor_texture_name;
 	std::string		engine_texture_name;
