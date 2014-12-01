@@ -53,6 +53,24 @@ public:
 	float getCurLife(void) const
 	{ return m_curLife; }
 
+	const cocos2d::Vec2& getEntryFrom(void) const
+	{ return m_entryFrom; }
+
+	const cocos2d::Vec2& getEntryTo(void) const
+	{ return m_entryTo; }
+
+	float getEntrySpeed(void) const
+	{ return m_entrySpeed; }
+
+	bool isEntryAutoFacing(void) const
+	{ return m_entryAutoFacing; }
+
+	float getLeaveSpeed(void) const
+	{ return m_leaveSpeed; }
+
+	bool isLeaveAutoFacing(void) const
+	{ return m_leaveAutoFacing; }
+
 protected:
 	Enemy(void);
 	~Enemy(void);
@@ -60,6 +78,14 @@ protected:
 	virtual bool init(const EnemyInfo &info);
 
 	ENEMY_TYPE m_type;
+
+	cocos2d::Vec2	m_entryFrom;
+	cocos2d::Vec2	m_entryTo;
+	float			m_entrySpeed;
+	bool			m_entryAutoFacing;
+
+	float			m_leaveSpeed;
+	bool			m_leaveAutoFacing;
 
 	float	m_curLife;
 	float	m_maxLife;

@@ -30,6 +30,14 @@ bool Enemy::init(const EnemyInfo &info)
 	}
 
 	m_type = info.type;
+
+	m_entryFrom = info.entry_from;
+	m_entryTo = info.entry_to;
+	m_entrySpeed = info.entry_speed;
+	m_entryAutoFacing = info.entry_auto_facing;
+	m_leaveSpeed = info.leave_speed;
+	m_leaveAutoFacing = info.leave_auto_facing;
+
 	m_curLife = m_maxLife = info.max_life;
 	m_armor = info.armor;
 

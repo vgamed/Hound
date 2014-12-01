@@ -108,6 +108,7 @@ void AppDelegate::scaleByDesign(float &flt)
 
 bool AppDelegate::loadGameResources(void)
 {
+	FileUtils::getInstance()->addSearchPath("backgrounds");
 	FileUtils::getInstance()->addSearchPath("bullet");
 	FileUtils::getInstance()->addSearchPath("fonts");
 	
@@ -174,11 +175,14 @@ bool AppDelegate::loadPlayerInfo(void)
 	m_playerInfo.hound.engine_type = ENGINE_TYPE::BASIC;
 	m_playerInfo.hound.engine_texture_name = "";
 
-	m_playerInfo.hound.start_position = Vec2(320.0f, 150.0f);
-	scaleByDesign(m_playerInfo.hound.start_position);
-
+	m_playerInfo.hound.entry_from = Vec2(320.0f, -50.0f);
+	scaleByDesign(m_playerInfo.hound.entry_from);
+	m_playerInfo.hound.entry_to = Vec2(320.0f, 150.0f);
+	scaleByDesign(m_playerInfo.hound.entry_to);
 	m_playerInfo.hound.entry_speed = 300.0f;
-	m_playerInfo.hound.leave_speed = 300.0f;
+	m_playerInfo.hound.entry_auto_facing = true;
+	m_playerInfo.hound.leave_speed = 1000.0f;
+	m_playerInfo.hound.leave_auto_facing = true;
 
 	m_playerInfo.hound.scale_xy = 1.0f;
 	scaleByDesign(m_playerInfo.hound.scale_xy);
@@ -251,9 +255,6 @@ bool AppDelegate::loadLevelInfo(void)
 {
 	m_levelInfo.id = 0;
 
-	m_levelInfo.hound_start_offset = Vec2(0.0f, 150.0f);
-	scaleByDesign(m_levelInfo.hound_start_offset);
-
 	m_levelInfo.sbg_layer_texture_names.push_back("img_bg_1.jpg");
 	m_levelInfo.sbg_layer_texture_names.push_back("clouds.png");
 
@@ -274,7 +275,6 @@ bool AppDelegate::loadLevelInfo(void)
 
 	ef_info.bounding_circle_radius = 50.0f;
 	ef_info.body_texture_name = "n1.png";
-	ef_info.facing_dir = -Vec2::UNIT_Y;
 
 	// weapons
 	BarrelInfo barrel;
@@ -330,21 +330,21 @@ bool AppDelegate::loadLevelInfo(void)
 	//
 
 	// enemy 1
-	ef_info.start_position = Vec2(200.0f, 960.0f);
-	scaleByDesign(ef_info.start_position);
+	ef_info.rotate_angle = 0.0f;
+	ef_info.entry_from = Vec2(200.0f, 960.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(200.0f, 560.0f);
+	scaleByDesign(ef_info.entry_to);
+	ef_info.entry_speed = 300.0f;
+	ef_info.entry_auto_facing = true;
+	ef_info.leave_speed = 1000.0f;
+	ef_info.leave_auto_facing = true;
 
 		// 1st state - Entry State
 		state.id = 1;
 		state.type = STATE_TYPE::ENTRY;
-	
-			// 1st movement
-			movement.type = MOVEMENT_TYPE::DISPLACEMENT;
-			movement.target_position = Vec2(200.0f, 560.0f);
-			scaleByDesign(movement.target_position);
-			movement.move_param.displmt.facing_dir = true;
-			movement.move_param.displmt.speed = 100.0f;
-			state.movements.push_back(movement);
-
+		state.movements.clear();
+		state.weapons.clear();
 		ef_info.state_infoes.push_back(state);
 		//
 
@@ -358,7 +358,7 @@ bool AppDelegate::loadLevelInfo(void)
 			movement.type = MOVEMENT_TYPE::DISPLACEMENT;
 			movement.target_position = Vec2(450.0f, 560.0f);
 			scaleByDesign(movement.target_position);
-			movement.move_param.displmt.facing_dir = false;
+			movement.move_param.displmt.auto_facing = false;
 			movement.move_param.displmt.speed = 100.0f;
 			state.movements.push_back(movement);
 
@@ -378,7 +378,7 @@ bool AppDelegate::loadLevelInfo(void)
 			movement.type = MOVEMENT_TYPE::DISPLACEMENT;
 			movement.target_position = Vec2(250.0f, 560.0f);
 			scaleByDesign(movement.target_position);
-			movement.move_param.displmt.facing_dir = false;
+			movement.move_param.displmt.auto_facing = false;
 			movement.move_param.displmt.speed = 100.0f;
 			state.movements.push_back(movement);
 
@@ -421,7 +421,6 @@ bool AppDelegate::loadLevelInfo(void)
 		// 5th state - Leave State
 		state.id = 5;
 		state.type = STATE_TYPE::LEAVE;
-		state.leave_speed = 1000.0f;
 		state.movements.clear();
 		state.weapons.clear();
 		ef_info.state_infoes.push_back(state);
@@ -488,17 +487,51 @@ bool AppDelegate::loadLevelInfo(void)
 	
 	w_info.enemies.push_back(ef_info);
 
+	ef_info.entry_auto_facing = false;
+	ef_info.entry_speed = 0.0f;
+	ef_info.leave_auto_facing = false;
+	ef_info.leave_speed = 0.0f;
 	ef_info.state_infoes.clear();
 	ef_info.state_map_infoes.clear();
 
 	// enemy 2
-	ef_info.start_position = Vec2(420.0f, 560.0f);
-	scaleByDesign(ef_info.start_position);
+	ef_info.entry_from = Vec2(420.0f, 560.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(420.0f, 560.0f);
+	scaleByDesign(ef_info.entry_to);
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+		// state maps
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	w_info.enemies.push_back(ef_info);
 
 	// enemy 3
-	ef_info.start_position = Vec2(320.0f, 760.0f);
-	scaleByDesign(ef_info.start_position);
+	ef_info.entry_from = Vec2(320.0f, 760.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(320.0f, 760.0f);
+	scaleByDesign(ef_info.entry_to);
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+		// state maps
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	w_info.enemies.push_back(ef_info);
 
 	m_levelInfo.enemy_waves.push_back(w_info);	
@@ -515,22 +548,65 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.armor = 300.0f;
 	ef_info.bounding_circle_radius = 60.0f;
 	ef_info.body_texture_name = "n2.png";
-	ef_info.facing_dir = Vec2::UNIT_Y;
+	ef_info.rotate_angle = 0.0f;
 
-	ef_info.start_position = Vec2(220.0f, 610.0f);
-	scaleByDesign(ef_info.start_position);
-
+	ef_info.entry_from = Vec2(220.0f, 610.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(220.0f, 610.0f);
+	scaleByDesign(ef_info.entry_to);
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+		// state maps
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	w_info.enemies.push_back(ef_info);
 
-	ef_info.start_position = Vec2(420.0f, 610.0f);
-	scaleByDesign(ef_info.start_position);
-
+	ef_info.entry_from = Vec2(420.0f, 610.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(420.0f, 610.0f);
+	scaleByDesign(ef_info.entry_to);
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+		// state maps
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	w_info.enemies.push_back(ef_info);
 
-	ef_info.start_position = Vec2(320.0f, 710.0f);
-	scaleByDesign(ef_info.start_position);
-
+	ef_info.entry_from = Vec2(320.0f, 710.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(320.0f, 710.0f);
+	scaleByDesign(ef_info.entry_to);
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+		// state maps
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	w_info.enemies.push_back(ef_info);
+
 	m_levelInfo.enemy_waves.push_back(w_info);	
 	// end of 2nd wave
 
@@ -545,9 +621,24 @@ bool AppDelegate::loadLevelInfo(void)
 	ef_info.armor = 500.0f;
 	ef_info.bounding_circle_radius = 150.0f;
 	ef_info.body_texture_name = "n_boss.png";
-	ef_info.start_position = Vec2(320.0f, 610.0f);
-	scaleByDesign(ef_info.start_position);
-	ef_info.facing_dir = Vec2::UNIT_Y;
+	ef_info.rotate_angle = 0.0f;
+	ef_info.entry_from = Vec2(320.0f, 610.0f);
+	scaleByDesign(ef_info.entry_from);
+	ef_info.entry_to = Vec2(320.0f, 610.0f);
+	scaleByDesign(ef_info.entry_to);
+		// 1st state - Entry State
+		state.id = 1;
+		state.type = STATE_TYPE::ENTRY;
+		state.movements.clear();
+		state.weapons.clear();
+		ef_info.state_infoes.push_back(state);
+		//
+		// state maps
+		state_map.event = STATE_MACHINE_EVENT::START;
+		state_map.from = -1;
+		state_map.to = 1;
+		ef_info.state_map_infoes.push_back(state_map);
+		//
 	w_info.enemies.push_back(ef_info);
 
 	m_levelInfo.enemy_waves.push_back(w_info);	

@@ -45,6 +45,13 @@ bool Hound::init(const HoundInfo &hdi)
 
 	m_boundingCircle.radius = hdi.bounding_circle_radius;
 
+	m_entryFrom = hdi.entry_from;
+	m_entryTo = hdi.entry_to;
+	m_entrySpeed = hdi.entry_speed;
+	m_entryAutoFacing = hdi.entry_auto_facing;
+	m_leaveSpeed = hdi.leave_speed;
+	m_leaveAutoFacing = hdi.leave_auto_facing;
+
 	auto app = dynamic_cast<AppDelegate*>(Application::getInstance());
 	m_curLife = m_maxLife = app->getHoundMaxLife();
 	m_armor = app->getHoundArmor();
@@ -73,17 +80,15 @@ bool Hound::init(const HoundInfo &hdi)
 	// Entry State
 	state.id = 1;
 	state.type = STATE_TYPE::ENTRY;
-	movement.type = MOVEMENT_TYPE::DISPLACEMENT;
-	movement.target_position = hdi.start_position;
-	movement.move_param.displmt.facing_dir = false;
-	movement.move_param.displmt.speed = hdi.entry_speed;
-	state.movements.push_back(movement);
+	state.movements.clear();
+	state.weapons.clear();
 	m_stateMap.insert(std::make_pair(state.id, new HoundEntryState(state)));
 
 	// Battle State
 	state.id = 2;
 	state.type = STATE_TYPE::BATTLE_PHASE;
 	state.movements.clear();
+	state.weapons.clear();
 	for (auto weapon : m_weapons)
 	{
 		state.weapons.push_back(weapon->getId());
@@ -93,7 +98,6 @@ bool Hound::init(const HoundInfo &hdi)
 	// Leave State
 	state.id = 3;
 	state.type = STATE_TYPE::LEAVE;
-	state.leave_speed = 1000.0f;
 	state.movements.clear();
 	state.weapons.clear();
 	m_stateMap.insert(std::make_pair(state.id, new HoundLeaveState(state)));

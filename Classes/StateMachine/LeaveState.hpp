@@ -12,7 +12,6 @@ class LeaveState : public MoveState<T>
 public:
 	LeaveState(const StateInfo &info)
 		: MoveState<T>(info)
-		, m_speed(info.leave_speed)
 	{}
 	~LeaveState(void) {}
 
@@ -22,7 +21,6 @@ public:
 
 private:
 	void calcTargetPosition(const T &t, Vec2 &target);
-	float m_speed;
 };
 
 template <typename T, STATE_MACHINE_EVENT finishEvent>
@@ -36,8 +34,8 @@ void LeaveState<T, finishEvent>::enter(T &t)
 	
 	CC_ASSERT(move.target_position != Vec2::ZERO);
 
-	move.move_param.displmt.facing_dir = true;
-	move.move_param.displmt.speed = m_speed;
+	move.move_param.displmt.auto_facing = t.isLeaveAutoFacing();
+	move.move_param.displmt.speed = t.getLeaveSpeed();
 	MoveState<T>::addMovement(move);
 
 	MoveState<T>::enter(t);

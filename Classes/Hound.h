@@ -61,6 +61,24 @@ public:
 	float getCurLife(void) const
 	{ return m_curLife; }
 
+	const cocos2d::Vec2& getEntryFrom(void) const
+	{ return m_entryFrom; }
+
+	const cocos2d::Vec2& getEntryTo(void) const
+	{ return m_entryTo; }
+
+	float getEntrySpeed(void) const
+	{ return m_entrySpeed; }
+
+	bool isEntryAutoFacing(void) const
+	{ return m_entryAutoFacing; }
+
+	float getLeaveSpeed(void) const
+	{ return m_leaveSpeed; }
+
+	bool isLeaveAutoFacing(void) const
+	{ return m_leaveAutoFacing; }
+
 	static const int TAG;
 	
 	CC_SYNTHESIZE(int, m_touchID, TouchID);
@@ -77,6 +95,15 @@ private:
 
 	//Armor*			m_armor;
 	//Engine*			m_engine;
+
+	cocos2d::Vec2	m_entryFrom;
+	cocos2d::Vec2	m_entryTo;
+	float			m_entrySpeed;
+	bool			m_entryAutoFacing;
+
+	float			m_leaveSpeed;
+	bool			m_leaveAutoFacing;
+
 	float	m_curLife;
 	float	m_maxLife;
 	float	m_armor;

@@ -28,7 +28,7 @@ enum class MOVEMENT_TYPE
 struct MoveParamDisplacement
 {
 	float speed;
-	bool facing_dir;
+	bool auto_facing;
 };
 
 struct MoveParamRotation
@@ -256,9 +256,14 @@ struct HoundInfo
 	
 	std::vector<WeaponInfo>	weapons;
 
-	cocos2d::Vec2	start_position;
+	cocos2d::Vec2	entry_from;
+	cocos2d::Vec2	entry_to;
 	float			entry_speed;
+	bool			entry_auto_facing;
+
 	float			leave_speed;
+	bool			leave_auto_facing;
+
 	float			scale_xy;
 	float			bounding_circle_radius;
 
@@ -282,14 +287,22 @@ struct EnemyInfo
 	ENEMY_TYPE type;
 	unsigned int level;
 
+	float			scale_xy;
+	float			rotate_angle;
+
+	cocos2d::Vec2	entry_from;
+	cocos2d::Vec2	entry_to;
+	float			entry_speed;
+	bool			entry_auto_facing;
+
+	float			leave_speed;
+	bool			leave_auto_facing;
+
 	float			max_life;
 	float			armor;
 
-	float			scale_xy;
 	float			bounding_circle_radius;
 	std::string		body_texture_name;
-	cocos2d::Vec2	start_position;
-	cocos2d::Vec2	facing_dir;
 
 	std::vector<WeaponInfo>	weapons;
 
@@ -307,7 +320,6 @@ struct LevelInfo
 {
 	unsigned long				id;
 	std::vector<std::string>	sbg_layer_texture_names;
-	cocos2d::Vec2				hound_start_offset;
 	std::vector<WaveInfo>		enemy_waves;
 };
 //////////////////////////////////////////////////////////////////////////////

@@ -48,7 +48,7 @@ bool Battlefield::init(const PlayerInfo &player, const LevelInfo &level)
 
 	this->addChild(m_hound);
 	// hound will fly into the battlefield, so set the initial position Y out of the screen
-	m_hound->setPosition(Vec2(player.hound.start_position.x, -50.0f));
+	//m_hound->setPosition(Vec2(player.hound.start_position.x, -50.0f));
 
 	m_hound->setTouchID(INVALID_TOUCH_ID); // no available touching inputs
 
@@ -305,8 +305,8 @@ void Battlefield::spawnEnemyWave(const WaveInfo &info)
 		Enemy *enemy = EnemyFactory::create(einfo);
 		if (enemy != nullptr)
 		{
-			enemy->setPosition(convertToNodeSpace(einfo.start_position));
-			enemy->setRotation(CC_RADIANS_TO_DEGREES(einfo.facing_dir.getAngle(Vec2::UNIT_Y)));
+			//enemy->setPosition(convertToNodeSpace(einfo.entry_from));
+			enemy->setRotation(einfo.rotate_angle);
 			enemy->getStateMachine().triggerEvent((int)STATE_MACHINE_EVENT::START);
 			addActiveEnemy(enemy);
 		}

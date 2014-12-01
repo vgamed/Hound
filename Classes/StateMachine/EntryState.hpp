@@ -23,6 +23,16 @@ void EntryState<T, finishEvent>::enter(T &t)
 {
 	t.setInvincible(true);
 
+	// init movement
+	t.setPosition(t.getEntryFrom());
+
+	Movement move;
+	move.type = MOVEMENT_TYPE::DISPLACEMENT;
+	move.target_position = t.getEntryTo();
+	move.move_param.displmt.auto_facing = t.isEntryAutoFacing();
+	move.move_param.displmt.speed = t.getEntrySpeed();
+	MoveState<T>::addMovement(move);
+
 	MoveState<T>::enter(t);
 }
 

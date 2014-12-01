@@ -138,7 +138,7 @@ void MoveState<T>::initDisplacement(T &t)
 		// prepare for the sequent displacements
 		m_displmtDir = m_movements[m_curIndexMovement].target_position - t.getPosition();
 		m_displmtDir.normalize();
-		if (m_movements[m_curIndexMovement].move_param.displmt.facing_dir)
+		if (m_movements[m_curIndexMovement].move_param.displmt.auto_facing)
 		{
 			t.setRotation(CC_RADIANS_TO_DEGREES(m_displmtDir.getAngle(cocos2d::Vec2::UNIT_Y)));
 		}
