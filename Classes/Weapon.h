@@ -33,7 +33,7 @@ public:
 	int getId(void) const
 	{ return m_id; }
 
-	WEAPON_TYPE getType(void) const
+	int getType(void) const
 	{ return m_type; }
 
 protected:
@@ -47,7 +47,7 @@ protected:
 private:
 	int				m_id;
 	unsigned int	m_level;
-	WEAPON_TYPE		m_type;
+	int				m_type;
 	bool			m_autoAim;
 
 	float			m_timeOffsetFiringStart; //second

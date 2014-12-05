@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<CommonTypes>
+	<HoundBodyType>
+		<!--to do-->
+	</HoundBodyType>
+	<HoundEngineType>
+		<!--to do-->
+	</HoundEngineType>
+	<HoundArmorType>
+		<!--to do-->
+	</HoundArmorType>
+	<EnemyType>
+		<!--to do-->
+	</EnemyType>
+	<WeaponType>
+		<!--to do-->
+	</WeaponType>
+	<BarrelType>
+		<!--to do-->
+	</BarrelType>
+	<ProjectileType>
+		<!--to do-->
+	</ProjectileType>
+	<StateType>
+		<!--to do-->
+	</StateType>
+	<StateMachineEvent>
+		<!--to do-->
+	</StateMachineEvent>
+</CommonTypes>

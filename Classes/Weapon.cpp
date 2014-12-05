@@ -12,7 +12,7 @@ USING_NS_CC;
 
 Weapon::Weapon(void)
 	: m_id(-1)
-	, m_type(WEAPON_TYPE::NONE)
+	, m_type(0)
 	, m_autoAim(false)
 {
 }

@@ -17,10 +17,10 @@ Hound::~Hound(void)
 {
 }
 
-Hound* Hound::create(const HoundInfo &hdi)
+Hound* Hound::create(const HoundInfo &hdi, const LevelInfo &lli)
 {
     Hound *hound = new (std::nothrow) Hound();
-	if (hound && hound->init(hdi))
+	if (hound && hound->init(hdi, lli))
     {
         hound->autorelease();
         return hound;
@@ -29,7 +29,7 @@ Hound* Hound::create(const HoundInfo &hdi)
     return nullptr;
 }
 
-bool Hound::init(const HoundInfo &hdi)
+bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 {
 	Texture2D *texture = 
 		Director::getInstance()->getTextureCache()->getTextureForKey(hdi.body_texture_name);
@@ -45,12 +45,12 @@ bool Hound::init(const HoundInfo &hdi)
 
 	m_boundingCircle.radius = hdi.bounding_circle_radius;
 
-	m_entryFrom = hdi.entry_from;
-	m_entryTo = hdi.entry_to;
-	m_entrySpeed = hdi.entry_speed;
-	m_entryAutoFacing = hdi.entry_auto_facing;
-	m_leaveSpeed = hdi.leave_speed;
-	m_leaveAutoFacing = hdi.leave_auto_facing;
+	m_entryFrom = lli.hound_entry_from;
+	m_entryTo = lli.hound_entry_to;
+	m_entrySpeed = lli.hound_entry_speed;
+	m_entryAutoFacing = lli.hound_entry_auto_facing;
+	m_leaveSpeed = lli.hound_leave_speed;
+	m_leaveAutoFacing = lli.hound_leave_auto_facing;
 
 	auto app = dynamic_cast<AppDelegate*>(Application::getInstance());
 	m_curLife = m_maxLife = app->getHoundMaxLife();
@@ -77,16 +77,19 @@ bool Hound::init(const HoundInfo &hdi)
 	StateInfo state;
 	Movement movement;
 
+	state.repeat_movements = false;
+	state.life_threshold = -FLT_MAX;
+
 	// Entry State
 	state.id = 1;
-	state.type = STATE_TYPE::ENTRY;
+	state.type = (int)STATE_TYPE::ENTRY;
 	state.movements.clear();
 	state.weapons.clear();
 	m_stateMap.insert(std::make_pair(state.id, new HoundEntryState(state)));
 
 	// Battle State
 	state.id = 2;
-	state.type = STATE_TYPE::BATTLE_PHASE;
+	state.type = (int)STATE_TYPE::BATTLE_PHASE;
 	state.movements.clear();
 	state.weapons.clear();
 	for (auto weapon : m_weapons)
@@ -97,14 +100,14 @@ bool Hound::init(const HoundInfo &hdi)
 
 	// Leave State
 	state.id = 3;
-	state.type = STATE_TYPE::LEAVE;
+	state.type = (int)STATE_TYPE::LEAVE;
 	state.movements.clear();
 	state.weapons.clear();
 	m_stateMap.insert(std::make_pair(state.id, new HoundLeaveState(state)));
 
 	// Dead State
 	state.id = 4;
-	state.type = STATE_TYPE::DEAD;
+	state.type = (int)STATE_TYPE::DEAD;
 	state.movements.clear();
 	state.weapons.clear();
 	m_stateMap.insert(std::make_pair(state.id, new HoundDeadState(state)));
@@ -112,7 +115,7 @@ bool Hound::init(const HoundInfo &hdi)
 
 	// BattleEnd State
 	state.id = 5;
-	state.type = STATE_TYPE::BATTLE_END;
+	state.type = (int)STATE_TYPE::BATTLE_END;
 	state.movements.clear();
 	state.weapons.clear();
 	m_stateMap.insert(std::make_pair(state.id, new HoundBattleEndState(state)));

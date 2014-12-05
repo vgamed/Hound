@@ -22,41 +22,18 @@ enum class MOVEMENT_TYPE
 	DISPLACEMENT,
 	ROTATION,
 	STAY,
-	MAX
-};
-
-struct MoveParamDisplacement
-{
-	float speed;
-	bool auto_facing;
-};
-
-struct MoveParamRotation
-{
-	float angle; //degree
-	float speed; //degree per second
-	bool jump; // if jump to the target position before rotation
-};
-
-struct MoveParamStay
-{
-	float angle; //degree
-	float period; // second
-	bool jump_rotate; // if jump to the target position before stay
-};
-
-union MoveParam
-{
-	MoveParamDisplacement	displmt;
-	MoveParamRotation		rotation;
-	MoveParamStay			stay;
+	MAX_VALUE
 };
 
 struct Movement
 {
-	MOVEMENT_TYPE	type;
-	cocos2d::Vec2	target_position;
-	MoveParam		move_param;
+	int				type;
+	cocos2d::Vec2	target_position; // target for displacement
+	bool			displmt_auto_facing; // for displacement
+	float			stay_period; // second
+	float			target_angle; //target angle for rotation and stay, in degree
+	float			speed; //degree per second for rotation
+	bool			jump; // if jump to the target position(for rotation), if jump to the target angle(stay)
 };
 
 typedef std::vector<Movement> MOVEMENTS;
@@ -74,7 +51,7 @@ enum class STATE_TYPE
 	LEAVE,
 	BATTLE_END,
 	DEAD,
-	MAX
+	MAX_VALUE
 };
 
 enum class STATE_MACHINE_EVENT
@@ -90,7 +67,7 @@ enum class STATE_MACHINE_EVENT
 	AI_DEAD,
 	LEVEL_QUIT,
 	VICTORY,
-	MAX
+	MAX_VALUE
 };
 
 typedef std::vector<int> WEAPON_GROUP;
@@ -98,9 +75,8 @@ typedef std::vector<int> WEAPON_GROUP;
 struct StateInfo
 {
 	int				id;
-	STATE_TYPE		type;
+	int				type;
 	float			life_threshold;
-	float			leave_speed;
 	bool			repeat_movements;
 
 	MOVEMENTS		movements;
@@ -111,9 +87,9 @@ typedef std::vector<StateInfo> STATE_INFOES;
 
 struct StateMapInfo
 {
-	STATE_MACHINE_EVENT event;
-	int					from;
-	int					to;
+	int event;
+	int	from;
+	int	to;
 };
 
 typedef std::vector<StateMapInfo> STATE_MAP_INFOES;
@@ -202,8 +178,8 @@ enum class ENEMY_TYPE
 // player and hound data declarations
 struct BarrelInfo
 {
-	BARREL_TYPE		type;
-	PROJECTILE_TYPE	projectile_type;
+	int				type;
+	int				projectile_type;
 	float			projectile_scale_xy;
 
 	// the angle from weapon direction, in degrees.
@@ -215,14 +191,13 @@ struct BarrelInfo
 	float			projectile_damage;
 	float			projectile_speed; //per second
 	// animation name or spriteframe name or texture name
-	EFFECT_TYPE		projectile_effect_type;
-	std::string		projectile_effect_name;
+	std::string		projectile_asset_name;
 };
 
 struct WeaponInfo
 {
 	int				id;
-	WEAPON_TYPE		type;
+	int				type;
 	unsigned int	level;
 
 	float			time_offset_firing_start; //second
@@ -245,24 +220,16 @@ struct WeaponInfo
 
 struct HoundInfo
 {
-	BODY_TYPE		body_type;
+	int				body_type;
 	unsigned int	body_level;
 
-	ARMOR_TYPE		armor_type;
+	int				armor_type;
 	unsigned int	armor_level;
 
-	ENGINE_TYPE		engine_type;
+	int				engine_type;
 	unsigned int	engine_level;
 	
 	std::vector<WeaponInfo>	weapons;
-
-	cocos2d::Vec2	entry_from;
-	cocos2d::Vec2	entry_to;
-	float			entry_speed;
-	bool			entry_auto_facing;
-
-	float			leave_speed;
-	bool			leave_auto_facing;
 
 	float			scale_xy;
 	float			bounding_circle_radius;
@@ -284,8 +251,9 @@ struct PlayerInfo
 // enemy fighter informations
 struct EnemyInfo
 {
-	ENEMY_TYPE type;
-	unsigned int level;
+	int				id;
+	int				type;
+	unsigned int	level;
 
 	float			scale_xy;
 	float			rotate_angle;
@@ -318,8 +286,17 @@ struct WaveInfo
 
 struct LevelInfo
 {
-	unsigned long				id;
+	int							id;
+
+	cocos2d::Vec2				hound_entry_from;
+	cocos2d::Vec2				hound_entry_to;
+	float						hound_entry_speed;
+	bool						hound_entry_auto_facing;
+	float						hound_leave_speed;
+	bool						hound_leave_auto_facing;
+
 	std::vector<std::string>	sbg_layer_texture_names;
+
 	std::vector<WaveInfo>		enemy_waves;
 };
 //////////////////////////////////////////////////////////////////////////////

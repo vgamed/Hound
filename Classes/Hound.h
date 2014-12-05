@@ -29,7 +29,7 @@ typedef MoveState<Hound> HoundMoveState;
 class Hound : public cocos2d::Sprite
 {
 public:
-	static Hound* create(const HoundInfo &hdi);
+	static Hound* create(const HoundInfo &hdi, const LevelInfo &lli);
 
 	void update(float dt);
 
@@ -87,11 +87,11 @@ protected:
 	Hound(void);
 	~Hound(void);
 
-	bool init(const HoundInfo &hdi);
+	bool init(const HoundInfo &hdi, const LevelInfo &lli);
 
 private:
-	BODY_TYPE			m_bodyType;
-	int					m_bodyLevel;
+	int				m_bodyType;
+	int				m_bodyLevel;
 
 	//Armor*			m_armor;
 	//Engine*			m_engine;

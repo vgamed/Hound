@@ -9,7 +9,7 @@ public:
 	virtual void update(float dt);
 
 	virtual float getDamage(void) const { return m_damage; }
-	virtual PROJECTILE_TYPE getProjectileType(void) { return m_projectileType; }
+	virtual int getProjectileType(void) { return m_projectileType; }
 
 	virtual const Circle& getBoundingCircle(void) const 
 	{
@@ -23,7 +23,7 @@ protected:
 	virtual bool init(const BarrelInfo &info, const cocos2d::Vec2 &direction, 
 		float damage, float speed, bool from_hound);
 
-	PROJECTILE_TYPE	m_projectileType;
+	int				m_projectileType;
 	cocos2d::Vec2	m_direction;
 	float			m_speed;
 	float			m_damage;

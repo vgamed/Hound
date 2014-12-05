@@ -6,8 +6,8 @@
 class SFXFactory
 {
 public:
-	static SFXExplosion* createProjectileSFX(PROJECTILE_TYPE type);
-	static SFXExplosion* createEnemyExplosionSFX(ENEMY_TYPE type);
+	static SFXExplosion* createProjectileSFX(int type);
+	static SFXExplosion* createEnemyExplosionSFX(int type);
 	static SFXExplosion* createHoundExplosionSFX(void);
 
 private:

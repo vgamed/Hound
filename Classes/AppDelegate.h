@@ -2,7 +2,9 @@
 #define  _APP_DELEGATE_H_
 
 #include "Common.h"
+#include "DataCenter.h"
 
+class DataCenter;
 /**
 @brief    The cocos2d Application.
 
@@ -40,16 +42,26 @@ public:
 	// for finding max life, armor and damage ratio by various types
 	float getHoundMaxLife(void);
 	float getHoundArmor(void);
-	const std::pair<float, float> getEnemyMaxLifeAndArmor(ENEMY_TYPE type, int level);
-	float getDamageRatio(PROJECTILE_TYPE proj_type, ARMOR_TYPE armor_type);
+	const std::pair<float, float> getEnemyMaxLifeAndArmor(int type, int level);
 
 private:
 	PlayerInfo	m_playerInfo;
 	LevelInfo	m_levelInfo;
 
+	CommonTypeMap m_mapCommonTypes;
+
+	void initCommonTypes(void);
+
 	bool loadGameResources(void);
 	bool loadPlayerInfo(void);
 	bool loadLevelInfo(void);
+
+	bool loadLevelInfoFromXML(int id);
+
+	int getCommonType(const std::string &str);
+
+	void stringToVec2(const std::string &str, cocos2d::Vec2 &vec);
+	void charToString(const char *pstr, std::string &ret);
 };
 
 #endif // _APP_DELEGATE_H_

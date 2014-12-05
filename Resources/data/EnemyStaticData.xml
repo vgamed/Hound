@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<EnemyStaticData>
+	<LifeArmorValue>
+		<Enemy type="">
+			<Level value="1">1000.00, 200.00</Level>
+			<!--Level value="n">life, armor</Level-->
+			<!--to do-->
+		</Enemy>
+	</LifeArmorValue>
+	<WeaponData>
+		<Weapon type="">
+			<Level value="1">200.00, 1000.00</Level>
+			<!--Level value="n">damage, speed</Level-->
+			<!--to do-->
+		</Weapon>
+	</WeaponData>
+	<!--	How about we simplify the AI's damage and speed to be only based on Weapon's damage and speed?
+	<ProjectileData>
+		<Projectile type="">
+			<Level value="1">200.00, 1000.00</Level>
+		</Projectile>
+	</ProjectileData>
+	-->
+</EnemyStaticData>

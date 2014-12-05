@@ -30,6 +30,8 @@ private:
 	bool doStay(T &t, float dt);
 
 	MOVEMENTS		m_movements;
+	bool			m_repeat;
+
 	std::size_t		m_curIndexMovement;
 
 	MOVEMENT_DO_FUNC	m_movementDoFunc;
@@ -42,6 +44,7 @@ private:
 template <typename T> 
 MoveState<T>::MoveState(const StateInfo &info)
 	: m_movements(info.movements)
+	, m_repeat(info.repeat_movements)
 	, m_curIndexMovement(0)
 	, m_movementDoFunc(nullptr)
 	, m_displmtDir(cocos2d::Vec2::ZERO)
@@ -80,6 +83,11 @@ void MoveState<T>::exec(T &t, float dt)
 		{
 			initMovement(t);
 		}
+		else if (m_repeat)
+		{
+			m_curIndexMovement = 0;
+			initMovement(t);
+		}
 		else
 		{
 			State<T>::m_done = true;
@@ -95,8 +103,8 @@ void MoveState<T>::exit(T &t)
 template <typename T>
 void MoveState<T>::addMovement(const Movement &move)
 {
-	CC_ASSERT((move.type > MOVEMENT_TYPE::NONE)&&
-		(move.type < MOVEMENT_TYPE::MAX));
+	CC_ASSERT((move.type > (int)MOVEMENT_TYPE::NONE)&&
+		(move.type < (int)MOVEMENT_TYPE::MAX_VALUE));
 	m_movements.push_back(move);
 }
 
@@ -105,15 +113,15 @@ void MoveState<T>::initMovement(T &t)
 {
 	switch (m_movements[m_curIndexMovement].type)
 	{
-	case MOVEMENT_TYPE::DISPLACEMENT:
+	case (int)MOVEMENT_TYPE::DISPLACEMENT:
 		initDisplacement(t);
 		m_movementDoFunc = CC_CALLBACK_2(MoveState<T>::doDisplacement, this);
 		break;
-	case MOVEMENT_TYPE::ROTATION:
+	case (int)MOVEMENT_TYPE::ROTATION:
 		initRotation(t);
 		m_movementDoFunc = CC_CALLBACK_2(MoveState<T>::doRotation, this);
 		break;
-	case MOVEMENT_TYPE::STAY:
+	case (int)MOVEMENT_TYPE::STAY:
 		initStay(t);
 		m_movementDoFunc = CC_CALLBACK_2(MoveState<T>::doStay, this);
 		break;
@@ -126,9 +134,9 @@ void MoveState<T>::initMovement(T &t)
 template <typename T>
 void MoveState<T>::initDisplacement(T &t)
 {
-	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::DISPLACEMENT);
+	CC_ASSERT(m_movements[m_curIndexMovement].type == (int)MOVEMENT_TYPE::DISPLACEMENT);
 
-	if (m_movements[m_curIndexMovement].move_param.displmt.speed <= 0)
+	if (m_movements[m_curIndexMovement].speed <= 0)
 	{
 		// it's a instant dispalcement
 		t.setPosition(m_movements[m_curIndexMovement].target_position);
@@ -138,7 +146,7 @@ void MoveState<T>::initDisplacement(T &t)
 		// prepare for the sequent displacements
 		m_displmtDir = m_movements[m_curIndexMovement].target_position - t.getPosition();
 		m_displmtDir.normalize();
-		if (m_movements[m_curIndexMovement].move_param.displmt.auto_facing)
+		if (m_movements[m_curIndexMovement].displmt_auto_facing)
 		{
 			t.setRotation(CC_RADIANS_TO_DEGREES(m_displmtDir.getAngle(cocos2d::Vec2::UNIT_Y)));
 		}
@@ -148,20 +156,20 @@ void MoveState<T>::initDisplacement(T &t)
 template <typename T>
 void MoveState<T>::initRotation(T &t)
 {
-	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::ROTATION);
+	CC_ASSERT(m_movements[m_curIndexMovement].type == (int)MOVEMENT_TYPE::ROTATION);
 
-	if (m_movements[m_curIndexMovement].move_param.rotation.jump)
+	if (m_movements[m_curIndexMovement].jump)
 		t.setPosition(m_movements[m_curIndexMovement].target_position);
 
-	if (m_movements[m_curIndexMovement].move_param.rotation.speed <= 0)
+	if (m_movements[m_curIndexMovement].speed < 0)
 	{
 		// it's a instant rotation
-		t.setRotation(m_movements[m_curIndexMovement].move_param.rotation.angle);
+		t.setRotation(m_movements[m_curIndexMovement].target_angle);
 	}
 	else
 	{
 		// prepare for the sequent rotation
-		m_rotateDir = m_movements[m_curIndexMovement].move_param.rotation.angle;
+		m_rotateDir = m_movements[m_curIndexMovement].target_angle;
 		m_rotateDir = m_rotateDir/abs(m_rotateDir);
 	}
 }
@@ -169,12 +177,12 @@ void MoveState<T>::initRotation(T &t)
 template <typename T>
 void MoveState<T>::initStay(T &t)
 {
-	CC_ASSERT(m_movements[m_curIndexMovement].type == MOVEMENT_TYPE::STAY);
+	CC_ASSERT(m_movements[m_curIndexMovement].type == (int)MOVEMENT_TYPE::STAY);
 
-	if (m_movements[m_curIndexMovement].move_param.stay.jump_rotate)
+	if (m_movements[m_curIndexMovement].jump)
 	{
 		t.setPosition(m_movements[m_curIndexMovement].target_position);
-		t.setRotation(m_movements[m_curIndexMovement].move_param.stay.angle);
+		t.setRotation(m_movements[m_curIndexMovement].target_angle);
 	}
 	
 	m_stayTimer = 0.0f;
@@ -183,7 +191,7 @@ void MoveState<T>::initStay(T &t)
 template <typename T>
 bool MoveState<T>::doDisplacement(T &t, float dt)
 {
-	float step = m_movements[m_curIndexMovement].move_param.displmt.speed*dt;
+	float step = m_movements[m_curIndexMovement].speed*dt;
 	float dist = m_movements[m_curIndexMovement].target_position.distance(t.getPosition());
 
 	t.setPosition(t.getPosition() + step * m_displmtDir);
@@ -198,8 +206,8 @@ bool MoveState<T>::doDisplacement(T &t, float dt)
 
 template <typename T> bool MoveState<T>::doRotation(T &t, float dt)
 {
-	float step = m_movements[m_curIndexMovement].move_param.rotation.speed * dt;
-	float dist = m_movements[m_curIndexMovement].move_param.rotation.angle - t.getRotation();
+	float step = m_movements[m_curIndexMovement].speed * dt;
+	float dist = m_movements[m_curIndexMovement].target_angle - t.getRotation();
 
 	t.setRotation(t.getRotation() + step*m_rotateDir);
 
@@ -215,7 +223,7 @@ template <typename T>
 bool MoveState<T>::doStay(T &t, float dt)
 {
 	m_stayTimer += dt;
-	if (m_stayTimer >= m_movements[m_curIndexMovement].move_param.stay.period)
+	if (m_stayTimer >= m_movements[m_curIndexMovement].stay_period)
 	{
 		return true; //the current movement is finished
 	}

@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LevelInfo id="1">
+	<HoundEntry>
+		<From>320.00,-50.00</From>
+		<To>320.00,150.00</To>
+		<Speed>300.00</Speed>
+		<AutoFacing>1</AutoFacing>
+	</HoundEntry>
+	<HoundLeave>
+		<Speed>1000.00</Speed>
+		<AutoFacing>1</AutoFacing>
+	</HoundLeave>
+	<Backgrounds>
+		<Background>img_bg_1.jpg</Background>
+		<Background>clouds.png</Background>
+	</Backgrounds>
+	<EnemyWaves>
+		<Wave time_offset="2.00">
+			<Enemy id="1">
+				<Type>ENEMY_TYPE::FIGHTER_BEE</Type>
+				<Level>1</Level>
+				<Scale>1.00</Scale>
+				<BoundingCircleRadius>50.00</BoundingCircleRadius>
+				<RotateAngle>0.00</RotateAngle>
+				<Asset>n1.png</Asset>
+				<Entry>
+					<From>200.00,960.00</From>
+					<To>200.00,560.00</To>
+					<Speed>300.00</Speed>
+					<AutoFacing>1</AutoFacing>
+				</Entry>
+				<Leave>
+					<Speed>1000.00</Speed>
+					<AutoFacing>1</AutoFacing>
+				</Leave>
+				<Weapons>
+					<Weapon id="1">
+						<Type>WEAPON_TYPE::CANNON</Type>
+						<Level>1</Level>
+						<Speed>0.00</Speed>
+						<Damage>0.00</Damage>
+						<RotateAngle>-20.00</RotateAngle>
+						<AutoAim>1</AutoAim>
+						<DockAt>60.00,100.00</DockAt>
+						<FiringStart>0.50</FiringStart>
+						<FiringStop>1.50</FiringStop>
+						<Asset></Asset>
+						<Barrells>
+							<Barrel type="BARREL_TYPE::BULLET">
+								<RotateAngle>0.00</RotateAngle>
+								<FiringInterval>0.20</FiringInterval>
+								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileScale>0.60</ProjectileScale>
+								<ProjectileDamage>200.00</ProjectileDamage>
+								<ProjectileSpeed>200.00</ProjectileSpeed>
+								<Asset>bullet0.png</Asset>
+							</Barrel>
+						</Barrells>
+					</Weapon>
+					<Weapon id="2">
+						<Type>WEAPON_TYPE::CANNON</Type>
+						<Level>1</Level>
+						<Speed>0.00</Speed>
+						<Damage>0.00</Damage>
+						<RotateAngle>20.00</RotateAngle>
+						<AutoAim>1</AutoAim>
+						<DockAt>98.00,100.00</DockAt>
+						<FiringStart>0.50</FiringStart>
+						<FiringStop>1.50</FiringStop>
+						<Asset></Asset>
+						<Barrells>
+							<Barrel type="BARREL_TYPE::BULLET">
+								<RotateAngle>0.00</RotateAngle>
+								<FiringInterval>0.20</FiringInterval>
+								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileScale>0.60</ProjectileScale>
+								<ProjectileDamage>200.00</ProjectileDamage>
+								<ProjectileSpeed>200.00</ProjectileSpeed>
+								<Asset>bullet0.png</Asset>
+							</Barrel>
+						</Barrells>
+					</Weapon>
+					<Weapon id="3">
+						<Type>WEAPON_TYPE::CANNON</Type>
+						<Level>1</Level>
+						<Speed>0.00</Speed>
+						<Damage>0.00</Damage>
+						<RotateAngle>-90.00</RotateAngle>
+						<AutoAim>0</AutoAim>
+						<DockAt>60.00,50.00</DockAt>
+						<FiringStart>0.10</FiringStart>
+						<FiringStop>7.50</FiringStop>
+						<Asset></Asset>
+						<Barrells>
+							<Barrel type="BARREL_TYPE::BULLET">
+								<RotateAngle>0.00</RotateAngle>
+								<FiringInterval>0.20</FiringInterval>
+								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileScale>0.60</ProjectileScale>
+								<ProjectileDamage>200.00</ProjectileDamage>
+								<ProjectileSpeed>200.00</ProjectileSpeed>
+								<Asset>bullet0.png</Asset>
+							</Barrel>
+						</Barrells>
+					</Weapon>
+					<Weapon id="4">
+						<Type>WEAPON_TYPE::CANNON</Type>
+						<Level>1</Level>
+						<Speed>0.00</Speed>
+						<Damage>0.00</Damage>
+						<RotateAngle>90.00</RotateAngle>
+						<AutoAim>0</AutoAim>
+						<DockAt>98.00,50.00</DockAt>
+						<FiringStart>0.10</FiringStart>
+						<FiringStop>7.50</FiringStop>
+						<Asset></Asset>
+						<Barrells>
+							<Barrel type="BARREL_TYPE::BULLET">
+								<RotateAngle>0.00</RotateAngle>
+								<FiringInterval>0.20</FiringInterval>
+								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileScale>0.60</ProjectileScale>
+								<ProjectileDamage>200.00</ProjectileDamage>
+								<ProjectileSpeed>200.00</ProjectileSpeed>
+								<Asset>bullet0.png</Asset>
+							</Barrel>
+						</Barrells>
+					</Weapon>
+				</Weapons>
+				<States>
+					<State id="1" type="STATE_TYPE::ENTRY">
+					</State>
+					<State id="2" type="STATE_TYPE::BATTLE_PHASE">
+						<LifeThreshold>1000.00</LifeThreshold>
+						<Movements>
+							<Movement type="MOVEMENT_TYPE::DISPLACEMENT">
+								<TargetPosition>450.00,560.00</TargetPosition>
+								<DisplacementAutoFacing>0</DisplacementAutoFacing>
+								<!--StayPeriod></StayPeriod-->
+								<!--TargetAngle></TargetAngle-->
+								<Speed>100.00</Speed>
+								<!--Jump></Jump-->
+							</Movement>
+						</Movements>
+						<WeaponGroup>
+							<WeaponID>1</WeaponID>
+							<WeaponID>2</WeaponID>
+						</WeaponGroup>
+					</State>
+					<State id="3" type="STATE_TYPE::BATTLE_PHASE">
+						<LifeThreshold>800.00</LifeThreshold>
+						<Movements>
+							<Movement type="MOVEMENT_TYPE::DISPLACEMENT">
+								<TargetPosition>250.00,560.00</TargetPosition>
+								<DisplacementAutoFacing>0</DisplacementAutoFacing>
+								<!--StayPeriod></StayPeriod-->
+								<!--TargetAngle></TargetAngle-->
+								<Speed>100.00</Speed>
+								<!--Jump></Jump-->
+							</Movement>
+						</Movements>
+						<WeaponGroup>
+							<WeaponID>1</WeaponID>
+							<WeaponID>2</WeaponID>
+						</WeaponGroup>
+					</State>
+					<State id="4" type="STATE_TYPE::BATTLE_PHASE">
+						<LifeThreshold>-1.00</LifeThreshold>
+						<Movements>
+							<Movement type="MOVEMENT_TYPE::ROTATION">
+								<TargetPosition>450.00,560.00</TargetPosition>
+								<!--DisplacementAutoFacing></DisplacementAutoFacing-->
+								<!--StayPeriod></StayPeriod-->
+								<TargetAngle>360.00</TargetAngle>
+								<Speed>60.00</Speed>
+								<Jump>0</Jump>
+							</Movement>
+						</Movements>
+						<WeaponGroup>
+							<WeaponID>3</WeaponID>
+							<WeaponID>4</WeaponID>
+						</WeaponGroup>
+					</State>
+					<State id="5" type="STATE_TYPE::LEAVE">
+					</State>
+					<State id="6" type="STATE_TYPE::DEAD">
+					</State>
+					<State id="7" type="STATE_TYPE::BATTLE_END">
+					</State>
+				</States>
+				<StateTransitions>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::START</Event>
+						<From>-1</From>
+						<To>1</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::AI_DEAD</Event>
+						<From>-1</From>
+						<To>6</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::HOUND_DEAD</Event>
+						<From>-1</From>
+						<To>7</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::LEVEL_QUIT</Event>
+						<From>-1</From>
+						<To>7</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::ENTRY_FINISHED</Event>
+						<From>1</From>
+						<To>2</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED</Event>
+						<From>2</From>
+						<To>3</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED</Event>
+						<From>3</From>
+						<To>4</To>
+					</Transition>
+					<Transition>
+						<Event>STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED</Event>
+						<From>4</From>
+						<To>5</To>
+					</Transition>
+				</StateTransitions>
+			</Enemy>
+		</Wave>
+	</EnemyWaves>
+</LevelInfo>

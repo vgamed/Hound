@@ -96,6 +96,9 @@
     <ClCompile Include="..\Classes\DrawNodeShape.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\DataCenter.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -195,6 +198,9 @@
       <Filter>Classes\StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DrawNodeShape.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DataCenter.h">
       <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>

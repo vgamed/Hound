@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<HoundStaticData>
+	<LifeValue>
+		<Body type="">
+			<Level value="1">1000.00</Level>
+			<!--to do-->
+		</Body>
+	</LifeValue>
+	<ArmorValue>
+		<Armor type="">
+			<Level value="1">1000.00</Level>
+			<!--to do-->
+		</Armor>
+	</ArmorValue>
+	<WeaponData>
+		<Weapon type="">
+			<Level value="1">200.00,1000.00</Level>
+			<!--Level value="n">damage,speed</Level-->
+			<!--to do-->
+		</Weapon>
+	</WeaponData>
+	<ProjectileData>
+		<Projectile type="">
+			<Level value="1">200.00,1000.00</Level>
+			<!--Level value="n">damage,speed</Level-->
+		</Projectile>
+	</ProjectileData>
+</HoundStaticData>

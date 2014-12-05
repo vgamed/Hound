@@ -27,10 +27,10 @@ void EntryState<T, finishEvent>::enter(T &t)
 	t.setPosition(t.getEntryFrom());
 
 	Movement move;
-	move.type = MOVEMENT_TYPE::DISPLACEMENT;
+	move.type = (int)MOVEMENT_TYPE::DISPLACEMENT;
 	move.target_position = t.getEntryTo();
-	move.move_param.displmt.auto_facing = t.isEntryAutoFacing();
-	move.move_param.displmt.speed = t.getEntrySpeed();
+	move.displmt_auto_facing = t.isEntryAutoFacing();
+	move.speed = t.getEntrySpeed();
 	MoveState<T>::addMovement(move);
 
 	MoveState<T>::enter(t);

@@ -30,7 +30,7 @@ class Enemy :
 public:
 	virtual void update(float dt);
 
-	virtual ENEMY_TYPE getType(void) 
+	virtual int getType(void) 
 	{ return m_type; }
 
 	virtual const Circle& getBoundingCircle(void) 
@@ -77,7 +77,7 @@ protected:
 
 	virtual bool init(const EnemyInfo &info);
 
-	ENEMY_TYPE m_type;
+	int m_type;
 
 	cocos2d::Vec2	m_entryFrom;
 	cocos2d::Vec2	m_entryTo;

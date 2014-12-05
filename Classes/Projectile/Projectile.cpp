@@ -19,13 +19,13 @@ bool Projectile::init(const BarrelInfo &info, const cocos2d::Vec2 &direction,
 {
 	do{
 		SpriteFrame *frame = 
-			SpriteFrameCache::getInstance()->getSpriteFrameByName(info.projectile_effect_name);
+			SpriteFrameCache::getInstance()->getSpriteFrameByName(info.projectile_asset_name);
 		if ((frame!=nullptr) && (initWithSpriteFrame(frame)))
 		{
 			break;
 		}
 		Texture2D *texture = 
-			Director::getInstance()->getTextureCache()->getTextureForKey(info.projectile_effect_name);
+			Director::getInstance()->getTextureCache()->getTextureForKey(info.projectile_asset_name);
 		if ((texture==nullptr) || (!initWithTexture(texture)))
 		{
 			return false;

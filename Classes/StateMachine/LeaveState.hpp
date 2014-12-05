@@ -29,13 +29,13 @@ void LeaveState<T, finishEvent>::enter(T &t)
 	t.setInvincible(true);
 
 	Movement move;
-	move.type = MOVEMENT_TYPE::DISPLACEMENT;
+	move.type = (int)MOVEMENT_TYPE::DISPLACEMENT;
 	calcTargetPosition(t, move.target_position);
 	
 	CC_ASSERT(move.target_position != Vec2::ZERO);
 
-	move.move_param.displmt.auto_facing = t.isLeaveAutoFacing();
-	move.move_param.displmt.speed = t.getLeaveSpeed();
+	move.displmt_auto_facing = t.isLeaveAutoFacing();
+	move.speed = t.getLeaveSpeed();
 	MoveState<T>::addMovement(move);
 
 	MoveState<T>::enter(t);
