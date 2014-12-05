@@ -7,6 +7,7 @@ std::auto_ptr<DataCenter> DataCenter::s_dataCenter(nullptr);
 
 DataCenter::DataCenter(void)
 {
+	FileUtils::getInstance()->addSearchPath("data");
 	FileUtils::getInstance()->addSearchPath("data/levels");
 }
 
