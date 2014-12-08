@@ -2,6 +2,7 @@
 #define __HOUND_COMMON_H__
 
 #include "cocos2d.h"
+#include "Types.h"
 #include "Circle.h"
 
 const int ZORDER_SFX_EXPLOSION		= 100;
@@ -13,18 +14,8 @@ const int ZORDER_ENEMY_FRIGATE		= -90;
 const int ZORDER_ENEMY_BOSS			= -100;
 
 //////////////////////////////////////////////////////////////////////////////
-// enumerations and structures for Movement info
+// structures for Movement info
 //////////////////////////////////////////////////////////////////////////////
-
-enum class MOVEMENT_TYPE
-{
-	NONE = 0,
-	DISPLACEMENT,
-	ROTATION,
-	STAY,
-	MAX_VALUE
-};
-
 struct Movement
 {
 	int				type;
@@ -39,37 +30,8 @@ struct Movement
 typedef std::vector<Movement> MOVEMENTS;
 
 //////////////////////////////////////////////////////////////////////////////
-// enumerations and structures for AI state info
+// structures for AI state info
 //////////////////////////////////////////////////////////////////////////////
-enum class STATE_TYPE
-{
-	NONE = 0,
-	MOVE,
-	ENTRY,
-	BATTLE_PHASE,
-	TRANSFORM,
-	LEAVE,
-	BATTLE_END,
-	DEAD,
-	MAX_VALUE
-};
-
-enum class STATE_MACHINE_EVENT
-{
-	NONE = -1,
-	START = 0,
-	MOVE_FINISHED,
-	ENTRY_FINISHED,
-	BATTLE_PHASE_FINISHED,
-	TRANSFORM_FINISHED,
-	LEAVE_FINISHED,
-	HOUND_DEAD,
-	AI_DEAD,
-	LEVEL_QUIT,
-	VICTORY,
-	MAX_VALUE
-};
-
 typedef std::vector<int> WEAPON_GROUP;
 
 struct StateInfo
@@ -93,89 +55,11 @@ struct StateMapInfo
 };
 
 typedef std::vector<StateMapInfo> STATE_MAP_INFOES;
-
 //////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////
-
+// Structures for Weapon and Barrel
 //////////////////////////////////////////////////////////////////////////////
-// type enumerations for Hound and fighters
-//////////////////////////////////////////////////////////////////////////////
-
-enum class BODY_TYPE
-{
-	NONE = 0,
-	BASIC,
-	MAX_VALUE
-};
-
-enum class ARMOR_TYPE
-{
-	NONE = 0,
-	ENEGY_SHIELD,
-	REACTIVE_ARMOR,
-	CERAMIC_ARMOR,
-	MAX_VALUE
-};
-
-enum class ENGINE_TYPE
-{
-	NONE = 0,
-	BASIC,
-	MAX_VALUE
-};
-
-enum class WEAPON_TYPE
-{
-	NONE = 0,
-	CANNON,
-	MAX_VALUE
-};
-
-enum class BARREL_TYPE
-{
-	NONE = 0,
-	BULLET,
-	LASER,
-	MISSILE,
-	MAX_VALUE
-};
-
-enum class EFFECT_TYPE
-{
-	NONE = 0,
-	TEXTURE,
-	SPRITEFRAME,
-	ANIMATION,
-	MAX_VALUE
-};
-
-enum class PROJECTILE_TYPE
-{
-	NONE = 0,
-	BULLET_NORMAL,
-	LASER_NORMAL,
-	MISSILE_NORMAL,
-	MAX_VALUE
-};
-
-enum class WINGMAN_TYPE
-{
-	NONE = 0,
-	BASIC,
-	MAX_VALUE
-};
-
-enum class ENEMY_TYPE
-{
-	NONE = 0,
-	FIGHTER_BEE,
-	FRIGATE_PUMA,
-	CARRIER_TIGER,
-	MAX_VALUE
-};
-
-// player and hound data declarations
 struct BarrelInfo
 {
 	int				type;
@@ -217,7 +101,11 @@ struct WeaponInfo
 	std::vector<BarrelInfo> barrells;
 	std::string		texture_name;
 };
+//////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////
+// Structures for Hound and player
+//////////////////////////////////////////////////////////////////////////////
 struct HoundInfo
 {
 	int				body_type;
@@ -247,8 +135,11 @@ struct PlayerInfo
 	HoundInfo		hound;
 	//Inventory inventory;
 };
+//////////////////////////////////////////////////////////////////////////////
 
-// enemy fighter informations
+//////////////////////////////////////////////////////////////////////////////
+// Structures for level and enemy fighters
+//////////////////////////////////////////////////////////////////////////////
 struct EnemyInfo
 {
 	int				id;
@@ -304,7 +195,6 @@ struct LevelInfo
 //////////////////////////////////////////////////////////////////////////////
 // custom cocos2d events and related enumerations and structures
 //////////////////////////////////////////////////////////////////////////////
-
 extern const char * EVENT_CUSTOM_COLLISION;
 extern const char * EVENT_CUSTOM_DEBUG;
 
@@ -343,7 +233,6 @@ struct DebugData
 //////////////////////////////////////////////////////////////////////////////
 // data structures for special effect
 //////////////////////////////////////////////////////////////////////////////
-
 //struct SFXInfo
 //{
 //	std::string name_prefix;
@@ -355,5 +244,6 @@ struct DebugData
 //	float		last;
 //	int			repeat;
 //};
+//////////////////////////////////////////////////////////////////////////////
 
 #endif //__HOUND_COMMON_H__

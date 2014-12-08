@@ -48,17 +48,8 @@ private:
 	PlayerInfo	m_playerInfo;
 	LevelInfo	m_levelInfo;
 
-	CommonTypeMap m_mapCommonTypes;
-
-	void initCommonTypes(void);
-
 	bool loadGameResources(void);
 	bool loadPlayerInfo(void);
-	bool loadLevelInfo(void);
-
-	bool loadLevelInfoFromXML(int id);
-
-	int getCommonType(const std::string &str);
 
 	void stringToVec2(const std::string &str, cocos2d::Vec2 &vec);
 	void charToString(const char *pstr, std::string &ret);

@@ -50,8 +50,54 @@ bool DataCenter::loadStaticData(void)
 
 bool DataCenter::loadCommonTypeMap(void)
 {
+	std::string str = "";
+	int value = 0;
+
+	str = FileUtils::getInstance()->fullPathForFilename("common_types.xml");
+	tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+	auto ret = doc->LoadFile(str.c_str());
+	if (ret != tinyxml2::XML_NO_ERROR)
+	{
+		return false;
+	}
+
+	std::vector<std::string> groups;
+	groups.push_back("HoundTypes");
+	groups.push_back("WingmanTypes");
+	groups.push_back("EnemyTypes");
+	groups.push_back("WeaponTypes");
+	groups.push_back("BarrelTypes");
+	groups.push_back("ProjectileTypes");
+	groups.push_back("MovementTypes");
+	groups.push_back("StateTypes");
+	groups.push_back("StateMachineEvents");
+
+	const tinyxml2::XMLElement* e_root = nullptr;
+	const tinyxml2::XMLElement* e_child_1 = nullptr;
+	const tinyxml2::XMLElement* e_child_2 = nullptr;
+
+	e_root = doc->RootElement();
+	CC_ASSERT(e_root != nullptr);
+
+	for (std::size_t i = 0; i < groups.size(); i++)
+	{
+		e_child_1 = e_root->FirstChildElement(groups[i].c_str());
+		if (e_child_1 == nullptr)
+			continue;
+
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			str = e_child_2->Value();
+			e_child_2->QueryIntText(&value);
+			m_mapCommonTypes.insert(std::make_pair(str, value));
+		}
+	}
+
 	return true;
 }
+
 bool DataCenter::loadDamageFactorMap(void)
 {
 	return true;
@@ -162,7 +208,7 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 	}
 
 	// for each wave
-	for (e_child_2 = e_child_1->FirstChildElement(); 
+	for (e_child_2 = e_child_1->FirstChildElement();
 		e_child_2 != nullptr;
 		e_child_2 = e_child_2->NextSiblingElement())
 	{
