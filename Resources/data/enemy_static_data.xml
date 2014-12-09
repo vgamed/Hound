@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <EnemyStaticData>
-	<LifeArmorValue>
-		<Enemy type="">
-			<Level value="1">1000.00, 200.00</Level>
+	<LifeArmor>
+		<Enemy type="ENEMY_TYPE::FIGHTER_BEE">
+			<Level value="1">2000.0, 300.0</Level>
+			<Level value="2">3000.0, 350.0</Level>
 			<!--Level value="n">life, armor</Level-->
-			<!--to do-->
 		</Enemy>
-	</LifeArmorValue>
+	</LifeArmor>
 	<WeaponData>
-		<Weapon type="">
-			<Level value="1">200.00, 1000.00</Level>
+		<Weapon type="WEAPON_TYPE::CANNON">
+			<Level value="1">200.0, 300.0</Level>
+			<Level value="2">300.0, 350.0</Level>
 			<!--Level value="n">damage, speed</Level-->
-			<!--to do-->
 		</Weapon>
 	</WeaponData>
 	<!--	How about we simplify the AI's damage and speed to be only based on Weapon's damage and speed?
 	<ProjectileData>
-		<Projectile type="">
+		<Projectile type="PROJECTILE_TYPE::BULLET_NORMAL">
 			<Level value="1">200.00, 1000.00</Level>
 		</Projectile>
 	</ProjectileData>

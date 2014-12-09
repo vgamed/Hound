@@ -1,27 +1,30 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <HoundStaticData>
 	<LifeValue>
-		<Body type="">
-			<Level value="1">1000.00</Level>
-			<!--to do-->
+		<Body type="BODY_TYPE::BASIC">
+			<Level value="1">1000.0</Level>
+			<Level value="2">1200.0</Level>
+			<!--Level value="n">max life</Level-->
 		</Body>
 	</LifeValue>
 	<ArmorValue>
-		<Armor type="">
-			<Level value="1">1000.00</Level>
-			<!--to do-->
+		<Armor type="ARMOR_TYPE::ENERGY_SHIELD">
+			<Level value="1">500.0</Level>
+			<Level value="2">550.0</Level>
+			<!--Level value="n">armor value</Level-->
 		</Armor>
 	</ArmorValue>
 	<WeaponData>
-		<Weapon type="">
-			<Level value="1">200.00,1000.00</Level>
+		<Weapon type="WEAPON_TYPE::CANNON">
+			<Level value="1">8.0, 1000.0</Level>
+			<Level value="2">18.0, 1000.0</Level>
 			<!--Level value="n">damage,speed</Level-->
-			<!--to do-->
 		</Weapon>
 	</WeaponData>
 	<ProjectileData>
-		<Projectile type="">
-			<Level value="1">200.00,1000.00</Level>
+		<Projectile type="PROJECTILE_TYPE::BULLET_NORMAL">
+			<Level value="1">2.0,200.0</Level>
+			<Level value="2">2.0,200.0</Level>
 			<!--Level value="n">damage,speed</Level-->
 		</Projectile>
 	</ProjectileData>

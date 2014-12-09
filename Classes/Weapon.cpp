@@ -72,13 +72,13 @@ bool Weapon::init(const WeaponInfo &info)
 		barrel.direction  = Vec2::UNIT_Y;
 		switch(barrel.info.type)
 		{
-		case BARREL_TYPE::BULLET:
+		case (int)BARREL_TYPE::BULLET:
 			barrel.projectile_creator = Bullet::create;
 			break;
-		case BARREL_TYPE::LASER:
+		case (int)BARREL_TYPE::LASER:
 			barrel.projectile_creator = Laser::create;
 			break;
-		case BARREL_TYPE::MISSILE:
+		case (int)BARREL_TYPE::MISSILE:
 			barrel.projectile_creator = Missile::create;
 			break;
 		default:

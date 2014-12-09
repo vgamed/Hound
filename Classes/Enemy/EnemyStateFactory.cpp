@@ -13,19 +13,19 @@ EnemyState* EnemyStateFactory::create(const StateInfo &info)
 {
 	switch(info.type)
 	{
-	case STATE_TYPE::ENTRY:
+	case (int)STATE_TYPE::ENTRY:
 		return new EnemyEntryState(info);
-	case STATE_TYPE::BATTLE_PHASE:
+	case (int)STATE_TYPE::BATTLE_PHASE:
 		return new EnemyBattlePhaseState(info);
-	case STATE_TYPE::TRANSFORM:
+	case (int)STATE_TYPE::TRANSFORM:
 		return nullptr;
-	case STATE_TYPE::LEAVE:
+	case (int)STATE_TYPE::LEAVE:
 		return new EnemyLeaveState(info);
-	case STATE_TYPE::DEAD:
+	case (int)STATE_TYPE::DEAD:
 		return new EnemyDeadState(info);
-	case STATE_TYPE::BATTLE_END:
+	case (int)STATE_TYPE::BATTLE_END:
 		return new EnemyBattleEndState(info);
-	case STATE_TYPE::MOVE:
+	case (int)STATE_TYPE::MOVE:
 		return new EnemyMoveState(info);
 	default:
 		return nullptr;

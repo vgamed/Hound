@@ -63,8 +63,6 @@ typedef std::vector<StateMapInfo> STATE_MAP_INFOES;
 struct BarrelInfo
 {
 	int				type;
-	int				projectile_type;
-	float			projectile_scale_xy;
 
 	// the angle from weapon direction, in degrees.
 	// positive for rotating in clockwise, negtive for rotating in anti-clockwise
@@ -72,8 +70,12 @@ struct BarrelInfo
 
 	float			firing_interval; //second
 
+	int				projectile_type;
+	int				projectile_level;
+	float			projectile_scale_xy;
 	float			projectile_damage;
 	float			projectile_speed; //per second
+
 	// animation name or spriteframe name or texture name
 	std::string		projectile_asset_name;
 };
@@ -117,6 +119,9 @@ struct HoundInfo
 	int				engine_type;
 	unsigned int	engine_level;
 	
+	float			max_life;
+	float			armor;
+
 	std::vector<WeaponInfo>	weapons;
 
 	float			scale_xy;
@@ -245,5 +250,7 @@ struct DebugData
 //	int			repeat;
 //};
 //////////////////////////////////////////////////////////////////////////////
+
+#include "DataCenter.h"
 
 #endif //__HOUND_COMMON_H__

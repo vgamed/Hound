@@ -59,7 +59,7 @@ bool Enemy::init(const EnemyInfo &info)
 	for (const auto &state_map_info : info.state_map_infoes)
 	{
 		EnemyStateTransit trans;
-		trans.event = (int)(state_map_info.event);
+		trans.event = state_map_info.event;
 		auto it = m_stateMap.find(state_map_info.from);
 		if (it == m_stateMap.end())
 		{

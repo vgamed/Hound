@@ -8,9 +8,10 @@
 	container.insert(std::make_pair<std::string, const int>(FULL_TYPE_STRING(typeclass, type), (int)(typeclass##::##type)));
 
 typedef std::map<std::string, int> CommonTypeMap;
-typedef std::pair<float, float> TLMValue;
-typedef std::map<int/*type*/, std::map<int/*level*/, TLMValue/*value*/>> TypeLevelMap;
-typedef std::map<int/*type*/, std::map<int/*type*/, float/*factor*/>> DamageFactorMap;
+typedef std::pair<float, float> PairValue;
+typedef std::map<int/*type*/, std::map<int/*level*/, PairValue/*value*/>> TypeLevelPairMap;
+typedef std::map<int/*type*/, std::map<int/*level*/, float/*value*/>> TypeLevelValueMap;
+typedef std::map<int/*type*/, std::map<int/*type*/, float/*value*/>> TypeTypeValueMap;
 
 class DataCenter
 {
@@ -19,50 +20,60 @@ public:
 
 	bool loadStaticData(void);
 
+	bool loadPlayerInfo(PlayerInfo &info);
 	bool loadLevelInfo(int id, LevelInfo &info);
 
 	int getCommonType(const std::string &str);
-	float getDamageFactor(int damage_type, int armor_type);
+	float getDamageFactor(int armor_type, int proj_type);
 
-	const TLMValue& getHoundMaxLifeArmor(int type, int level);
-	const TLMValue& getHoundWeaponDamageSpeed(int type, int level);
-	const TLMValue& getHoundProjectileDamageSpeed(int type, int level);
+	float getHoundMaxLife(int body_type, int level);
+	float getHoundArmor(int armor_type, int level);
+	const PairValue& getHoundWeaponDamageSpeed(int type, int level);
+	const PairValue& getHoundProjectileDamageSpeed(int type, int level);
 
-	const TLMValue& getEnemyMaxLifeArmor(int type, int level);
-	const TLMValue& getEnemyWeaponDamageSpeed(int type, int level);
-	const TLMValue& getEnemyProjectileDamageSpeed(int type, int level);
+	const PairValue& getEnemyMaxLifeArmor(int type, int level);
+	const PairValue& getEnemyWeaponDamageSpeed(int type, int level);
+	const PairValue& getEnemyProjectileDamageSpeed(int type, int level);
+
+	static const cocos2d::Size RESOURCE_RESOLUTION;
+	static const cocos2d::Size DESIGN_RESOLUTION;
+	static const PairValue PAIR_ZERO;
 
 private:
 	DataCenter(void);
 	DataCenter(const DataCenter&){}
 	~DataCenter(void);
-	DataCenter& operator = (const DataCenter&){}
+	DataCenter& operator = (const DataCenter&){ return *s_dataCenter; }
 
 	bool loadCommonTypeMap(void);
 	bool loadDamageFactorMap(void);
 
-	bool loadHoundMaxLifeArmorMap(void);
-	bool loadHoundWeaponDamageSpeedMap(void);
-	bool loadHoundProjectileDamageSpeedMap(void);
+	bool loadHoundStaticData(void);
+	bool loadEnemyStaticData(void);
 
-	bool loadEnemyMaxLifeArmorMap(void);
-	bool loadEnemyWeaponDamageSpeedMap(void);
-	bool loadEnemyProjectileDamageSpeedMap(void);
+	// for multi-resolution scaling
+	void scaleByDesign(cocos2d::Vec2 &design_vec2);
+	void scaleByDesign(float &design_float);
 
-	// utilties
+	// data conversions
 	void stringToVec2(const std::string &str, cocos2d::Vec2 &vec);
-	void charToString(const char *pstr, std::string &ret);
+	void stringToPairValue(const std::string &str, PairValue &pair);
+	void charToString(const char *pstr, std::string &ret)
+	{
+		ret = pstr==nullptr ? "" : pstr;
+	}
 
 	CommonTypeMap m_mapCommonTypes;
-	DamageFactorMap m_mapDamageFactor;
+	TypeTypeValueMap m_mapDamageFactor;
 
-	TypeLevelMap m_mapHoundMaxLifeArmor;
-	TypeLevelMap m_mapHoundWeaponDamageSpeed;
-	TypeLevelMap m_mapHoundProjectileDamageSpeed;
+	TypeLevelValueMap m_mapHoundMaxLife;
+	TypeLevelValueMap m_mapHoundArmor;
+	TypeLevelPairMap m_mapHoundWeaponDamageSpeed;
+	TypeLevelPairMap m_mapHoundProjectileDamageSpeed;
 
-	TypeLevelMap m_mapEnemyMaxLifeArmor;
-	TypeLevelMap m_mapEnemyWeaponDamageSpeed;
-	TypeLevelMap m_mapEnemyProjectileDamageSpeed;
+	TypeLevelPairMap m_mapEnemyMaxLifeArmor;
+	TypeLevelPairMap m_mapEnemyWeaponDamageSpeed;
+	TypeLevelPairMap m_mapEnemyProjectileDamageSpeed;
 
 	friend class std::auto_ptr<DataCenter>;
 	static std::auto_ptr<DataCenter> s_dataCenter;

@@ -20,7 +20,7 @@ bool SFXExplosion::initWithSpriteFrames(const std::string &sf_name, int start_id
 	}
 
 	setScale(scale);
-	setZOrder(ZORDER_SFX_EXPLOSION);
+	setLocalZOrder(ZORDER_SFX_EXPLOSION);
 
 	auto anim = Animation::create();
 	char name[50] = "\0";
@@ -51,7 +51,7 @@ bool SFXExplosion::initWithAnimation(const std::string &anim_name, float last, f
 	}
 
 	setScale(scale);
-	setZOrder(ZORDER_SFX_EXPLOSION);
+	setLocalZOrder(ZORDER_SFX_EXPLOSION);
 
 	auto anim = AnimationCache::getInstance()->getAnimation(anim_name);
 	auto action = Animate::create(anim);

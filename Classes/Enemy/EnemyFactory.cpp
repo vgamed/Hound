@@ -16,11 +16,11 @@ Enemy* EnemyFactory::create(const EnemyInfo &info)
 {
 	switch(info.type)
 	{
-	case ENEMY_TYPE::FIGHTER_BEE:
+	case (int)ENEMY_TYPE::FIGHTER_BEE:
 		return FighterBee::create(info);
-	case ENEMY_TYPE::FRIGATE_PUMA:
+	case (int)ENEMY_TYPE::FRIGATE_PUMA:
 		return FrigatePuma::create(info);
-	case ENEMY_TYPE::CARRIER_TIGER:
+	case (int)ENEMY_TYPE::CARRIER_TIGER:
 		return CarrierTiger::create(info);
 	default:
 		return nullptr;

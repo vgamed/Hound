@@ -4,6 +4,9 @@
 USING_NS_CC;
 
 std::auto_ptr<DataCenter> DataCenter::s_dataCenter(nullptr);
+const PairValue DataCenter::PAIR_ZERO = std::make_pair(0.0f,0.0f);
+const Size DataCenter::RESOURCE_RESOLUTION = Size(720.0f, 1280.0f);
+const Size DataCenter::DESIGN_RESOLUTION = Size(640.0f, 960.0f);
 
 DataCenter::DataCenter(void)
 {
@@ -28,21 +31,14 @@ bool DataCenter::loadStaticData(void)
 {
 	if (!loadCommonTypeMap())
 		return false;
+
 	if (!loadDamageFactorMap())
 		return false;
 
-	if (!loadHoundMaxLifeArmorMap())
-		return false;
-	if (!loadHoundWeaponDamageSpeedMap())
-		return false;
-	if (!loadHoundProjectileDamageSpeedMap())
+	if (!loadHoundStaticData())
 		return false;
 
-	if (!loadEnemyMaxLifeArmorMap())
-		return false;
-	if (!loadEnemyWeaponDamageSpeedMap())
-		return false;
-	if (!loadEnemyProjectileDamageSpeedMap())
+	if (!loadEnemyStaticData())
 		return false;
 
 	return true;
@@ -50,12 +46,14 @@ bool DataCenter::loadStaticData(void)
 
 bool DataCenter::loadCommonTypeMap(void)
 {
+	m_mapCommonTypes.clear();
+
 	std::string str = "";
 	int value = 0;
 
 	str = FileUtils::getInstance()->fullPathForFilename("common_types.xml");
-	tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
-	auto ret = doc->LoadFile(str.c_str());
+	tinyxml2::XMLDocument doc;
+	auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
@@ -76,7 +74,7 @@ bool DataCenter::loadCommonTypeMap(void)
 	const tinyxml2::XMLElement* e_child_1 = nullptr;
 	const tinyxml2::XMLElement* e_child_2 = nullptr;
 
-	e_root = doc->RootElement();
+	e_root = doc.RootElement();
 	CC_ASSERT(e_root != nullptr);
 
 	for (std::size_t i = 0; i < groups.size(); i++)
@@ -100,32 +98,352 @@ bool DataCenter::loadCommonTypeMap(void)
 
 bool DataCenter::loadDamageFactorMap(void)
 {
+	m_mapDamageFactor.clear();
+
+	std::string str = FileUtils::getInstance()->fullPathForFilename("damage_factor.xml");
+	tinyxml2::XMLDocument doc;
+	auto ret = doc.LoadFile(str.c_str());
+	if (ret != tinyxml2::XML_NO_ERROR)
+	{
+		return false;
+	}
+
+	const tinyxml2::XMLElement* e_root = nullptr;
+	const tinyxml2::XMLElement* e_child_1 = nullptr;
+	const tinyxml2::XMLElement* e_child_2 = nullptr;
+	float factor = 0.0f;
+
+	e_root = doc.RootElement();
+	CC_ASSERT(e_root != nullptr);
+
+	for (e_child_1 = e_root->FirstChildElement();
+		e_child_1 != nullptr;
+		e_child_1 = e_child_1->NextSiblingElement())
+	{
+		int armor_type = getCommonType(e_child_1->Value());
+
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int proj_type = getCommonType(e_child_2->Value());
+			e_child_2->QueryFloatText(&factor);
+			m_mapDamageFactor[armor_type][proj_type] = factor;
+		}
+	}
+
 	return true;
 }
 
-bool DataCenter::loadHoundMaxLifeArmorMap(void)
+bool DataCenter::loadHoundStaticData(void)
 {
-	return true;
-}
-bool DataCenter::loadHoundWeaponDamageSpeedMap(void)
-{
-	return true;
-}
-bool DataCenter::loadHoundProjectileDamageSpeedMap(void)
-{
+	m_mapHoundMaxLife.clear();
+	m_mapHoundArmor.clear();
+	m_mapHoundWeaponDamageSpeed.clear();
+	m_mapHoundProjectileDamageSpeed.clear();
+
+	std::string str = "";
+	float value = 0.0f;
+	PairValue pair_value;
+
+	str = FileUtils::getInstance()->fullPathForFilename("hound_static_data.xml");
+	tinyxml2::XMLDocument doc;
+	auto ret = doc.LoadFile(str.c_str());
+	if (ret != tinyxml2::XML_NO_ERROR)
+	{
+		return false;
+	}
+
+	const tinyxml2::XMLElement* e_root = nullptr;
+	const tinyxml2::XMLElement* e_child_1 = nullptr;
+	const tinyxml2::XMLElement* e_child_2 = nullptr;
+	const tinyxml2::XMLElement* e_child_3 = nullptr;
+
+	e_root = doc.RootElement();
+	CC_ASSERT(e_root != nullptr);
+
+	//load Hound Max Life Map
+	e_child_1 = e_root->FirstChildElement("LifeValue");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int body_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				e_child_3->QueryFloatText(&value);
+				m_mapHoundMaxLife[body_type][level] = value;
+			}
+		}
+	}
+
+	//load Hound Armor Map
+	e_child_1 = e_root->FirstChildElement("ArmorValue");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int armor_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				e_child_3->QueryFloatText(&value);
+				m_mapHoundArmor[armor_type][level] = value;
+			}
+		}
+	}
+
+	//load Hound Weapon Damage/Speed Map
+	e_child_1 = e_root->FirstChildElement("WeaponData");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int weapon_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				str = e_child_3->GetText();
+				stringToPairValue(str, pair_value);
+				m_mapHoundWeaponDamageSpeed[weapon_type][level] = pair_value;
+			}
+		}
+	}
+
+	//load Hound Projectile Damage/Speed Map
+	e_child_1 = e_root->FirstChildElement("ProjectileData");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int proj_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				str = e_child_3->GetText();
+				stringToPairValue(str, pair_value);
+				m_mapHoundProjectileDamageSpeed[proj_type][level] = pair_value;
+			}
+		}
+	}
+
 	return true;
 }
 
-bool DataCenter::loadEnemyMaxLifeArmorMap(void)
+bool DataCenter::loadEnemyStaticData(void)
 {
+	m_mapEnemyMaxLifeArmor.clear();
+	m_mapEnemyWeaponDamageSpeed.clear();
+	m_mapEnemyProjectileDamageSpeed.clear();
+
+	std::string str = "";
+	PairValue pair_value;
+
+	str = FileUtils::getInstance()->fullPathForFilename("enemy_static_data.xml");
+	tinyxml2::XMLDocument doc;
+	auto ret = doc.LoadFile(str.c_str());
+	if (ret != tinyxml2::XML_NO_ERROR)
+	{
+		return false;
+	}
+
+	const tinyxml2::XMLElement* e_root = nullptr;
+	const tinyxml2::XMLElement* e_child_1 = nullptr;
+	const tinyxml2::XMLElement* e_child_2 = nullptr;
+	const tinyxml2::XMLElement* e_child_3 = nullptr;
+
+	e_root = doc.RootElement();
+	CC_ASSERT(e_root != nullptr);
+
+	//load Enemy MaxLife/Armor Map
+	e_child_1 = e_root->FirstChildElement("LifeArmor");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int enemy_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				str = e_child_3->GetText();
+				stringToPairValue(str, pair_value);
+				m_mapEnemyMaxLifeArmor[enemy_type][level] = pair_value;
+			}
+		}
+	}
+	//load Enemy Weapon Damage/Speed Map
+	e_child_1 = e_root->FirstChildElement("WeaponData");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int weapon_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				str = e_child_3->GetText();
+				stringToPairValue(str, pair_value);
+				m_mapEnemyWeaponDamageSpeed[weapon_type][level] = pair_value;
+			}
+		}
+	}
+	//load Enemy Projectile Damage/Speed Map
+	e_child_1 = e_root->FirstChildElement("ProjectileData");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement();
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			int proj_type = getCommonType(e_child_2->FindAttribute("type")->Value());
+			for (e_child_3 = e_child_2->FirstChildElement();
+				e_child_3 != nullptr;
+				e_child_3 = e_child_3->NextSiblingElement())
+			{
+				int level = e_child_3->FindAttribute("value")->IntValue();
+				str = e_child_3->GetText();
+				stringToPairValue(str, pair_value);
+				m_mapEnemyProjectileDamageSpeed[proj_type][level] = pair_value;
+			}
+		}
+	}
+
 	return true;
 }
-bool DataCenter::loadEnemyWeaponDamageSpeedMap(void)
+
+bool DataCenter::loadPlayerInfo(PlayerInfo &info)
 {
-	return true;
-}
-bool DataCenter::loadEnemyProjectileDamageSpeedMap(void)
-{
+	// player info dummy config
+	{
+		info.id = 0;
+		info.name = "player";
+		info.vip_level = 0;
+
+		// hound
+		info.hound.body_level = 1;
+		info.hound.body_type = (int)BODY_TYPE::BASIC;
+		info.hound.body_texture_name = "mplane.png";
+		info.hound.armor_level = 1;
+		info.hound.armor_type = (int)ARMOR_TYPE::ENEGY_SHIELD;
+		info.hound.armor_texture_name = "";
+		info.hound.engine_level = 1;
+		info.hound.engine_type = (int)ENGINE_TYPE::BASIC;
+		info.hound.engine_texture_name = "";
+		info.hound.scale_xy = 1.0f;
+		scaleByDesign(info.hound.scale_xy);
+		info.hound.bounding_circle_radius = 10.0f;
+		scaleByDesign(info.hound.bounding_circle_radius);
+
+		// barrel config
+		BarrelInfo barrel;
+		barrel.type = (int)BARREL_TYPE::BULLET;
+		barrel.projectile_type = (int)PROJECTILE_TYPE::BULLET_NORMAL;
+		barrel.projectile_level = 1;
+		barrel.projectile_scale_xy = 0.6f;
+		scaleByDesign(barrel.projectile_scale_xy);
+
+		//barrel.projectile_effect_name = "bullet_1.png";
+		barrel.projectile_asset_name = "bullet18.png";
+		barrel.firing_interval = 0.1f; //second
+
+		// weapon config
+		WeaponInfo weapon;
+		weapon.level  = 1;
+		weapon.type = (int)WEAPON_TYPE::CANNON;
+		weapon.auto_aim = false;
+		weapon.time_offset_firing_start = 2.0f; //second
+		weapon.time_offset_firing_stop = FLT_MAX; //second
+
+		// add weapons
+		info.hound.weapons.clear();
+
+		// front gun
+		weapon.id = 1;
+		weapon.texture_name = "frontgun.png";
+		weapon.dock_position = Vec2(58.0f, 81.0f);
+		weapon.rotate_angle = 0.0f;
+		weapon.barrells.clear();
+		barrel.rotate_angle = 0.0f;
+		weapon.barrells.push_back(barrel);
+		info.hound.weapons.push_back(weapon);
+
+		// left gun
+		weapon.id = 2;
+		weapon.texture_name = "leftgun.png";
+		weapon.dock_position = Vec2(29.0f, 65.0f);
+		weapon.rotate_angle = -30.0f;
+		weapon.barrells.clear();
+		barrel.rotate_angle = 0.0f;
+		weapon.barrells.push_back(barrel);
+		barrel.rotate_angle = -30.0f;
+		weapon.barrells.push_back(barrel);
+		barrel.rotate_angle = 30.0f;
+		weapon.barrells.push_back(barrel);
+		info.hound.weapons.push_back(weapon);
+
+		// right gun
+		weapon.id = 3;
+		weapon.texture_name = "rightgun.png";
+		weapon.dock_position = Vec2(87.0f, 65.0f);
+		weapon.rotate_angle = 30.0f;
+		weapon.barrells.clear();
+		barrel.rotate_angle = 0.0f;
+		weapon.barrells.push_back(barrel);
+		barrel.rotate_angle = -30.0f;
+		weapon.barrells.push_back(barrel);
+		barrel.rotate_angle = 30.0f;
+		weapon.barrells.push_back(barrel);
+		info.hound.weapons.push_back(weapon);
+	} 
+	// end of player info dummy config
+
+	// get hound max life and armor value
+	info.hound.max_life = getHoundMaxLife(info.hound.body_type, info.hound.body_level);
+	info.hound.armor = getHoundArmor(info.hound.armor_type, info.hound.armor_level);
+
+	// get weapon damage and speed
+	for (auto &weapon : info.hound.weapons)
+	{
+		auto wds = DataCenter::getInstance()->getHoundWeaponDamageSpeed(
+			weapon.type, weapon.level);
+		weapon.damage = wds.first;
+		weapon.speed = wds.second;
+
+		// get projectile damage and speed
+		for (auto &barrel : weapon.barrells)
+		{
+			auto pds = DataCenter::getInstance()->getHoundProjectileDamageSpeed(
+				barrel.projectile_type, barrel.projectile_level);
+			barrel.projectile_damage = pds.first;
+			barrel.projectile_speed = pds.second;
+		}
+	}
+
 	return true;
 }
 
@@ -137,8 +455,8 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 	buffer << "level_info_" << id << ".xml";
 	str = FileUtils::getInstance()->fullPathForFilename(buffer.str());
 
-	tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
-	auto ret = doc->LoadFile(str.c_str());
+	tinyxml2::XMLDocument doc;
+	auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
@@ -155,7 +473,7 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 	const tinyxml2::XMLElement* e_child_8 = nullptr;
 
 	// set level id
-	e_root = doc->RootElement();
+	e_root = doc.RootElement();
 	CC_ASSERT(e_root != nullptr);
 	info.id = e_root->FindAttribute("id")->IntValue();
 	//
@@ -167,9 +485,12 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 		std::string str;
 		str = e_child_1->FirstChildElement("From")->GetText();
 		stringToVec2(str, info.hound_entry_from);
+		scaleByDesign(info.hound_entry_from);
 		str = e_child_1->FirstChildElement("To")->GetText();
 		stringToVec2(str, info.hound_entry_to);
+		scaleByDesign(info.hound_entry_to);
 		e_child_1->FirstChildElement("Speed")->QueryFloatText(&info.hound_entry_speed);
+		scaleByDesign(info.hound_entry_speed);
 		e_child_1->FirstChildElement("AutoFacing")->QueryBoolText(&info.hound_entry_auto_facing);
 	}
 	//
@@ -178,6 +499,7 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 	e_child_1 = e_root->FirstChildElement("HoundLeave");
 	CC_ASSERT(e_child_1 != nullptr);
 		e_child_1->FirstChildElement("Speed")->QueryFloatText(&info.hound_leave_speed);
+		scaleByDesign(info.hound_leave_speed);
 		e_child_1->FirstChildElement("AutoFacing")->QueryBoolText(&info.hound_leave_auto_facing);
 	//
 
@@ -222,24 +544,30 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 			charToString(e_child_3->FirstChildElement("Type")->GetText(), str);
 			ef_info.type = getCommonType(str);
 			e_child_3->FirstChildElement("Level")->QueryUnsignedText(&ef_info.level);
-			auto value = getEnemyMaxLifeArmor(ef_info.type, ef_info.level);
-			ef_info.max_life = value.first;
-			ef_info.armor = value.second;
+			auto mla = getEnemyMaxLifeArmor(ef_info.type, ef_info.level);
+			ef_info.max_life = mla.first;
+			ef_info.armor = mla.second;
 			e_child_3->FirstChildElement("Scale")->QueryFloatText(&ef_info.scale_xy);
+			scaleByDesign(ef_info.scale_xy);
 			e_child_3->FirstChildElement("BoundingCircleRadius")->QueryFloatText(&ef_info.bounding_circle_radius);
+			scaleByDesign(ef_info.bounding_circle_radius);
 			e_child_3->FirstChildElement("RotateAngle")->QueryFloatText(&ef_info.rotate_angle);
 			charToString(e_child_3->FirstChildElement("Asset")->GetText(), ef_info.body_texture_name);
 			// entry
 			e_child_4 = e_child_3->FirstChildElement("Entry");
 			charToString(e_child_4->FirstChildElement("From")->GetText(), str);
 			stringToVec2(str, ef_info.entry_from);
+			scaleByDesign(ef_info.entry_from);
 			charToString(e_child_4->FirstChildElement("To")->GetText(), str);
 			stringToVec2(str, ef_info.entry_to);
+			scaleByDesign(ef_info.entry_to);
 			e_child_4->FirstChildElement("Speed")->QueryFloatText(&ef_info.entry_speed);
+			scaleByDesign(ef_info.entry_speed);
 			e_child_4->FirstChildElement("AutoFacing")->QueryBoolText(&ef_info.entry_auto_facing);
 			// leave
 			e_child_4 = e_child_3->FirstChildElement("Leave");
 			e_child_4->FirstChildElement("Speed")->QueryFloatText(&ef_info.leave_speed);
+			scaleByDesign(ef_info.leave_speed);
 			e_child_4->FirstChildElement("AutoFacing")->QueryBoolText(&ef_info.leave_auto_facing);
 			
 			// for each weapon
@@ -254,8 +582,9 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 					charToString(e_child_5->FirstChildElement("Type")->GetText(), str);
 					weapon.type = getCommonType(str);
 					e_child_5->FirstChildElement("Level")->QueryUnsignedText(&weapon.level);
-					e_child_5->FirstChildElement("Speed")->QueryFloatText(&weapon.speed);
-					e_child_5->FirstChildElement("Damage")->QueryFloatText(&weapon.damage);
+					auto wds = getEnemyWeaponDamageSpeed(weapon.type, weapon.level);
+					weapon.damage = wds.first;
+					weapon.speed = wds.second;
 					e_child_5->FirstChildElement("RotateAngle")->QueryFloatText(&weapon.rotate_angle);
 					e_child_5->FirstChildElement("AutoAim")->QueryBoolText(&weapon.auto_aim);
 					charToString(e_child_5->FirstChildElement("DockAt")->GetText(), str);
@@ -278,9 +607,13 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 							e_child_7->FirstChildElement("FiringInterval")->QueryFloatText(&barrel.firing_interval);
 							charToString(e_child_7->FirstChildElement("ProjectileType")->GetText(), str);
 							barrel.projectile_type = getCommonType(str);
+							e_child_7->FirstChildElement("ProjectileLevel")->QueryIntText(&barrel.projectile_level);
 							e_child_7->FirstChildElement("ProjectileScale")->QueryFloatText(&barrel.projectile_scale_xy);
-							e_child_7->FirstChildElement("ProjectileDamage")->QueryFloatText(&barrel.projectile_damage);
-							e_child_7->FirstChildElement("ProjectileSpeed")->QueryFloatText(&barrel.projectile_speed);
+							scaleByDesign(barrel.projectile_scale_xy);
+							auto pds = getEnemyProjectileDamageSpeed(barrel.projectile_type, barrel.projectile_level);
+							barrel.projectile_damage = pds.first;
+							barrel.projectile_speed = pds.second;
+							scaleByDesign(barrel.projectile_speed);
 							charToString(e_child_7->FirstChildElement("Asset")->GetText(), barrel.projectile_asset_name);
 
 							weapon.barrells.push_back(barrel);
@@ -330,6 +663,7 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 							movement.type = getCommonType(str);
 							charToString(e_child_7->FirstChildElement("TargetPosition")->GetText(), str);
 							stringToVec2(str, movement.target_position);
+							scaleByDesign(movement.target_position);
 
 							movement.displmt_auto_facing = false;
 							e_child_8 = e_child_7->FirstChildElement("DisplacementAutoFacing");
@@ -357,6 +691,8 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 							if (e_child_8 != nullptr)
 							{
 								e_child_8->QueryFloatText(&movement.speed);
+								if (movement.type == (int)MOVEMENT_TYPE::DISPLACEMENT)
+									scaleByDesign(movement.speed);
 							}
 
 							movement.jump = false;
@@ -421,44 +757,193 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 
 int DataCenter::getCommonType(const std::string &str)
 {
-	return m_mapCommonTypes[str];
+	CommonTypeMap::iterator it = m_mapCommonTypes.find(str);
+	if (it == m_mapCommonTypes.end())
+	{
+		CCLOG("Error: getCommonType => Could not find type %s.", str.c_str());
+		return 0; //invalid type
+	}
+	return it->second;
 }
 
-float DataCenter::getDamageFactor(int damage_type, int armor_type)
+float DataCenter::getDamageFactor(int armor_type, int proj_type)
 {
-	return m_mapDamageFactor[damage_type][armor_type];
+	TypeTypeValueMap::iterator it = m_mapDamageFactor.find(armor_type);
+	if (it == m_mapDamageFactor.end())
+	{
+		CCLOG("Error: getDamageFactor => Could not find armor type %d.", armor_type);
+		return 1.0f;
+	}
+
+	std::map<int, float>::iterator it2 = it->second.find(proj_type);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getDamageFactor => Could not find projectile type %d.", proj_type);
+		return 1.0f;
+	}
+
+	return it2->second;
 }
 
-const TLMValue& DataCenter::getHoundMaxLifeArmor(int type, int level)
+float DataCenter::getHoundMaxLife(int body_type, int level)
 {
-	return m_mapHoundMaxLifeArmor[type][level];
-}
-const TLMValue& DataCenter::getHoundWeaponDamageSpeed(int type, int level)
-{
-	return m_mapHoundWeaponDamageSpeed[type][level];
-}
-const TLMValue& DataCenter::getHoundProjectileDamageSpeed(int type, int level)
-{
-	return m_mapHoundProjectileDamageSpeed[type][level];
+	TypeLevelValueMap::iterator it = m_mapHoundMaxLife.find(body_type);
+	if (it == m_mapHoundMaxLife.end())
+	{
+		CCLOG("Error: getHoundMaxLife => Could not find body type %d.", body_type);
+		return 1.0f;
+	}
+
+	std::map<int, float>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getHoundMaxLife => Could not find level %d.", level);
+		return 1.0f;
+	}
+
+	return it2->second;
 }
 
-const TLMValue& DataCenter::getEnemyMaxLifeArmor(int type, int level)
+float DataCenter::getHoundArmor(int armor_type, int level)
 {
-	return m_mapEnemyMaxLifeArmor[type][level];
+	TypeLevelValueMap::iterator it = m_mapHoundArmor.find(armor_type);
+	if (it == m_mapHoundArmor.end())
+	{
+		CCLOG("Error: getHoundArmor => Could not find armor type %d.", armor_type);
+		return 1.0f;
+	}
+
+	std::map<int, float>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getHoundArmor => Could not find level %d.", level);
+		return 1.0f;
+	}
+
+	return it2->second;
 }
-const TLMValue& DataCenter::getEnemyWeaponDamageSpeed(int type, int level)
+
+const PairValue& DataCenter::getHoundWeaponDamageSpeed(int type, int level)
 {
-	return m_mapEnemyWeaponDamageSpeed[type][level];
+	TypeLevelPairMap::iterator it = m_mapHoundWeaponDamageSpeed.find(type);
+	if (it == m_mapHoundWeaponDamageSpeed.end())
+	{
+		CCLOG("Error: getHoundWeaponDamageSpeed => Could not find armor type %d.", type);
+		return PAIR_ZERO;
+	}
+
+	std::map<int, PairValue>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getHoundWeaponDamageSpeed => Could not find level %d.", level);
+		return PAIR_ZERO;
+	}
+
+	return it2->second;
 }
-const TLMValue& DataCenter::getEnemyProjectileDamageSpeed(int type, int level)
+const PairValue& DataCenter::getHoundProjectileDamageSpeed(int type, int level)
 {
-	return m_mapEnemyProjectileDamageSpeed[type][level];
+	TypeLevelPairMap::iterator it = m_mapHoundProjectileDamageSpeed.find(type);
+	if (it == m_mapHoundProjectileDamageSpeed.end())
+	{
+		CCLOG("Error: getHoundProjectileDamageSpeed => Could not find armor type %d.", type);
+		return PAIR_ZERO;
+	}
+
+	std::map<int, PairValue>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getHoundProjectileDamageSpeed => Could not find level %d.", level);
+		return PAIR_ZERO;
+	}
+
+	return it2->second;
+}
+
+const PairValue& DataCenter::getEnemyMaxLifeArmor(int type, int level)
+{
+	TypeLevelPairMap::iterator it = m_mapEnemyMaxLifeArmor.find(type);
+	if (it == m_mapEnemyMaxLifeArmor.end())
+	{
+		CCLOG("Error: getEnemyMaxLifeArmor => Could not find Enemy type %d.", type);
+		return PAIR_ZERO;
+	}
+
+	std::map<int, PairValue>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getEnemyMaxLifeArmor => Could not find level %d.", level);
+		return PAIR_ZERO;
+	}
+
+	return it2->second;
+}
+const PairValue& DataCenter::getEnemyWeaponDamageSpeed(int type, int level)
+{
+	TypeLevelPairMap::iterator it = m_mapEnemyWeaponDamageSpeed.find(type);
+	if (it == m_mapEnemyWeaponDamageSpeed.end())
+	{
+		CCLOG("Error: getEnemyWeaponDamageSpeed => Could not find Weapon type %d.", type);
+		return PAIR_ZERO;
+	}
+
+	std::map<int, PairValue>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getEnemyWeaponDamageSpeed => Could not find level %d.", level);
+		return PAIR_ZERO;
+	}
+
+	return it2->second;
+}
+const PairValue& DataCenter::getEnemyProjectileDamageSpeed(int type, int level)
+{
+	TypeLevelPairMap::iterator it = m_mapEnemyProjectileDamageSpeed.find(type);
+	if (it == m_mapEnemyProjectileDamageSpeed.end())
+	{
+		CCLOG("Error: getEnemyProjectileDamageSpeed => Could not find Projectile type %d.", type);
+		return PAIR_ZERO;
+	}
+
+	std::map<int, PairValue>::iterator it2 = it->second.find(level);
+	if (it2 == it->second.end())
+	{
+		CCLOG("Error: getEnemyProjectileDamageSpeed => Could not find level %d.", level);
+		return PAIR_ZERO;
+	}
+
+	return it2->second;
+}
+
+void DataCenter::scaleByDesign(Vec2 &vec2)
+{
+	static float scale_x = Director::getInstance()->getVisibleSize().width / DESIGN_RESOLUTION.width;
+	static float scale_y = Director::getInstance()->getVisibleSize().height / DESIGN_RESOLUTION.height;
+
+	CCLOG("BEFORE SCALE: x=%f, y=%f", vec2.x, vec2.y);
+
+	vec2.x *= scale_x;
+	vec2.y *= scale_y;
+
+	CCLOG("AFTER SCALE: x=%f, y=%f", vec2.x, vec2.y);
+}
+
+void DataCenter::scaleByDesign(float &flt)
+{
+	static float scale = MIN(Director::getInstance()->getVisibleSize().width / DESIGN_RESOLUTION.width,
+							Director::getInstance()->getVisibleSize().height / DESIGN_RESOLUTION.height);
+
+	CCLOG("BEFORE SCALE: floatValue = %f", flt);
+
+	flt *= scale;
+
+	CCLOG("AFTER SCALE: floatValue = %f", flt);
 }
 
 void DataCenter::stringToVec2(const std::string &str, cocos2d::Vec2 &vec)
 {
-	vec.x = FLT_MAX;
-	vec.y = FLT_MAX;
+	vec.x = 0.0f;
+	vec.y = 0.0f;
 
 	std::size_t pos = str.find(',');
 	if (pos == std::string::npos)
@@ -470,7 +955,17 @@ void DataCenter::stringToVec2(const std::string &str, cocos2d::Vec2 &vec)
 	tinyxml2::XMLUtil::ToFloat(str.substr(pos+1).c_str(), &vec.y);
 }
 
-void DataCenter::charToString(const char *pstr, std::string &ret)
+void DataCenter::stringToPairValue(const std::string &str, PairValue &value)
 {
-	ret = pstr==nullptr ? "" : pstr;
+	value.first = 0.0f;
+	value.second = 0.0f;
+
+	std::size_t pos = str.find(',');
+	if (pos == std::string::npos)
+	{
+		return;
+	}
+
+	tinyxml2::XMLUtil::ToFloat(str.substr(0, pos).c_str(), &value.first);
+	tinyxml2::XMLUtil::ToFloat(str.substr(pos+1).c_str(), &value.second);
 }

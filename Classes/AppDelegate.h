@@ -2,7 +2,6 @@
 #define  _APP_DELEGATE_H_
 
 #include "Common.h"
-#include "DataCenter.h"
 
 class DataCenter;
 /**
@@ -35,24 +34,11 @@ public:
     */
     virtual void applicationWillEnterForeground();
 
-	// for multi-resolution scaling
-	void scaleByDesign(cocos2d::Vec2 &design_vec2);
-	void scaleByDesign(float &design_float);
-
-	// for finding max life, armor and damage ratio by various types
-	float getHoundMaxLife(void);
-	float getHoundArmor(void);
-	const std::pair<float, float> getEnemyMaxLifeAndArmor(int type, int level);
-
 private:
 	PlayerInfo	m_playerInfo;
 	LevelInfo	m_levelInfo;
 
 	bool loadGameResources(void);
-	bool loadPlayerInfo(void);
-
-	void stringToVec2(const std::string &str, cocos2d::Vec2 &vec);
-	void charToString(const char *pstr, std::string &ret);
 };
 
 #endif // _APP_DELEGATE_H_

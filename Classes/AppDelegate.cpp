@@ -1,13 +1,8 @@
 #include "AppDelegate.h"
 #include "cocos-ext.h"
-#include "tinyxml2\tinyxml2.h"
 #include "GameScene.h"
 
 USING_NS_CC;
-using namespace tinyxml2;
-
-static const Size resourceResolution(720.0f, 1280.0f);
-static const Size designResolution(640.0f, 960.0f);
 
 AppDelegate::AppDelegate() 
 {
@@ -25,8 +20,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		glview = GLView::create("Hound");
 		//glview = GLView::createWithRect("Hound", Rect(0, 0, 1280, 960));
         director->setOpenGLView(glview);
-		glview->setDesignResolutionSize(designResolution.width, designResolution.height, ResolutionPolicy::SHOW_ALL);
-		director->setContentScaleFactor(resourceResolution.width/designResolution.width);
+		glview->setDesignResolutionSize(DataCenter::DESIGN_RESOLUTION.width, 
+										DataCenter::DESIGN_RESOLUTION.height, 
+										ResolutionPolicy::SHOW_ALL);
+		director->setContentScaleFactor(
+			DataCenter::RESOURCE_RESOLUTION.width / DataCenter::DESIGN_RESOLUTION.width);
     }
 
     // turn on display FPS
@@ -47,11 +45,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		return false;
 	}
 
-	// load Hound static data
-	//...
-
 	// load player information from database
-	if (!loadPlayerInfo())
+	if (!DataCenter::getInstance()->loadPlayerInfo(m_playerInfo))
 	{
 		return false;
 	}
@@ -90,31 +85,6 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-}
-
-void AppDelegate::scaleByDesign(Vec2 &vec2)
-{
-	static float scale_x = Director::getInstance()->getVisibleSize().width / designResolution.width;
-	static float scale_y = Director::getInstance()->getVisibleSize().height / designResolution.height;
-
-	CCLOG("BEFORE SCALE: x=%f, y=%f", vec2.x, vec2.y);
-
-	vec2.x *= scale_x;
-	vec2.y *= scale_y;
-
-	CCLOG("AFTER SCALE: x=%f, y=%f", vec2.x, vec2.y);
-}
-
-void AppDelegate::scaleByDesign(float &flt)
-{
-	static float scale = MIN(Director::getInstance()->getVisibleSize().width / designResolution.width,
-							Director::getInstance()->getVisibleSize().height / designResolution.height);
-
-	CCLOG("BEFORE SCALE: floatValue = %f", flt);
-
-	flt *= scale;
-
-	CCLOG("AFTER SCALE: floatValue = %f", flt);
 }
 
 bool AppDelegate::loadGameResources(void)
@@ -170,121 +140,4 @@ bool AppDelegate::loadGameResources(void)
 	AnimationCache::getInstance()->addAnimationsWithFile("bullet.plist");
 
 	return true;
-}
-
-bool AppDelegate::loadPlayerInfo(void)
-{
-	m_playerInfo.id = 0;
-	m_playerInfo.name = "player";
-	m_playerInfo.vip_level = 0;
-	m_playerInfo.hound.body_level = 1;
-	m_playerInfo.hound.body_type = (int)BODY_TYPE::BASIC;
-	m_playerInfo.hound.body_texture_name = "mplane.png";
-	m_playerInfo.hound.armor_level = 1;
-	m_playerInfo.hound.armor_type = (int)ARMOR_TYPE::ENEGY_SHIELD;
-	m_playerInfo.hound.armor_texture_name = "";
-	m_playerInfo.hound.engine_level = 1;
-	m_playerInfo.hound.engine_type = (int)ENGINE_TYPE::BASIC;
-	m_playerInfo.hound.engine_texture_name = "";
-
-	m_playerInfo.hound.scale_xy = 1.0f;
-	scaleByDesign(m_playerInfo.hound.scale_xy);
-
-	m_playerInfo.hound.bounding_circle_radius = 10.0f;
-
-	m_playerInfo.hound.weapons.clear();
-
-	BarrelInfo barrel;
-	barrel.type = (int)BARREL_TYPE::BULLET;
-	barrel.projectile_type = (int)PROJECTILE_TYPE::BULLET_NORMAL;
-	
-	barrel.projectile_scale_xy = 0.6f;
-	scaleByDesign(barrel.projectile_scale_xy);
-
-	//barrel.projectile_effect_name = "bullet_1.png";
-	barrel.projectile_asset_name = "bullet18.png";
-	barrel.projectile_damage = 2.0f;
-	barrel.projectile_speed = 200.0f;
-	barrel.firing_interval = 0.1f; //second
-
-	WeaponInfo weapon;
-	weapon.level  = 1;
-	weapon.type = (int)WEAPON_TYPE::CANNON;
-	weapon.auto_aim = false;
-	weapon.time_offset_firing_start = 2.0f; //second
-	weapon.time_offset_firing_stop = FLT_MAX; //second
-	weapon.speed = 1000.0f; //per second
-	weapon.damage = 8.0f;
-
-	weapon.id = 1;
-	weapon.texture_name = "frontgun.png";
-	weapon.dock_position = Vec2(58.0f, 81.0f);
-	weapon.rotate_angle = 0.0f;
-	weapon.barrells.clear();
-	barrel.rotate_angle = 0.0f;
-	weapon.barrells.push_back(barrel);
-	m_playerInfo.hound.weapons.push_back(weapon);
-
-	weapon.id = 2;
-	weapon.texture_name = "leftgun.png";
-	weapon.dock_position = Vec2(29.0f, 65.0f);
-	weapon.rotate_angle = -30.0f;
-	weapon.barrells.clear();
-	barrel.rotate_angle = 0.0f;
-	weapon.barrells.push_back(barrel);
-	barrel.rotate_angle = -30.0f;
-	weapon.barrells.push_back(barrel);
-	barrel.rotate_angle = 30.0f;
-	weapon.barrells.push_back(barrel);
-	m_playerInfo.hound.weapons.push_back(weapon);
-
-	weapon.id = 3;
-	weapon.texture_name = "rightgun.png";
-	weapon.dock_position = Vec2(87.0f, 65.0f);
-	weapon.rotate_angle = 30.0f;
-	weapon.barrells.clear();
-	barrel.rotate_angle = 0.0f;
-	weapon.barrells.push_back(barrel);
-	barrel.rotate_angle = -30.0f;
-	weapon.barrells.push_back(barrel);
-	barrel.rotate_angle = 30.0f;
-	weapon.barrells.push_back(barrel);
-	m_playerInfo.hound.weapons.push_back(weapon);
-
-	return true;
-}
-
-float AppDelegate::getHoundMaxLife(void)
-{
-	return 1000.0f;
-}
-
-float AppDelegate::getHoundArmor(void)
-{
-	return 500.0f;
-}
-
-const std::pair<float, float> AppDelegate::getEnemyMaxLifeAndArmor(int type, int level)
-{
-	return std::make_pair<float, float>(2000.0f, 300.0f);
-}
-
-void AppDelegate::stringToVec2(const std::string &str, cocos2d::Vec2 &vec)
-{
-	vec.x = FLT_MAX;
-	vec.y = FLT_MAX;
-
-	std::size_t pos = str.find(',');
-	if (pos == std::string::npos)
-	{
-		return;
-	}
-
-	tinyxml2::XMLUtil::ToFloat(str.substr(0, pos).c_str(), &vec.x);
-	tinyxml2::XMLUtil::ToFloat(str.substr(pos+1).c_str(), &vec.y);
-}
-
-void AppDelegate::charToString(const char *pstr, std::string &ret)
-{
-	ret = pstr==nullptr ? "" : pstr;
 }

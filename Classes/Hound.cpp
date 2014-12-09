@@ -52,9 +52,8 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	m_leaveSpeed = lli.hound_leave_speed;
 	m_leaveAutoFacing = lli.hound_leave_auto_facing;
 
-	auto app = dynamic_cast<AppDelegate*>(Application::getInstance());
-	m_curLife = m_maxLife = app->getHoundMaxLife();
-	m_armor = app->getHoundArmor();
+	m_curLife = m_maxLife = hdi.max_life;
+	m_armor = hdi.armor;
 
 	// initialize weapons
 	auto scale = Director::getInstance()->getContentScaleFactor();

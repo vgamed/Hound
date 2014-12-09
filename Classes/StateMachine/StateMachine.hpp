@@ -160,10 +160,10 @@ void StateMachine<T>::processEvent(int event)
 template <typename T> 
 void StateMachine<T>::update(float dt) 
 {
-	if (m_eventReceived >= 0)
+	if (m_eventReceived > 0)
 	{
 		processEvent(m_eventReceived);
-		m_eventReceived = -1;
+		m_eventReceived = 0;
 	}
 
 	m_pCurState->exec(m_rOwner, dt);

@@ -50,9 +50,8 @@
 								<RotateAngle>0.00</RotateAngle>
 								<FiringInterval>0.20</FiringInterval>
 								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileLevel>1</ProjectileLevel>
 								<ProjectileScale>0.60</ProjectileScale>
-								<ProjectileDamage>200.00</ProjectileDamage>
-								<ProjectileSpeed>200.00</ProjectileSpeed>
 								<Asset>bullet0.png</Asset>
 							</Barrel>
 						</Barrells>
@@ -73,9 +72,8 @@
 								<RotateAngle>0.00</RotateAngle>
 								<FiringInterval>0.20</FiringInterval>
 								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileLevel>1</ProjectileLevel>
 								<ProjectileScale>0.60</ProjectileScale>
-								<ProjectileDamage>200.00</ProjectileDamage>
-								<ProjectileSpeed>200.00</ProjectileSpeed>
 								<Asset>bullet0.png</Asset>
 							</Barrel>
 						</Barrells>
@@ -96,9 +94,8 @@
 								<RotateAngle>0.00</RotateAngle>
 								<FiringInterval>0.20</FiringInterval>
 								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileLevel>1</ProjectileLevel>
 								<ProjectileScale>0.60</ProjectileScale>
-								<ProjectileDamage>200.00</ProjectileDamage>
-								<ProjectileSpeed>200.00</ProjectileSpeed>
 								<Asset>bullet0.png</Asset>
 							</Barrel>
 						</Barrells>
@@ -119,9 +116,8 @@
 								<RotateAngle>0.00</RotateAngle>
 								<FiringInterval>0.20</FiringInterval>
 								<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+								<ProjectileLevel>1</ProjectileLevel>
 								<ProjectileScale>0.60</ProjectileScale>
-								<ProjectileDamage>200.00</ProjectileDamage>
-								<ProjectileSpeed>200.00</ProjectileSpeed>
 								<Asset>bullet0.png</Asset>
 							</Barrel>
 						</Barrells>
