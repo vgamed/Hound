@@ -135,9 +135,9 @@ bool AppDelegate::loadGameResources(void)
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("bullet.plist");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("wsparticle_p01.plist");
 
-	AnimationCache::getInstance()->addAnimationsWithFile("pig.plist");
-	AnimationCache::getInstance()->addAnimationsWithFile("nplane.plist");
-	AnimationCache::getInstance()->addAnimationsWithFile("bullet.plist");
+	//AnimationCache::getInstance()->addAnimationsWithFile("pig.plist");
+	//AnimationCache::getInstance()->addAnimationsWithFile("nplane.plist");
+	//AnimationCache::getInstance()->addAnimationsWithFile("bullet.plist");
 
 	return true;
 }

@@ -2,7 +2,7 @@
 <EnemyStaticData>
 	<LifeArmor>
 		<Enemy type="ENEMY_TYPE::FIGHTER_BEE">
-			<Level value="1">2000.0, 300.0</Level>
+			<Level value="1">2000.0, 200.0</Level>
 			<Level value="2">3000.0, 350.0</Level>
 			<!--Level value="n">life, armor</Level-->
 		</Enemy>

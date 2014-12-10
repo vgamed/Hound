@@ -53,7 +53,9 @@ bool DataCenter::loadCommonTypeMap(void)
 
 	str = FileUtils::getInstance()->fullPathForFilename("common_types.xml");
 	tinyxml2::XMLDocument doc;
-	auto ret = doc.LoadFile(str.c_str());
+	auto data = FileUtils::getInstance()->getDataFromFile(str);
+	auto ret = doc.Parse((const char*)data.getBytes(), data.getSize());
+	//auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
@@ -102,7 +104,9 @@ bool DataCenter::loadDamageFactorMap(void)
 
 	std::string str = FileUtils::getInstance()->fullPathForFilename("damage_factor.xml");
 	tinyxml2::XMLDocument doc;
-	auto ret = doc.LoadFile(str.c_str());
+	auto data = FileUtils::getInstance()->getDataFromFile(str);
+	auto ret = doc.Parse((const char*)data.getBytes(), data.getSize());
+	//auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
@@ -148,7 +152,9 @@ bool DataCenter::loadHoundStaticData(void)
 
 	str = FileUtils::getInstance()->fullPathForFilename("hound_static_data.xml");
 	tinyxml2::XMLDocument doc;
-	auto ret = doc.LoadFile(str.c_str());
+	auto data = FileUtils::getInstance()->getDataFromFile(str);
+	auto ret = doc.Parse((const char*)data.getBytes(), data.getSize());
+	//auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
@@ -258,7 +264,9 @@ bool DataCenter::loadEnemyStaticData(void)
 
 	str = FileUtils::getInstance()->fullPathForFilename("enemy_static_data.xml");
 	tinyxml2::XMLDocument doc;
-	auto ret = doc.LoadFile(str.c_str());
+	auto data = FileUtils::getInstance()->getDataFromFile(str);
+	auto ret = doc.Parse((const char*)data.getBytes(), data.getSize());
+	//auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
@@ -456,7 +464,9 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 	str = FileUtils::getInstance()->fullPathForFilename(buffer.str());
 
 	tinyxml2::XMLDocument doc;
-	auto ret = doc.LoadFile(str.c_str());
+	auto data = FileUtils::getInstance()->getDataFromFile(str);
+	auto ret = doc.Parse((const char*)data.getBytes(), data.getSize());
+	//auto ret = doc.LoadFile(str.c_str());
 	if (ret != tinyxml2::XML_NO_ERROR)
 	{
 		return false;
