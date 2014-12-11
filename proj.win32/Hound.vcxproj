@@ -69,7 +69,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(EngineRoot)cocos\audio\include;$(EngineRoot)external;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..;$(EngineRoot);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(EngineRoot)cocos\audio\include;$(EngineRoot)external;$(EngineRoot)external\chipmunk\include\chipmunk;$(EngineRoot)extensions;..\Classes;..\Classes\StateMachine;..\Classes\SFX;..\Classes\Projectile;..\Classes\Level;..\Classes\Entity;..\Classes\Sqlite3;..\Classes\CCExt;..;$(EngineRoot);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;COCOS2D_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -134,48 +134,56 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\Battlefield.cpp" />
-    <ClCompile Include="..\Classes\Circle.cpp" />
+    <ClCompile Include="..\Classes\CCExt\Circle.cpp" />
+    <ClCompile Include="..\Classes\CCExt\DrawNodeShape.cpp" />
     <ClCompile Include="..\Classes\DataCenter.cpp" />
-    <ClCompile Include="..\Classes\DrawNodeShape.cpp" />
-    <ClCompile Include="..\Classes\Enemy\CarrierTiger.cpp" />
-    <ClCompile Include="..\Classes\Enemy\Enemy.cpp" />
-    <ClCompile Include="..\Classes\Enemy\EnemyFactory.cpp" />
-    <ClCompile Include="..\Classes\Enemy\EnemyStateFactory.cpp" />
-    <ClCompile Include="..\Classes\Enemy\FighterBee.cpp" />
-    <ClCompile Include="..\Classes\Enemy\FrigatePuma.cpp" />
-    <ClCompile Include="..\Classes\GameScene.cpp" />
+    <ClCompile Include="..\Classes\Entity\CarrierTiger.cpp" />
+    <ClCompile Include="..\Classes\Entity\Enemy.cpp" />
+    <ClCompile Include="..\Classes\Entity\EnemyFactory.cpp" />
+    <ClCompile Include="..\Classes\Entity\EnemyStateFactory.cpp" />
+    <ClCompile Include="..\Classes\Entity\FighterBee.cpp" />
+    <ClCompile Include="..\Classes\Entity\FrigatePuma.cpp" />
+    <ClCompile Include="..\Classes\Entity\Hound.cpp" />
+    <ClCompile Include="..\Classes\Entity\Weapon.cpp" />
+    <ClCompile Include="..\Classes\Entity\Wingman.cpp" />
+    <ClCompile Include="..\Classes\Level\Battlefield.cpp" />
+    <ClCompile Include="..\Classes\Level\GameScene.cpp" />
+    <ClCompile Include="..\Classes\Level\ScrollingBackground.cpp" />
+    <ClCompile Include="..\Classes\Level\UILayer.cpp" />
     <ClCompile Include="..\Classes\SFX\BulletExplosion.cpp" />
     <ClCompile Include="..\Classes\SFX\SFXExplosion.cpp" />
     <ClCompile Include="..\Classes\SFX\SFXFactory.cpp" />
-    <ClCompile Include="..\Classes\UILayer.cpp" />
-    <ClCompile Include="..\Classes\Hound.cpp" />
     <ClCompile Include="..\Classes\Projectile\Bullet.cpp" />
     <ClCompile Include="..\Classes\Projectile\Laser.cpp" />
     <ClCompile Include="..\Classes\Projectile\Missile.cpp" />
     <ClCompile Include="..\Classes\Projectile\Projectile.cpp" />
-    <ClCompile Include="..\Classes\ScrollingBackground.cpp" />
-    <ClCompile Include="..\Classes\Weapon.cpp" />
-    <ClCompile Include="..\Classes\Wingman.cpp" />
+    <ClCompile Include="..\Classes\Sqlite3\sqlite3.c" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
-    <ClInclude Include="..\Classes\Battlefield.h" />
-    <ClInclude Include="..\Classes\Circle.h" />
+    <ClInclude Include="..\Classes\CCExt\Circle.h" />
+    <ClInclude Include="..\Classes\CCExt\DrawNodeShape.h" />
     <ClInclude Include="..\Classes\Common.h" />
     <ClInclude Include="..\Classes\DataCenter.h" />
-    <ClInclude Include="..\Classes\DrawNodeShape.h" />
-    <ClInclude Include="..\Classes\Enemy\CarrierTiger.h" />
-    <ClInclude Include="..\Classes\Enemy\Enemy.h" />
-    <ClInclude Include="..\Classes\Enemy\EnemyFactory.h" />
-    <ClInclude Include="..\Classes\Enemy\EnemyStateFactory.h" />
-    <ClInclude Include="..\Classes\Enemy\FighterBee.h" />
-    <ClInclude Include="..\Classes\Enemy\FrigatePuma.h" />
-    <ClInclude Include="..\Classes\GameScene.h" />
+    <ClInclude Include="..\Classes\Entity\CarrierTiger.h" />
+    <ClInclude Include="..\Classes\Entity\Enemy.h" />
+    <ClInclude Include="..\Classes\Entity\EnemyFactory.h" />
+    <ClInclude Include="..\Classes\Entity\EnemyStateFactory.h" />
+    <ClInclude Include="..\Classes\Entity\FighterBee.h" />
+    <ClInclude Include="..\Classes\Entity\FrigatePuma.h" />
+    <ClInclude Include="..\Classes\Entity\Hound.h" />
+    <ClInclude Include="..\Classes\Entity\Weapon.h" />
+    <ClInclude Include="..\Classes\Entity\Wingman.h" />
+    <ClInclude Include="..\Classes\Level\Battlefield.h" />
+    <ClInclude Include="..\Classes\Level\GameScene.h" />
+    <ClInclude Include="..\Classes\Level\ScrollingBackground.h" />
+    <ClInclude Include="..\Classes\Level\UILayer.h" />
     <ClInclude Include="..\Classes\SFX\BulletExplosion.h" />
     <ClInclude Include="..\Classes\SFX\SFXExplosion.h" />
     <ClInclude Include="..\Classes\SFX\SFXFactory.h" />
+    <ClInclude Include="..\Classes\Sqlite3\sqlite3.h" />
+    <ClInclude Include="..\Classes\Sqlite3\sqlite3ext.h" />
     <ClInclude Include="..\Classes\StateMachine\BattleEndState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\BattlePhaseState.hpp" />
     <ClInclude Include="..\Classes\StateMachine\DeadState.hpp" />
@@ -185,15 +193,10 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\StateMachine\StateMachine.hpp" />
     <ClInclude Include="..\Classes\StateMachine\TransformState.hpp" />
     <ClInclude Include="..\Classes\Types.h" />
-    <ClInclude Include="..\Classes\UILayer.h" />
-    <ClInclude Include="..\Classes\Hound.h" />
     <ClInclude Include="..\Classes\Projectile\Bullet.h" />
     <ClInclude Include="..\Classes\Projectile\Laser.h" />
     <ClInclude Include="..\Classes\Projectile\Missile.h" />
     <ClInclude Include="..\Classes\Projectile\Projectile.h" />
-    <ClInclude Include="..\Classes\ScrollingBackground.h" />
-    <ClInclude Include="..\Classes\Weapon.h" />
-    <ClInclude Include="..\Classes\Wingman.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

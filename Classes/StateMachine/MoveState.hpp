@@ -1,7 +1,7 @@
 #ifndef __HOUND_MOVE_STATE_H__
 #define __HOUND_MOVE_STATE_H__
 
-#include "../Common.h"
+#include "Common.h"
 #include "StateMachine.hpp"
 
 template <typename T>

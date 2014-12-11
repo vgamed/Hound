@@ -1,7 +1,7 @@
 #include "Projectile.h"
-#include "../Hound.h"
-#include "../Battlefield.h"
-#include "../Enemy/Enemy.h"
+#include "Hound.h"
+#include "Battlefield.h"
+#include "Enemy.h"
 
 USING_NS_CC;
 

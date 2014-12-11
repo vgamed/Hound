@@ -13,14 +13,23 @@
     <Filter Include="Classes\Projectile">
       <UniqueIdentifier>{6ae3d002-2189-4e1d-8f3e-f052b7517556}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Enemy">
-      <UniqueIdentifier>{05d7cefb-9401-42a8-b010-2bcda0c43f62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Classes\SFX">
       <UniqueIdentifier>{38d37f16-5398-402d-90a9-1693f4971153}</UniqueIdentifier>
     </Filter>
     <Filter Include="Classes\StateMachine">
       <UniqueIdentifier>{a42cb7d4-2c14-433d-972c-71171310a1a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Level">
+      <UniqueIdentifier>{d98cd5a1-3905-44d5-935c-93992ea3f51a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Entity">
+      <UniqueIdentifier>{05d7cefb-9401-42a8-b010-2bcda0c43f62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CCExt">
+      <UniqueIdentifier>{b7f68ea1-60b1-4eca-bed5-7b8c4f9281e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Sqlite3">
+      <UniqueIdentifier>{477f1e86-9a50-4640-a8f2-03f19cb166ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,36 +38,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\ScrollingBackground.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Hound.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Wingman.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Battlefield.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\GameScene.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Weapon.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Enemy\CarrierTiger.cpp">
-      <Filter>Classes\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Enemy\Enemy.cpp">
-      <Filter>Classes\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Enemy\FighterBee.cpp">
-      <Filter>Classes\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Enemy\FrigatePuma.cpp">
-      <Filter>Classes\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\Projectile\Bullet.cpp">
       <Filter>Classes\Projectile</Filter>
@@ -72,15 +51,6 @@
     <ClCompile Include="..\Classes\Projectile\Projectile.cpp">
       <Filter>Classes\Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Enemy\EnemyFactory.cpp">
-      <Filter>Classes\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\UILayer.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Circle.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SFX\SFXFactory.cpp">
       <Filter>Classes\SFX</Filter>
     </ClCompile>
@@ -90,14 +60,56 @@
     <ClCompile Include="..\Classes\SFX\SFXExplosion.cpp">
       <Filter>Classes\SFX</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Enemy\EnemyStateFactory.cpp">
-      <Filter>Classes\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\DrawNodeShape.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\DataCenter.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Level\Battlefield.cpp">
+      <Filter>Classes\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Level\GameScene.cpp">
+      <Filter>Classes\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Level\ScrollingBackground.cpp">
+      <Filter>Classes\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Level\UILayer.cpp">
+      <Filter>Classes\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\CarrierTiger.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\Enemy.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\EnemyFactory.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\EnemyStateFactory.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\FighterBee.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\FrigatePuma.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\Hound.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\Weapon.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\Wingman.cpp">
+      <Filter>Classes\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CCExt\Circle.cpp">
+      <Filter>Classes\CCExt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CCExt\DrawNodeShape.cpp">
+      <Filter>Classes\CCExt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Sqlite3\sqlite3.c">
+      <Filter>Classes\Sqlite3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,38 +119,8 @@
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\ScrollingBackground.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Hound.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Wingman.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Battlefield.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\GameScene.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Common.h">
       <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Weapon.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Enemy\CarrierTiger.h">
-      <Filter>Classes\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Enemy\Enemy.h">
-      <Filter>Classes\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Enemy\FighterBee.h">
-      <Filter>Classes\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Enemy\FrigatePuma.h">
-      <Filter>Classes\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Projectile\Bullet.h">
       <Filter>Classes\Projectile</Filter>
@@ -151,15 +133,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Projectile\Projectile.h">
       <Filter>Classes\Projectile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Enemy\EnemyFactory.h">
-      <Filter>Classes\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\UILayer.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Circle.h">
-      <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SFX\SFXFactory.h">
       <Filter>Classes\SFX</Filter>
@@ -191,20 +164,65 @@
     <ClInclude Include="..\Classes\StateMachine\MoveState.hpp">
       <Filter>Classes\StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Enemy\EnemyStateFactory.h">
-      <Filter>Classes\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\StateMachine\EntryState.hpp">
       <Filter>Classes\StateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\DrawNodeShape.h">
-      <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DataCenter.h">
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Types.h">
       <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level\Battlefield.h">
+      <Filter>Classes\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level\GameScene.h">
+      <Filter>Classes\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level\ScrollingBackground.h">
+      <Filter>Classes\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level\UILayer.h">
+      <Filter>Classes\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\CarrierTiger.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\Enemy.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\EnemyFactory.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\EnemyStateFactory.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\FighterBee.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\FrigatePuma.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\Hound.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\Weapon.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\Wingman.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CCExt\Circle.h">
+      <Filter>Classes\CCExt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CCExt\DrawNodeShape.h">
+      <Filter>Classes\CCExt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Sqlite3\sqlite3.h">
+      <Filter>Classes\Sqlite3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Sqlite3\sqlite3ext.h">
+      <Filter>Classes\Sqlite3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

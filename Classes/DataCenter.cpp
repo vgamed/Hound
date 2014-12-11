@@ -1,5 +1,6 @@
 #include "DataCenter.h"
 #include "tinyxml2\tinyxml2.h"
+#include "sqlite3.h"
 
 USING_NS_CC;
 
