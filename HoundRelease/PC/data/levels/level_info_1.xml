@@ -1,15 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <LevelInfo id="1">
-	<HoundEntry>
-		<From>320.00,-50.00</From>
-		<To>320.00,150.00</To>
-		<Speed>300.00</Speed>
-		<AutoFacing>1</AutoFacing>
-	</HoundEntry>
-	<HoundLeave>
-		<Speed>1000.00</Speed>
-		<AutoFacing>1</AutoFacing>
-	</HoundLeave>
+	<Hound>
+		<Scale>1.0</Scale>
+		<BoundingCircleRadius>10.0</BoundingCircleRadius>
+		<Entry>
+			<From>320.00,-50.00</From>
+			<To>320.00,150.00</To>
+			<Speed>300.00</Speed>
+			<AutoFacing>1</AutoFacing>
+		</Entry>
+		<Leave>
+			<Speed>1000.00</Speed>
+			<AutoFacing>1</AutoFacing>
+		</Leave>
+	</Hound>
 	<Backgrounds>
 		<Background>img_bg_1.jpg</Background>
 		<Background>clouds.png</Background>
@@ -37,8 +41,6 @@
 					<Weapon id="1">
 						<Type>WEAPON_TYPE::CANNON</Type>
 						<Level>1</Level>
-						<Speed>0.00</Speed>
-						<Damage>0.00</Damage>
 						<RotateAngle>-20.00</RotateAngle>
 						<AutoAim>1</AutoAim>
 						<DockAt>60.00,100.00</DockAt>
@@ -59,8 +61,6 @@
 					<Weapon id="2">
 						<Type>WEAPON_TYPE::CANNON</Type>
 						<Level>1</Level>
-						<Speed>0.00</Speed>
-						<Damage>0.00</Damage>
 						<RotateAngle>20.00</RotateAngle>
 						<AutoAim>1</AutoAim>
 						<DockAt>98.00,100.00</DockAt>
@@ -81,8 +81,6 @@
 					<Weapon id="3">
 						<Type>WEAPON_TYPE::CANNON</Type>
 						<Level>1</Level>
-						<Speed>0.00</Speed>
-						<Damage>0.00</Damage>
 						<RotateAngle>-90.00</RotateAngle>
 						<AutoAim>0</AutoAim>
 						<DockAt>60.00,50.00</DockAt>
@@ -103,8 +101,6 @@
 					<Weapon id="4">
 						<Type>WEAPON_TYPE::CANNON</Type>
 						<Level>1</Level>
-						<Speed>0.00</Speed>
-						<Damage>0.00</Damage>
 						<RotateAngle>90.00</RotateAngle>
 						<AutoAim>0</AutoAim>
 						<DockAt>98.00,50.00</DockAt>
