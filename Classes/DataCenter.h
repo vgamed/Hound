@@ -35,7 +35,7 @@ public:
 	const PairValue& getEnemyWeaponDamageSpeed(int type, int level);
 	const PairValue& getEnemyProjectileDamageSpeed(int type, int level);
 
-	bool generateDummyDatabase(void);
+	bool generateDatabase(void);
 
 	static const cocos2d::Size RESOURCE_RESOLUTION;
 	static const cocos2d::Size DESIGN_RESOLUTION;

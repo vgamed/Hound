@@ -473,7 +473,7 @@ bool DataCenter::loadHoundInfoFromXml(HoundInfo &info)
 	return true;
 }
 
-bool DataCenter::generateDummyDatabase(void)
+bool DataCenter::generateDatabase(void)
 {
 #define SAFE_SQLITE_EXEC(db, sql) \
 	{ \
@@ -532,6 +532,14 @@ bool DataCenter::generateDummyDatabase(void)
 											"type TEXT, "
 											"enum INTEGER UNIQUE, "
 											"asset TEXT)");
+
+	// make up player info
+	PlayerInfo player;
+	player.id = 1;
+	player.name = "lqtjl";
+
+	// load hound info from hound_info.xml
+	loadHoundInfoFromXml(player.hound);
 
 	// insert records
 	sqlite3_stmt *stmt = nullptr;

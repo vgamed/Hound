@@ -59,7 +59,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	TSTR2A(lpCmdLine, cmd_line);
 	if (cmd_line.find("-gendb") != std::string::npos)
 	{
-		DataCenter::getInstance()->generateDummyDatabase();
+		DataCenter::getInstance()->generateDatabase();
 		return 0;
 	}
 
