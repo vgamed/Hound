@@ -1,6 +1,7 @@
 #include "DataCenter.h"
 #include "tinyxml2\tinyxml2.h"
 #include "sqlite3.h"
+#include "BlobData.h"
 
 USING_NS_CC;
 
@@ -345,14 +346,222 @@ bool DataCenter::loadEnemyStaticData(void)
 	return true;
 }
 
+bool DataCenter::loadHoundInfoFromXml(HoundInfo &info)
+{
+	std::string str;
+	str = FileUtils::getInstance()->fullPathForFilename("hound_info.xml");
+
+	tinyxml2::XMLDocument doc;
+	auto data = FileUtils::getInstance()->getDataFromFile(str);
+	auto ret = doc.Parse((const char*)data.getBytes(), data.getSize());
+	//auto ret = doc.LoadFile(str.c_str());
+	if (ret != tinyxml2::XML_NO_ERROR)
+	{
+		return false;
+	}
+
+	const tinyxml2::XMLElement* e_root = nullptr;
+	const tinyxml2::XMLElement* e_child_1 = nullptr;
+	const tinyxml2::XMLElement* e_child_2 = nullptr;
+	const tinyxml2::XMLElement* e_child_3 = nullptr;
+	const tinyxml2::XMLElement* e_child_4 = nullptr;
+
+	// get root element
+	e_root = doc.RootElement();
+	CC_ASSERT(e_root != nullptr);
+	//
+
+	// Section: body
+	e_child_1 = e_root->FirstChildElement("Body");
+	CC_ASSERT(e_child_1 != nullptr);
+	charToString(e_child_1->FirstChildElement("Type")->GetText(), str);
+	info.body_type = getCommonType(str);
+	e_child_1->FirstChildElement("Level")->QueryUnsignedText(&info.body_level);
+	charToString(e_child_1->FirstChildElement("Asset")->GetText(), info.body_asset_name);
+	// exacting docking positions
+	std::map<int, Vec2> docks;
+	int dock_id;
+	Vec2 dock_pos;
+	e_child_2 = e_child_1->FirstChildElement("DockPoints");
+	for (e_child_3 = e_child_2->FirstChildElement(); 
+		e_child_3 != nullptr;
+		e_child_3 = e_child_3->NextSiblingElement())
+	{
+		dock_id = e_child_3->FindAttribute("id")->IntValue();
+		charToString(e_child_3->GetText(), str);
+		stringToVec2(str, dock_pos);
+		docks[dock_id] = dock_pos;
+	}
+
+	// Section: armor
+	e_child_1 = e_root->FirstChildElement("Armor");
+	CC_ASSERT(e_child_1 != nullptr);
+	charToString(e_child_1->FirstChildElement("Type")->GetText(), str);
+	info.body_type = getCommonType(str);
+	e_child_1->FirstChildElement("Level")->QueryUnsignedText(&info.armor_level);
+	charToString(e_child_1->FirstChildElement("Asset")->GetText(), info.armor_asset_name);
+
+	// Section: engine
+	e_child_1 = e_root->FirstChildElement("Engine");
+	CC_ASSERT(e_child_1 != nullptr);
+	charToString(e_child_1->FirstChildElement("Type")->GetText(), str);
+	info.body_type = getCommonType(str);
+	e_child_1->FirstChildElement("Level")->QueryUnsignedText(&info.engine_level);
+	charToString(e_child_1->FirstChildElement("Asset")->GetText(), info.engine_asset_name);
+
+	// get hound max life and armor value
+	info.max_life = getHoundMaxLife(info.body_type, info.body_level);
+	info.armor = getHoundArmor(info.armor_type, info.armor_level);
+
+	// for each weapon
+	e_child_1 = e_root->FirstChildElement("Weapons");
+	if (e_child_1 != nullptr)
+	{
+		for (e_child_2 = e_child_1->FirstChildElement(); 
+			e_child_2 != nullptr;
+			e_child_2 = e_child_2->NextSiblingElement())
+		{
+			WeaponInfo weapon;
+			weapon.id = e_child_2->FindAttribute("id")->IntValue();
+			charToString(e_child_2->FirstChildElement("Type")->GetText(), str);
+			weapon.type = getCommonType(str);
+			e_child_2->FirstChildElement("Level")->QueryUnsignedText(&weapon.level);
+			auto wds = getHoundWeaponDamageSpeed(weapon.type, weapon.level);
+			weapon.damage = wds.first;
+			weapon.speed = wds.second;
+			e_child_2->FirstChildElement("RotateAngle")->QueryFloatText(&weapon.rotate_angle);
+			e_child_2->FirstChildElement("AutoAim")->QueryBoolText(&weapon.auto_aim);
+			e_child_2->FirstChildElement("DockAt")->QueryIntText(&dock_id);
+			weapon.dock_position = docks[dock_id];
+			e_child_2->FirstChildElement("FiringStart")->QueryFloatText(&weapon.time_offset_firing_start);
+			e_child_2->FirstChildElement("FiringStop")->QueryFloatText(&weapon.time_offset_firing_stop);
+			charToString(e_child_2->FirstChildElement("Asset")->GetText(), weapon.texture_name);
+
+			// for each barrel
+			e_child_3 = e_child_2->FirstChildElement("Barrells");
+			if (e_child_3 != nullptr)
+			{
+				for (e_child_4 = e_child_3->FirstChildElement(); 
+					e_child_4 != nullptr;
+					e_child_4 = e_child_4->NextSiblingElement())
+				{
+					BarrelInfo barrel;
+					charToString(e_child_4->FindAttribute("type")->Value(), str);
+					barrel.type = getCommonType(str);
+					e_child_4->FirstChildElement("RotateAngle")->QueryFloatText(&barrel.rotate_angle);
+					e_child_4->FirstChildElement("FiringInterval")->QueryFloatText(&barrel.firing_interval);
+					charToString(e_child_4->FirstChildElement("ProjectileType")->GetText(), str);
+					barrel.projectile_type = getCommonType(str);
+					e_child_4->FirstChildElement("ProjectileLevel")->QueryIntText(&barrel.projectile_level);
+					e_child_4->FirstChildElement("ProjectileScale")->QueryFloatText(&barrel.projectile_scale_xy);
+					scaleByDesign(barrel.projectile_scale_xy);
+					auto pds = getHoundProjectileDamageSpeed(barrel.projectile_type, barrel.projectile_level);
+					barrel.projectile_damage = pds.first;
+					barrel.projectile_speed = pds.second;
+					scaleByDesign(barrel.projectile_speed);
+					charToString(e_child_4->FirstChildElement("Asset")->GetText(), barrel.projectile_asset_name);
+
+					weapon.barrells.push_back(barrel);
+				}
+			}
+
+			info.weapons.push_back(weapon);
+			weapon.barrells.clear();
+		}
+	}
+
+	return true;
+}
+
+bool DataCenter::generateDummyDatabase(void)
+{
+#define SAFE_SQLITE_EXEC(db, sql) \
+	{ \
+		std::string str = sql; \
+		int result = sqlite3_exec(db, str.c_str(), nullptr, nullptr, nullptr); \
+		if (result != SQLITE_OK) \
+		{ \
+			CCLOG("sqlite3_exec() failed! %s, %d, %s", str.c_str(), __LINE__, __FILE__); \
+			return false; \
+		} \
+	}
+
+	sqlite3 *pdb = nullptr;
+	std::string path = FileUtils::getInstance()->getWritablePath()+"hound.db";
+
+	// create database
+	int result = sqlite3_open(path.c_str(), &pdb);
+	if (result != SQLITE_OK)
+	{
+		CCLOG("sqlite3_open() failed! %d, %s", __LINE__, __FILE__);
+		return false;
+	}
+
+	// create tables
+	SAFE_SQLITE_EXEC(pdb, "Begin Transaction");
+	SAFE_SQLITE_EXEC(pdb, "Drop Table player");
+	SAFE_SQLITE_EXEC(pdb, "Drop Table s_body");
+	SAFE_SQLITE_EXEC(pdb, "Drop Table s_armor");
+	SAFE_SQLITE_EXEC(pdb, "Drop Table s_engine");
+	SAFE_SQLITE_EXEC(pdb, "Drop Table s_weapon");
+	SAFE_SQLITE_EXEC(pdb, "CREATE TABLE player (id INTEGER PRIMARY KEY UNIQUE, "
+											"name TEXT, "
+											"gold INTEGER, "
+											"diamond INTEGER, "
+											"body INTEGER, "
+											"body_level INTEGER, "
+											"armor INTEGER, "
+											"armor_level INTEGER, "
+											"engine INTEGER, "
+											"engine_level INTEGER, "
+											"weapon BLOB, "
+											"inventory BLOB)");
+	SAFE_SQLITE_EXEC(pdb, "CREATE TABLE s_body (id INTEGER PRIMARY KEY UNIQUE, "
+											"type TEXT, "
+											"enum INTEGER UNIQUE, "
+											"asset TEXT)");
+	SAFE_SQLITE_EXEC(pdb, "CREATE TABLE s_armor (id INTEGER PRIMARY KEY UNIQUE, "
+											"type TEXT, "
+											"enum INTEGER UNIQUE, "
+											"asset TEXT)");
+	SAFE_SQLITE_EXEC(pdb, "CREATE TABLE s_engine (id INTEGER PRIMARY KEY UNIQUE, "
+											"type TEXT, "
+											"enum NUMERIC UNIQUE, "
+											"asset TEXT)");
+	SAFE_SQLITE_EXEC(pdb, "CREATE TABLE s_weapon (id INTEGER PRIMARY KEY UNIQUE, "
+											"type TEXT, "
+											"enum INTEGER UNIQUE, "
+											"asset TEXT)");
+
+	// insert records
+	sqlite3_stmt *stmt = nullptr;
+	//sqlite3_prepare("insert...", &stmt);
+	//sqlite3_bind_blob(stmt, ...);
+	//sqlite3_step(stmt);
+	//sqlite3_finalize(stmt);
+
+	// query records
+	//sqlite3_prepare("select...", &stmt);
+	//sqlite3_step(stmt);
+	//sqlite3_column_blob(stmt, index);
+	//sqlite3_column_size(stmt, index);
+	//sqlite3_finalize(stmt);
+
+	SAFE_SQLITE_EXEC(pdb, "Commit Transaction");
+
+	CCLOG("generateDummyDatabase succeeded!");
+	return true;
+}
+
 bool DataCenter::loadPlayerInfo(PlayerInfo &info)
 {
 	// player info dummy config
-	{
-		info.id = 0;
-		info.name = "player";
-		info.vip_level = 0;
+	info.id = 0;
+	info.name = "player";
+	info.vip_level = 0;
 
+	return loadHoundInfoFromXml(info.hound);
+	/*
 		// hound
 		info.hound.body_level = 1;
 		info.hound.body_type = (int)BODY_TYPE::BASIC;
@@ -363,10 +572,6 @@ bool DataCenter::loadPlayerInfo(PlayerInfo &info)
 		info.hound.engine_level = 1;
 		info.hound.engine_type = (int)ENGINE_TYPE::BASIC;
 		info.hound.engine_texture_name = "";
-		info.hound.scale_xy = 1.0f;
-		scaleByDesign(info.hound.scale_xy);
-		info.hound.bounding_circle_radius = 10.0f;
-		scaleByDesign(info.hound.bounding_circle_radius);
 
 		// barrel config
 		BarrelInfo barrel;
@@ -428,32 +633,26 @@ bool DataCenter::loadPlayerInfo(PlayerInfo &info)
 		barrel.rotate_angle = 30.0f;
 		weapon.barrells.push_back(barrel);
 		info.hound.weapons.push_back(weapon);
-	} 
-	// end of player info dummy config
 
-	// get hound max life and armor value
-	info.hound.max_life = getHoundMaxLife(info.hound.body_type, info.hound.body_level);
-	info.hound.armor = getHoundArmor(info.hound.armor_type, info.hound.armor_level);
-
-	// get weapon damage and speed
-	for (auto &weapon : info.hound.weapons)
-	{
-		auto wds = DataCenter::getInstance()->getHoundWeaponDamageSpeed(
-			weapon.type, weapon.level);
-		weapon.damage = wds.first;
-		weapon.speed = wds.second;
-
-		// get projectile damage and speed
-		for (auto &barrel : weapon.barrells)
+		// get weapon damage and speed
+		for (auto &weapon : info.hound.weapons)
 		{
-			auto pds = DataCenter::getInstance()->getHoundProjectileDamageSpeed(
-				barrel.projectile_type, barrel.projectile_level);
-			barrel.projectile_damage = pds.first;
-			barrel.projectile_speed = pds.second;
-		}
-	}
+			auto wds = DataCenter::getInstance()->getHoundWeaponDamageSpeed(
+				weapon.type, weapon.level);
+			weapon.damage = wds.first;
+			weapon.speed = wds.second;
 
-	return true;
+			// get projectile damage and speed
+			for (auto &barrel : weapon.barrells)
+			{
+				auto pds = DataCenter::getInstance()->getHoundProjectileDamageSpeed(
+					barrel.projectile_type, barrel.projectile_level);
+				barrel.projectile_damage = pds.first;
+				barrel.projectile_speed = pds.second;
+			}
+		}
+	*/ 
+	// end of player info dummy config
 }
 
 bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
@@ -490,28 +689,32 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 	//
 
 	// Section: hound entry
-	e_child_1 = e_root->FirstChildElement("HoundEntry");
+	e_child_1 = e_root->FirstChildElement("Hound");
 	CC_ASSERT(e_child_1 != nullptr);
-	{
-		std::string str;
-		str = e_child_1->FirstChildElement("From")->GetText();
+	e_child_1->FirstChildElement("Scale")->QueryFloatText(&info.hound_scale);
+	scaleByDesign(info.hound_scale);
+	e_child_1->FirstChildElement("BoundingCircleRadius")->QueryFloatText(&info.hound_bounding_circle_radius);
+	scaleByDesign(info.hound_bounding_circle_radius);
+
+	e_child_2 = e_child_1->FirstChildElement("Entry");
+	CC_ASSERT(e_child_2 != nullptr);
+		str = e_child_2->FirstChildElement("From")->GetText();
 		stringToVec2(str, info.hound_entry_from);
 		scaleByDesign(info.hound_entry_from);
-		str = e_child_1->FirstChildElement("To")->GetText();
+		str = e_child_2->FirstChildElement("To")->GetText();
 		stringToVec2(str, info.hound_entry_to);
 		scaleByDesign(info.hound_entry_to);
-		e_child_1->FirstChildElement("Speed")->QueryFloatText(&info.hound_entry_speed);
+		e_child_2->FirstChildElement("Speed")->QueryFloatText(&info.hound_entry_speed);
 		scaleByDesign(info.hound_entry_speed);
-		e_child_1->FirstChildElement("AutoFacing")->QueryBoolText(&info.hound_entry_auto_facing);
-	}
+		e_child_2->FirstChildElement("AutoFacing")->QueryBoolText(&info.hound_entry_auto_facing);
 	//
 
 	// Section: hound leave
-	e_child_1 = e_root->FirstChildElement("HoundLeave");
-	CC_ASSERT(e_child_1 != nullptr);
-		e_child_1->FirstChildElement("Speed")->QueryFloatText(&info.hound_leave_speed);
+	e_child_2 = e_child_1->FirstChildElement("Leave");
+	CC_ASSERT(e_child_2 != nullptr);
+		e_child_2->FirstChildElement("Speed")->QueryFloatText(&info.hound_leave_speed);
 		scaleByDesign(info.hound_leave_speed);
-		e_child_1->FirstChildElement("AutoFacing")->QueryBoolText(&info.hound_leave_auto_facing);
+		e_child_2->FirstChildElement("AutoFacing")->QueryBoolText(&info.hound_leave_auto_facing);
 	//
 
 	// Section: backgrounds

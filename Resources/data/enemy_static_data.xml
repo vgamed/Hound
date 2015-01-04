@@ -14,7 +14,7 @@
 			<!--Level value="n">damage, speed</Level-->
 		</Weapon>
 	</WeaponData>
-	<!--	How about we simplify the AI's damage and speed to be only based on Weapon's damage and speed?
+	<!--	We just simplify the AI's damage and speed to be only based on Weapon's damage and speed?
 	<ProjectileData>
 		<Projectile type="PROJECTILE_TYPE::BULLET_NORMAL">
 			<Level value="1">200.00, 1000.00</Level>

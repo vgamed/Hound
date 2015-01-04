@@ -111,6 +111,9 @@
     <ClCompile Include="..\Classes\Sqlite3\sqlite3.c">
       <Filter>Classes\Sqlite3</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\BlobData.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Sqlite3\sqlite3ext.h">
       <Filter>Classes\Sqlite3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BlobData.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

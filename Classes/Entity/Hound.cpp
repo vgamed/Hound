@@ -32,7 +32,7 @@ Hound* Hound::create(const HoundInfo &hdi, const LevelInfo &lli)
 bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 {
 	Texture2D *texture = 
-		Director::getInstance()->getTextureCache()->getTextureForKey(hdi.body_texture_name);
+		Director::getInstance()->getTextureCache()->getTextureForKey(hdi.body_asset_name);
 	if (!initWithTexture(texture))
 	{
 		return false;
@@ -40,10 +40,9 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 
 	setTag(TAG);
 	setName("Hound");
-	setScale(hdi.scale_xy);
 	setLocalZOrder(ZORDER_HOUND);
 
-	m_boundingCircle.radius = hdi.bounding_circle_radius;
+	m_boundingCircle.radius = lli.hound_bounding_circle_radius;
 
 	m_entryFrom = lli.hound_entry_from;
 	m_entryTo = lli.hound_entry_to;
@@ -51,6 +50,7 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	m_entryAutoFacing = lli.hound_entry_auto_facing;
 	m_leaveSpeed = lli.hound_leave_speed;
 	m_leaveAutoFacing = lli.hound_leave_auto_facing;
+	setScale(lli.hound_scale);
 
 	m_curLife = m_maxLife = hdi.max_life;
 	m_armor = hdi.armor;

@@ -124,12 +124,9 @@ struct HoundInfo
 
 	std::vector<WeaponInfo>	weapons;
 
-	float			scale_xy;
-	float			bounding_circle_radius;
-
-	std::string		body_texture_name;
-	std::string		armor_texture_name;
-	std::string		engine_texture_name;
+	std::string		body_asset_name;
+	std::string		armor_asset_name;
+	std::string		engine_asset_name;
 };
 
 struct PlayerInfo
@@ -190,6 +187,8 @@ struct LevelInfo
 	bool						hound_entry_auto_facing;
 	float						hound_leave_speed;
 	bool						hound_leave_auto_facing;
+	float						hound_scale;
+	float						hound_bounding_circle_radius;
 
 	std::vector<std::string>	sbg_layer_texture_names;
 

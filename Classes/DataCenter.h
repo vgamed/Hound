@@ -35,6 +35,8 @@ public:
 	const PairValue& getEnemyWeaponDamageSpeed(int type, int level);
 	const PairValue& getEnemyProjectileDamageSpeed(int type, int level);
 
+	bool generateDummyDatabase(void);
+
 	static const cocos2d::Size RESOURCE_RESOLUTION;
 	static const cocos2d::Size DESIGN_RESOLUTION;
 	static const PairValue PAIR_ZERO;
@@ -50,6 +52,8 @@ private:
 
 	bool loadHoundStaticData(void);
 	bool loadEnemyStaticData(void);
+
+	bool loadHoundInfoFromXml(HoundInfo &info);
 
 	// for multi-resolution scaling
 	void scaleByDesign(cocos2d::Vec2 &design_vec2);
