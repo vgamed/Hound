@@ -4,21 +4,30 @@
 #include <string.h>
 #include <vector>
 
-class Blob
-{
-public:
-
-};
-
 class BlobData
 {
 public:
 	BlobData(size_t size);
+	BlobData(const void *buf, size_t size);
 	~BlobData(void);
 
-	size_t getLength(void) const { return m_length; }
-	void* getBlob(void) { return m_blob; }
-	bool isAtEnd(void) { return (m_curPos>=m_endPos); }
+	size_t getLength(void) const 
+	{
+		return m_length; 
+	}
+
+	void* getBlob(void) 
+	{
+		return m_blob; 
+	}
+
+	void setBlob(const void *buf, size_t size);
+
+	bool isAtEnd(void) 
+	{
+		return (m_curPos>=m_endPos); 
+	}
+
 	void seek(size_t offset);
 	bool evaluate(size_t size) const;
 

@@ -7,9 +7,24 @@
 #define ADD_COMMON_TYPE(container, typeclass, type) \
 	container.insert(std::make_pair<std::string, const int>(FULL_TYPE_STRING(typeclass, type), (int)(typeclass##::##type)));
 
+typedef struct _TripleValue
+{
+	_TripleValue(void)
+		: first(0.0f)
+		, second(0.0f)
+		, third(0.0f)
+	{}
+
+	float first;
+	float second;
+	float third;
+} TripleValue;
+
 typedef std::map<std::string, int> CommonTypeMap;
 typedef std::pair<float, float> PairValue;
+
 typedef std::map<int/*type*/, std::map<int/*level*/, PairValue/*value*/>> TypeLevelPairMap;
+typedef std::map<int/*type*/, std::map<int/*level*/, TripleValue/*value*/>> TypeLevelTripleMap;
 typedef std::map<int/*type*/, std::map<int/*level*/, float/*value*/>> TypeLevelValueMap;
 typedef std::map<int/*type*/, std::map<int/*type*/, float/*value*/>> TypeTypeValueMap;
 
@@ -28,18 +43,19 @@ public:
 
 	float getHoundMaxLife(int body_type, int level);
 	float getHoundArmor(int armor_type, int level);
-	const PairValue& getHoundWeaponDamageSpeed(int type, int level);
-	const PairValue& getHoundProjectileDamageSpeed(int type, int level);
+	const TripleValue& getHoundWeaponDSA(int type, int level);
+	const TripleValue& getHoundProjectileDSA(int type, int level);
 
 	const PairValue& getEnemyMaxLifeArmor(int type, int level);
-	const PairValue& getEnemyWeaponDamageSpeed(int type, int level);
-	const PairValue& getEnemyProjectileDamageSpeed(int type, int level);
+	const TripleValue& getEnemyWeaponDSA(int type, int level); // DSA: Damage, Speed, Acceleration
+	const TripleValue& getEnemyProjectileDSA(int type, int level);
 
 	bool generateDatabase(void);
 
 	static const cocos2d::Size RESOURCE_RESOLUTION;
 	static const cocos2d::Size DESIGN_RESOLUTION;
 	static const PairValue PAIR_ZERO;
+	static const TripleValue TRIPLE_ZERO;
 
 private:
 	DataCenter(void);
@@ -60,8 +76,9 @@ private:
 	void scaleByDesign(float &design_float);
 
 	// data conversions
-	void stringToVec2(const std::string &str, cocos2d::Vec2 &vec);
-	void stringToPairValue(const std::string &str, PairValue &pair);
+	void stringToVec2(const std::string &str, cocos2d::Vec2 &ret);
+	void stringToPairValue(const std::string &str, PairValue &ret);
+	void stringToTripleValue(const std::string &str, TripleValue &ret);
 	void charToString(const char *pstr, std::string &ret)
 	{
 		ret = pstr==nullptr ? "" : pstr;
@@ -72,12 +89,12 @@ private:
 
 	TypeLevelValueMap m_mapHoundMaxLife;
 	TypeLevelValueMap m_mapHoundArmor;
-	TypeLevelPairMap m_mapHoundWeaponDamageSpeed;
-	TypeLevelPairMap m_mapHoundProjectileDamageSpeed;
+	TypeLevelTripleMap m_mapHoundWeaponDSA;
+	TypeLevelTripleMap m_mapHoundProjectileDSA;
 
 	TypeLevelPairMap m_mapEnemyMaxLifeArmor;
-	TypeLevelPairMap m_mapEnemyWeaponDamageSpeed;
-	TypeLevelPairMap m_mapEnemyProjectileDamageSpeed;
+	TypeLevelTripleMap m_mapEnemyWeaponDSA;
+	TypeLevelTripleMap m_mapEnemyProjectileDSA;
 
 	friend class std::auto_ptr<DataCenter>;
 	static std::auto_ptr<DataCenter> s_dataCenter;

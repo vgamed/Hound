@@ -14,8 +14,9 @@ Projectile::~Projectile(void)
 {
 }
 
-bool Projectile::init(const BarrelInfo &info, const cocos2d::Vec2 &direction, 
-		float damage, float speed, bool from_hound)
+bool Projectile::init(const BarrelInfo &info, 
+					  const cocos2d::Vec2 &direction, 
+					  bool from_hound)
 {
 	do{
 		SpriteFrame *frame = 
@@ -34,8 +35,8 @@ bool Projectile::init(const BarrelInfo &info, const cocos2d::Vec2 &direction,
 
 	m_projectileType = info.projectile_type;
 	m_direction = direction;
-	m_speed = speed;
-	m_damage = damage;
+	m_speed = info.projectile_runtime_speed;
+	m_damage = info.projectile_runtime_damage;
 
 	m_direction.normalize();
 	m_isFromHound = from_hound;

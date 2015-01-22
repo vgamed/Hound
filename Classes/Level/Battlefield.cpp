@@ -275,7 +275,7 @@ bool Battlefield::removeInactiveEnemies(void)
 		{
 			if (p->getStateMachine().isInState((int)STATE_TYPE::DEAD))
 			{	// play explosion effect
-				auto sfx = SFXFactory::createEnemyExplosionSFX(p->getType());
+				auto sfx = SFXFactory::createEnemyExplosionSFX(p->getEnemyType());
 				if (sfx != nullptr)
 				{
 					sfx->setPosition(p->getPosition());

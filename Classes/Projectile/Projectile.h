@@ -20,8 +20,8 @@ protected:
 	Projectile(void);
 	virtual ~Projectile(void);
 
-	virtual bool init(const BarrelInfo &info, const cocos2d::Vec2 &direction, 
-		float damage, float speed, bool from_hound);
+	virtual bool init(const BarrelInfo &info, 
+		const cocos2d::Vec2 &direction, bool from_hound);
 
 	int				m_projectileType;
 	cocos2d::Vec2	m_direction;

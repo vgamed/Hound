@@ -146,8 +146,6 @@ void Weapon::fire(float dt)
 			barrel.direction = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(angle));
 			Projectile *proj = barrel.projectile_creator(barrel.info, 
 														barrel.direction, 
-														m_damage + barrel.info.projectile_damage, 
-														m_speed + barrel.info.projectile_speed, 
 														m_isHound);
 			if (proj != nullptr)
 			{

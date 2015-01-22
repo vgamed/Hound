@@ -3,13 +3,9 @@
 
 USING_NS_CC;
 
-const int Hound::TAG = 1001;
-
 Hound::Hound(void)
-	: m_stateMachine(*this)
-	, m_invincible(false)
+	: Entity((int)ENTITY_TYPE::HOUND)
 {
-	m_stateMap.clear();
 }
 
 
@@ -38,7 +34,6 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 		return false;
 	}
 
-	setTag(TAG);
 	setName("Hound");
 	setLocalZOrder(ZORDER_HOUND);
 
@@ -84,7 +79,7 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	state.type = (int)STATE_TYPE::ENTRY;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new HoundEntryState(state)));
+	m_stateMap.insert(std::make_pair(state.id, new EntityEntryState(state)));
 
 	// Battle State
 	state.id = 2;
@@ -95,21 +90,21 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	{
 		state.weapons.push_back(weapon->getId());
 	}
-	m_stateMap.insert(std::make_pair(state.id, new HoundBattlePhaseState(state)));
+	m_stateMap.insert(std::make_pair(state.id, new EntityBattlePhaseState(state)));
 
 	// Leave State
 	state.id = 3;
 	state.type = (int)STATE_TYPE::LEAVE;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new HoundLeaveState(state)));
+	m_stateMap.insert(std::make_pair(state.id, new EntityLeaveState(state)));
 
 	// Dead State
 	state.id = 4;
 	state.type = (int)STATE_TYPE::DEAD;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new HoundDeadState(state)));
+	m_stateMap.insert(std::make_pair(state.id, new EntityDeadState(state)));
 	//
 
 	// BattleEnd State
@@ -117,11 +112,11 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	state.type = (int)STATE_TYPE::BATTLE_END;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new HoundBattleEndState(state)));
+	m_stateMap.insert(std::make_pair(state.id, new EntityBattleEndState(state)));
 	//
 
 	// state transitions
-	HoundStateTransit trans;
+	EntityStateTransit trans;
 	trans.event = (int)(STATE_MACHINE_EVENT::START);
 	trans.from = nullptr;
 	trans.to = m_stateMap.find(1)->second;
@@ -137,7 +132,7 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	trans.to = m_stateMap.find(3)->second;
 	m_stateMachine.addStateTransition(trans);
 
-	trans.event = (int)(STATE_MACHINE_EVENT::HOUND_DEAD);
+	trans.event = (int)(STATE_MACHINE_EVENT::DESTROYED);
 	trans.from = nullptr;
 	trans.to = m_stateMap.find(4)->second;
 	m_stateMachine.addStateTransition(trans);

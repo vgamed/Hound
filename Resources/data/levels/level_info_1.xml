@@ -187,7 +187,7 @@
 						<To>1</To>
 					</Transition>
 					<Transition>
-						<Event>STATE_MACHINE_EVENT::AI_DEAD</Event>
+						<Event>STATE_MACHINE_EVENT::DESTROYED</Event>
 						<From>-1</From>
 						<To>6</To>
 					</Transition>

@@ -11,7 +11,7 @@ class Weapon :
 public:
 	typedef std::function<Projectile* ( const BarrelInfo&, 
 										const cocos2d::Vec2&, 
-										float, float, bool)>	PROJECTILE_CREATOR;
+										bool)>	PROJECTILE_CREATOR;
 
 	struct Barrel
 	{

@@ -29,7 +29,7 @@ bool Enemy::init(const EnemyInfo &info)
 		return false;
 	}
 
-	m_type = info.type;
+	m_typeEnemy = info.type;
 
 	m_entryFrom = info.entry_from;
 	m_entryTo = info.entry_to;

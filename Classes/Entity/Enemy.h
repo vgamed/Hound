@@ -17,7 +17,7 @@ typedef _StateTransition<Enemy> EnemyStateTransit;
 typedef State<Enemy> EnemyState;
 typedef std::map<int, EnemyState*> EnemyStateMap;
 typedef EntryState<Enemy, STATE_MACHINE_EVENT::ENTRY_FINISHED> EnemyEntryState;
-typedef BattlePhaseState<Enemy, STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED, STATE_MACHINE_EVENT::AI_DEAD> EnemyBattlePhaseState;
+typedef BattlePhaseState<Enemy, STATE_MACHINE_EVENT::BATTLE_PHASE_FINISHED, STATE_MACHINE_EVENT::DESTROYED> EnemyBattlePhaseState;
 typedef TransformState<Enemy, STATE_MACHINE_EVENT::TRANSFORM_FINISHED> EnemyTransformState;
 typedef LeaveState<Enemy, STATE_MACHINE_EVENT::LEAVE_FINISHED> EnemyLeaveState;
 typedef DeadState<Enemy> EnemyDeadState;
@@ -30,8 +30,8 @@ class Enemy :
 public:
 	virtual void update(float dt);
 
-	virtual int getType(void) 
-	{ return m_type; }
+	virtual int getEnemyType(void) 
+	{ return m_typeEnemy; }
 
 	virtual const Circle& getBoundingCircle(void) 
 	{
@@ -77,7 +77,7 @@ protected:
 
 	virtual bool init(const EnemyInfo &info);
 
-	int m_type;
+	int m_typeEnemy;
 
 	cocos2d::Vec2	m_entryFrom;
 	cocos2d::Vec2	m_entryTo;
