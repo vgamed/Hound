@@ -1,23 +1,16 @@
 #include "Enemy.h"
-#include "EnemyStateFactory.h"
+#include "EntityStateFactory.h"
 
 USING_NS_CC;
 
 Enemy::Enemy(void)
-	: m_stateMachine(*this)
-	, m_invincible(false)
+	: Entity((int)ENTITY_TYPE::ENEMY)
 {
-	m_stateMap.clear();
 }
 
 
 Enemy::~Enemy(void)
 {
-	for (auto state : m_stateMap)
-	{
-		if (state.second != nullptr)
-			delete state.second;
-	}
 }
 
 bool Enemy::init(const EnemyInfo &info)
@@ -49,7 +42,7 @@ bool Enemy::init(const EnemyInfo &info)
 	// init states and state transitions for state machine
 	for (const auto &state_info : info.state_infoes)
 	{
-		auto state = EnemyStateFactory::create(state_info);
+		auto state = EntityStateFactory::create(state_info);
 		if (state != nullptr)
 		{
 			m_stateMap.insert(std::make_pair(state->getId(), state));
@@ -58,7 +51,7 @@ bool Enemy::init(const EnemyInfo &info)
 
 	for (const auto &state_map_info : info.state_map_infoes)
 	{
-		EnemyStateTransit trans;
+		EntityStateTransit trans;
 		trans.event = state_map_info.event;
 		auto it = m_stateMap.find(state_map_info.from);
 		if (it == m_stateMap.end())

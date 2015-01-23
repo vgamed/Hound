@@ -1,4 +1,5 @@
 #include "Hound.h"
+#include "EntityStateFactory.h"
 #include "AppDelegate.h"
 
 USING_NS_CC;
@@ -79,7 +80,7 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	state.type = (int)STATE_TYPE::ENTRY;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new EntityEntryState(state)));
+	m_stateMap.insert(std::make_pair(state.id, EntityStateFactory::create(state)));
 
 	// Battle State
 	state.id = 2;
@@ -90,21 +91,21 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	{
 		state.weapons.push_back(weapon->getId());
 	}
-	m_stateMap.insert(std::make_pair(state.id, new EntityBattlePhaseState(state)));
+	m_stateMap.insert(std::make_pair(state.id, EntityStateFactory::create(state)));
 
 	// Leave State
 	state.id = 3;
 	state.type = (int)STATE_TYPE::LEAVE;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new EntityLeaveState(state)));
+	m_stateMap.insert(std::make_pair(state.id, EntityStateFactory::create(state)));
 
 	// Dead State
 	state.id = 4;
 	state.type = (int)STATE_TYPE::DEAD;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new EntityDeadState(state)));
+	m_stateMap.insert(std::make_pair(state.id, EntityStateFactory::create(state)));
 	//
 
 	// BattleEnd State
@@ -112,7 +113,7 @@ bool Hound::init(const HoundInfo &hdi, const LevelInfo &lli)
 	state.type = (int)STATE_TYPE::BATTLE_END;
 	state.movements.clear();
 	state.weapons.clear();
-	m_stateMap.insert(std::make_pair(state.id, new EntityBattleEndState(state)));
+	m_stateMap.insert(std::make_pair(state.id, EntityStateFactory::create(state)));
 	//
 
 	// state transitions

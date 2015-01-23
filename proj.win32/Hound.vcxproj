@@ -141,7 +141,7 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\Entity\CarrierTiger.cpp" />
     <ClCompile Include="..\Classes\Entity\Enemy.cpp" />
     <ClCompile Include="..\Classes\Entity\EnemyFactory.cpp" />
-    <ClCompile Include="..\Classes\Entity\EnemyStateFactory.cpp" />
+    <ClCompile Include="..\Classes\Entity\EntityStateFactory.cpp" />
     <ClCompile Include="..\Classes\Entity\FighterBee.cpp" />
     <ClCompile Include="..\Classes\Entity\FrigatePuma.cpp" />
     <ClCompile Include="..\Classes\Entity\Hound.cpp" />
@@ -171,8 +171,8 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\Entity\CarrierTiger.h" />
     <ClInclude Include="..\Classes\Entity\Enemy.h" />
     <ClInclude Include="..\Classes\Entity\EnemyFactory.h" />
-    <ClInclude Include="..\Classes\Entity\EnemyStateFactory.h" />
     <ClInclude Include="..\Classes\Entity\Entity.h" />
+    <ClInclude Include="..\Classes\Entity\EntityStateFactory.h" />
     <ClInclude Include="..\Classes\Entity\FighterBee.h" />
     <ClInclude Include="..\Classes\Entity\FrigatePuma.h" />
     <ClInclude Include="..\Classes\Entity\Hound.h" />

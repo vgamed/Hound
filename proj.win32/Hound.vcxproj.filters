@@ -84,9 +84,6 @@
     <ClCompile Include="..\Classes\Entity\EnemyFactory.cpp">
       <Filter>Classes\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Entity\EnemyStateFactory.cpp">
-      <Filter>Classes\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\Entity\FighterBee.cpp">
       <Filter>Classes\Entity</Filter>
     </ClCompile>
@@ -113,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\BlobData.cpp">
       <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Entity\EntityStateFactory.cpp">
+      <Filter>Classes\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -197,9 +197,6 @@
     <ClInclude Include="..\Classes\Entity\EnemyFactory.h">
       <Filter>Classes\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Entity\EnemyStateFactory.h">
-      <Filter>Classes\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\Entity\FighterBee.h">
       <Filter>Classes\Entity</Filter>
     </ClInclude>
@@ -231,6 +228,9 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Entity\Entity.h">
+      <Filter>Classes\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Entity\EntityStateFactory.h">
       <Filter>Classes\Entity</Filter>
     </ClInclude>
   </ItemGroup>

@@ -110,7 +110,14 @@ protected:
 		m_stateMap.clear();
 	}
 
-	~Entity(void) {}
+	~Entity(void) 
+	{
+		for (auto state : m_stateMap)
+		{
+			if (state.second != nullptr)
+				delete state.second;
+		}
+	}
 
 	int m_type;
 
