@@ -27,6 +27,7 @@ protected:
 
 	int				m_projectileType;
 	cocos2d::Vec2	m_direction;
+	float			m_acceleration;
 	float			m_speed;
 	float			m_damage;
 

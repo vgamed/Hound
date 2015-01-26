@@ -13,6 +13,11 @@
 			<Level value="2">300.0, 350.0, 0.0</Level>
 			<!--Level value="n">damage, speed</Level-->
 		</Weapon>
+		<Weapon type="WEAPON_TYPE::SNAKEEYE">
+			<Level value="1">288.0, 200.0, 5.0</Level>
+			<Level value="2">388.0, 250.0, 5.0</Level>
+			<!--Level value="n">damage,speed</Level-->
+		</Weapon>
 	</WeaponData>
 	<!--	We just simplify the AI's damage and speed to be only based on Weapon's damage and speed?
 	<ProjectileData>

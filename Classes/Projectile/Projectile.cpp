@@ -39,6 +39,7 @@ bool Projectile::init(const BarrelInfo &info,
 
 	m_projectileType = info.projectile_type;
 	m_direction = direction;
+	m_acceleration = info.projectile_runtime_acceleration;
 	m_speed = info.projectile_runtime_speed;
 	m_damage = info.projectile_runtime_damage;
 
