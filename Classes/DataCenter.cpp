@@ -401,7 +401,7 @@ bool DataCenter::loadHoundInfoFromXml(HoundInfo &info)
 	e_child_1 = e_root->FirstChildElement("Armor");
 	CC_ASSERT(e_child_1 != nullptr);
 	charToString(e_child_1->FirstChildElement("Type")->GetText(), str);
-	info.body_type = getCommonType(str);
+	info.armor_type = getCommonType(str);
 	e_child_1->FirstChildElement("Level")->QueryUnsignedText(&info.armor_level);
 	charToString(e_child_1->FirstChildElement("Asset")->GetText(), info.armor_asset_name);
 
@@ -409,7 +409,7 @@ bool DataCenter::loadHoundInfoFromXml(HoundInfo &info)
 	e_child_1 = e_root->FirstChildElement("Engine");
 	CC_ASSERT(e_child_1 != nullptr);
 	charToString(e_child_1->FirstChildElement("Type")->GetText(), str);
-	info.body_type = getCommonType(str);
+	info.engine_type = getCommonType(str);
 	e_child_1->FirstChildElement("Level")->QueryUnsignedText(&info.engine_level);
 	charToString(e_child_1->FirstChildElement("Asset")->GetText(), info.engine_asset_name);
 

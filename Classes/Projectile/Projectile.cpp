@@ -12,11 +12,15 @@ Projectile::Projectile(void)
 
 Projectile::~Projectile(void)
 {
+	if (m_target != nullptr)
+	{
+		m_target->release();
+	}
 }
 
 bool Projectile::init(const BarrelInfo &info, 
 					  const cocos2d::Vec2 &direction, 
-					  bool from_hound)
+					  Entity *target)
 {
 	do{
 		SpriteFrame *frame = 
@@ -39,9 +43,24 @@ bool Projectile::init(const BarrelInfo &info,
 	m_damage = info.projectile_runtime_damage;
 
 	m_direction.normalize();
-	m_isFromHound = from_hound;
-	m_isFromHound ? setLocalZOrder(ZORDER_HOUND_PROJECTILE) :
-					setLocalZOrder(ZORDER_ENEMY_PROJECTILE);
+
+	if (target != nullptr)
+	{
+		m_target = target;
+		target->retain(); //keep the target from autoRelease() when this projectile is active
+		switch (m_target->getType())
+		{
+		case ENTITY_TYPE::ENEMY:
+			setLocalZOrder(ZORDER_HOUND_PROJECTILE);
+			break;
+		case ENTITY_TYPE::HOUND:
+			setLocalZOrder(ZORDER_ENEMY_PROJECTILE);
+			break;
+		default:
+			break;
+		}
+	}
+					
 	setScale(info.projectile_scale_xy);
 
 	Size sz = getBoundingBox().size;
@@ -66,13 +85,14 @@ void Projectile::update(float dt)
 	{	// detect collision with objects in battlefield
 		CollisionData data;
 		data.who = this;
-		if (m_isFromHound)
+		if (m_target->getType() == ENTITY_TYPE::ENEMY)
 		{
 			data.type = COLLISION_TYPE::PROJECTILE_TO_ENEMY;
-			for (Enemy *enemy : bf->getActiveEnemies())
+			for (auto enemy : bf->getActiveEnemies())
 			{
 				//if (enemy->getBoundingCircle().intersectsRect(getBoundingBox()))
-				if (enemy->getBoundingCircle().intersectsCircle(getBoundingCircle()))
+				if ((enemy != nullptr) && !enemy->isDead() && 
+					enemy->getBoundingCircle().intersectsCircle(getBoundingCircle()))
 				{
 					data.whom.push_back(enemy);
 				}
@@ -81,7 +101,7 @@ void Projectile::update(float dt)
 		else
 		{
 			data.type = COLLISION_TYPE::PROJECTILE_TO_HOUND;
-			if ((bf->getHound() != nullptr) &&
+			if ((bf->getHound() != nullptr) && !bf->getHound()->isDead() &&
 				bf->getHound()->getBoundingCircle().intersectsCircle(getBoundingCircle()))
 			{
 				data.whom.push_back(bf->getHound());

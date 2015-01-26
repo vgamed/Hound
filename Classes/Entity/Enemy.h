@@ -19,6 +19,7 @@ protected:
 	~Enemy(void);
 
 	virtual bool init(const EnemyInfo &info);
+	void selectTarget(void);
 
 	int m_typeEnemy;
 };

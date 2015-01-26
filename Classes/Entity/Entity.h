@@ -28,9 +28,21 @@ typedef MoveState<Entity> EntityMoveState;
 class Entity : public cocos2d::Sprite
 {
 public:
+	// pure virtual functions
 	virtual void update(float dt) = 0;
-
 	virtual void doDamage(float damage) = 0;
+	virtual void selectTarget(void) = 0;
+
+	// getters and setters
+	Entity* getCurrentTarget(void) const
+	{
+		return m_curTarget;
+	}
+
+	ENTITY_TYPE getType(void) const
+	{
+		return m_type;
+	}
 
 	const Circle& getBoundingCircle(void) 
 	{
@@ -93,19 +105,35 @@ public:
 		return m_leaveAutoFacing; 
 	}
 
+	bool isDead(void) const
+	{
+		return m_stateMachine.isInState((int)STATE_TYPE::DEAD);
+	}
+
 protected:
 	Entity(void)
-		: m_type(0)
+		: m_type(ENTITY_TYPE::NONE)
 		, m_stateMachine(*this)
 		, m_invincible(false)
+		, m_curTarget(nullptr)
+	{
+		m_stateMap.clear();
+	}
+
+	Entity(ENTITY_TYPE type)
+		: m_type(type)
+		, m_stateMachine(*this)
+		, m_invincible(false)
+		, m_curTarget(nullptr)
 	{
 		m_stateMap.clear();
 	}
 
 	Entity(int type)
-		: m_type(type)
+		: m_type((ENTITY_TYPE)type)
 		, m_stateMachine(*this)
 		, m_invincible(false)
+		, m_curTarget(nullptr)
 	{
 		m_stateMap.clear();
 	}
@@ -119,7 +147,7 @@ protected:
 		}
 	}
 
-	int m_type;
+	ENTITY_TYPE m_type;
 
 	cocos2d::Vec2	m_entryFrom;
 	cocos2d::Vec2	m_entryTo;
@@ -140,6 +168,8 @@ protected:
 
 	EntityStateMap m_stateMap;
 	EntityStateMachine m_stateMachine;
+
+	Entity	*m_curTarget;
 };
 
 #endif //__HOUND_ENTITY_H__

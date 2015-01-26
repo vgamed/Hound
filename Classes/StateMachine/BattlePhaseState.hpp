@@ -49,6 +49,8 @@ void BattlePhaseState<T, finishEvent, deadEvent>::enter(T &t)
 template <typename T, STATE_MACHINE_EVENT finishEvent, STATE_MACHINE_EVENT deadEvent> 
 void BattlePhaseState<T, finishEvent, deadEvent>::exec(T &t, float dt)
 {
+	t.selectTarget();
+
 	for (auto weapon : m_weapons)
 	{
 		weapon->update(dt);

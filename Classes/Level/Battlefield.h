@@ -3,6 +3,7 @@
 
 #include "Common.h"
 
+class Entity;
 class Hound;
 class Projectile;
 class Enemy;
@@ -20,8 +21,10 @@ public:
 	void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 	void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
     
-	const std::vector<Enemy*>& getActiveEnemies(void) const 
-	{ return m_activeEnemies; }
+	const std::vector<Entity*>& getActiveEnemies(void) const 
+	{
+		return m_activeEnemies; 
+	}
 
 	void onEventCollision(cocos2d::EventCustom* event);
 	void onEventDebug(cocos2d::EventCustom* event);
@@ -33,8 +36,7 @@ public:
 	bool removeActiveEnemy(Enemy *enemy);
 	bool removeInactiveEnemies(void);
 
-	Hound* getHound(void) const
-	{ return m_hound; }
+	Entity* getHound(void);
 
 	static const int INVALID_TOUCH_ID = -1;
 
@@ -52,7 +54,7 @@ protected:
 	void processHoundCollidesEnemy(cocos2d::Node *who, std::vector<cocos2d::Node*> &whom);
 
 private:
-	Hound*							m_hound;
+	Hound							*m_hound;
 	cocos2d::Vec2					m_houndStartPosition;
 	cocos2d::Vec2					m_movingOffset; //for record touch position offset from the hound
 
@@ -61,7 +63,7 @@ private:
 	float							m_waveTimer;
 	std::vector<WaveInfo>::iterator m_nextWave;
 
-	std::vector<Enemy*>				m_activeEnemies;
+	std::vector<Entity*>			m_activeEnemies;
 	std::vector<Projectile*>		m_activeProjectiles;
 };
 

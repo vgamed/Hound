@@ -1,6 +1,7 @@
 #include "Hound.h"
 #include "EntityStateFactory.h"
 #include "AppDelegate.h"
+#include "Level/Battlefield.h"
 
 USING_NS_CC;
 
@@ -165,4 +166,26 @@ void Hound::doDamage(float damage)
 		return;
 
 	m_curLife -= damage*(1-m_armor/1000.0f);
+}
+
+void Hound::selectTarget(void)
+{
+	if ((m_curTarget==nullptr) || m_curTarget->isDead())
+	{
+		CC_ASSERT(getParent()!=nullptr);
+		auto bf = dynamic_cast<Battlefield*>(getParent());
+		float min_dist_sq = FLT_MAX;
+		for (auto enemy : bf->getActiveEnemies())
+		{
+			if ((enemy != nullptr) && !enemy->isDead())
+			{
+				float dist_sq = getPosition().distanceSquared(enemy->getPosition());
+				if (dist_sq < min_dist_sq)
+				{
+					min_dist_sq = dist_sq;
+					m_curTarget = enemy;
+				}
+			}
+		}
+	}
 }

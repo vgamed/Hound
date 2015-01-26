@@ -1,5 +1,5 @@
-#ifndef __HOUND_H__
-#define __HOUND_H__
+#ifndef __HOUND_HOUND_H__
+#define __HOUND_HOUND_H__
 
 #include "Common.h"
 #include "Entity.h"
@@ -24,6 +24,7 @@ protected:
 	~Hound(void);
 
 	bool init(const HoundInfo &hdi, const LevelInfo &lli);
+	void selectTarget(void);
 
 private:
 	int				m_bodyType;
@@ -36,5 +37,4 @@ private:
 	Wingman *m_wingmanRight;
 };
 
-#endif
-
+#endif //__HOUND_HOUND_H__

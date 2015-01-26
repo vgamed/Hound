@@ -1,7 +1,7 @@
 #include "Weapon.h"
 #include "DrawNodeShape.h"
 #include "Battlefield.h"
-#include "Hound.h"
+#include "Entity.h"
 #include "Bullet.h"
 #include "Laser.h"
 #include "Missile.h"
@@ -14,6 +14,7 @@ Weapon::Weapon(void)
 	: m_id(-1)
 	, m_type(0)
 	, m_autoAim(false)
+	, m_entityParent(nullptr)
 {
 }
 
@@ -22,12 +23,11 @@ Weapon::~Weapon(void)
 {
 }
 
-Weapon* Weapon::create(const WeaponInfo &info, bool is_hound)
+Weapon* Weapon::create(const WeaponInfo &info)
 {
 	auto weapon = new Weapon();
 	if (weapon && weapon->init(info))
 	{
-		weapon->m_isHound = is_hound;
 		weapon->autorelease();
 		return weapon;
 	}
@@ -100,11 +100,17 @@ bool Weapon::init(const WeaponInfo &info)
 	return true;
 }
 
+void Weapon::onEnter(void)
+{
+	CC_ASSERT(getParent()!=nullptr);
+	m_entityParent = dynamic_cast<Entity*>(getParent());
+}
+
 void Weapon::update(float dt)
 {
-	if (m_autoAim) // hound weapon will not aim automatically
+	if (m_autoAim)
 	{
-		aimHound();
+		autoAimTarget();
 	}
 
 	CC_ASSERT(m_timeOffsetFiringStart<=m_timeOffsetFiringStop);
@@ -119,23 +125,25 @@ void Weapon::update(float dt)
 	}
 }
 
-void Weapon::aimHound(void)
+void Weapon::autoAimTarget(void)
 {
 	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
 	auto bf = dynamic_cast<Battlefield*>(getParent()->getParent());
-	auto hound = bf->getHound();
-	if (hound != nullptr)
+	if (m_entityParent != nullptr)
 	{
-		Vec2 dir = bf->convertToWorldSpace(hound->getPosition()) - getParent()->convertToWorldSpace(getPosition());
-		setRotation(CC_RADIANS_TO_DEGREES(dir.getAngle(Vec2::UNIT_Y))-getParent()->getRotation());
+		auto target = m_entityParent->getCurrentTarget();
+		if (target != nullptr)
+		{
+			Vec2 dir = bf->convertToWorldSpace(target->getPosition()) - getParent()->convertToWorldSpace(getPosition());
+			setRotation(CC_RADIANS_TO_DEGREES(dir.getAngle(Vec2::UNIT_Y))-getParent()->getRotation());
+		}
 	}
 }
 
 void Weapon::fire(float dt)
 {
 	CC_ASSERT(getParent()!=nullptr && getParent()->getParent()!=nullptr);
-
-	Battlefield *bf = (Battlefield*)(getParent()->getParent());
+	auto bf = dynamic_cast<Battlefield*>(getParent()->getParent());
 	Vec2 start_pos = bf->convertToNodeSpace(getParent()->convertToWorldSpace(getPosition()));
 	for (Barrel &barrel : m_barrells)
 	{
@@ -144,16 +152,19 @@ void Weapon::fire(float dt)
 		{
 			float angle = getParent()->getRotation() + getRotation() + barrel.info.rotate_angle;
 			barrel.direction = Vec2::UNIT_Y.rotateByAngle(Vec2::ZERO, -CC_DEGREES_TO_RADIANS(angle));
-			Projectile *proj = barrel.projectile_creator(barrel.info, 
-														barrel.direction, 
-														m_isHound);
-			if (proj != nullptr)
+			if (m_entityParent != nullptr)
 			{
-				bf->addActiveProjectile(proj); // bullet should be child of Battlefield
-				proj->setRotation(angle);
-				proj->setPosition(start_pos);
-			}
-			
+				Entity* target = m_entityParent->getCurrentTarget();
+				Projectile *proj = barrel.projectile_creator(barrel.info, 
+															barrel.direction, 
+															target);
+				if (proj != nullptr)
+				{
+					bf->addActiveProjectile(proj); // bullet should be child of Battlefield
+					proj->setRotation(angle);
+					proj->setPosition(start_pos);
+				}
+			}			
 			barrel.firing_counter = 0.0f;
 		}
 	}

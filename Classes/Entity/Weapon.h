@@ -3,6 +3,7 @@
 
 #include "Common.h"
 
+class Entity;
 class Projectile;
 
 class Weapon :
@@ -11,7 +12,7 @@ class Weapon :
 public:
 	typedef std::function<Projectile* ( const BarrelInfo&, 
 										const cocos2d::Vec2&, 
-										bool)>	PROJECTILE_CREATOR;
+										Entity*)>	PROJECTILE_CREATOR;
 
 	struct Barrel
 	{
@@ -21,12 +22,14 @@ public:
 		PROJECTILE_CREATOR projectile_creator;
 	};
 
-	static Weapon* create(const WeaponInfo &info, bool is_hound=true);
+	static Weapon* create(const WeaponInfo &info);
 
 	void reset(void)
 	{ m_timeCounter = 0; }
 
 	void update(float dt);
+
+	void onEnter(void);
 
 	void fire(float dt);
 
@@ -42,7 +45,7 @@ protected:
 
 	bool init(const WeaponInfo &info);
 
-	void aimHound(void);
+	void autoAimTarget(void);
 
 private:
 	int				m_id;
@@ -59,7 +62,7 @@ private:
 
 	std::vector<Barrel> m_barrells;
 
-	bool			m_isHound;
+	Entity*			m_entityParent;
 };
 
 #endif //__HOUND_WEAPON_H__

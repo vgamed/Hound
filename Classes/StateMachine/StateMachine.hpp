@@ -19,7 +19,7 @@ public:
 
 	int getId(void) { return m_id; }
 
-	int getType(void) { return m_type; }
+	int getType(void) const { return m_type; }
 
 	bool isDone(void)
 	{ return m_done; }
@@ -68,7 +68,7 @@ public:
 	State<T> &getPreviousState(void)
 	{ return *m_pPreState; }
 
-	bool isInState(int type) 
+	bool isInState(int type) const
 	{ return (m_pCurState->getType() == type); }
 
 private:

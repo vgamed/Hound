@@ -82,7 +82,7 @@ void Battlefield::update(float dt)
 	{
 		m_hound->update(dt);
 		// remove hound if it's in dead state
-		if (m_hound->getStateMachine().isInState((int)STATE_TYPE::DEAD))
+		if (m_hound->isDead())
 		{
 			auto sfx = SFXFactory::createHoundExplosionSFX();
 			if (sfx != nullptr)
@@ -92,6 +92,9 @@ void Battlefield::update(float dt)
 			}
 			removeChild(m_hound);
 			m_hound = nullptr;
+			
+			// trigger HOUND_DEAD event for each entity in the field
+			//...
 		}
 	}
 
@@ -256,9 +259,9 @@ void Battlefield::addActiveEnemy(Enemy *enemy)
 
 bool Battlefield::removeActiveEnemy(Enemy *enemy)
 {
-	std::vector<Enemy*>::iterator found = std::remove_if(m_activeEnemies.begin(), 
+	std::vector<Entity*>::iterator found = std::remove_if(m_activeEnemies.begin(), 
 		m_activeEnemies.end(), 
-		[&](Enemy *p)->bool { return (p == enemy); });
+		[&](Entity *p)->bool { return (p == enemy); });
 	
 	m_activeEnemies.erase(found, m_activeEnemies.end());
 	
@@ -269,13 +272,14 @@ bool Battlefield::removeActiveEnemy(Enemy *enemy)
 
 bool Battlefield::removeInactiveEnemies(void)
 {
-	std::vector<Enemy*>::iterator found = std::remove_if(m_activeEnemies.begin(), 
+	std::vector<Entity*>::iterator found = std::remove_if(m_activeEnemies.begin(), 
 		m_activeEnemies.end(), 
-		[&](Enemy *p)->bool 
+		[&](Entity *p)->bool 
 		{
-			if (p->getStateMachine().isInState((int)STATE_TYPE::DEAD))
+			if (p->isDead())
 			{	// play explosion effect
-				auto sfx = SFXFactory::createEnemyExplosionSFX(p->getEnemyType());
+				Enemy *e = dynamic_cast<Enemy*>(p);
+				auto sfx = SFXFactory::createEnemyExplosionSFX(e->getEnemyType());
 				if (sfx != nullptr)
 				{
 					sfx->setPosition(p->getPosition());
@@ -296,6 +300,11 @@ bool Battlefield::removeInactiveEnemies(void)
 	m_activeEnemies.erase(found, m_activeEnemies.end());
 	
 	return true;
+}
+
+Entity* Battlefield::getHound(void)
+{ 
+	return m_hound; 
 }
 
 void Battlefield::spawnEnemyWave(const WaveInfo &info)

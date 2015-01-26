@@ -2,6 +2,7 @@
 #define __HOUND_PROJECTILE_H__
 
 #include "../Common.h"
+#include "Entity/Entity.h"
 
 class Projectile : public cocos2d::Sprite
 {
@@ -21,7 +22,8 @@ protected:
 	virtual ~Projectile(void);
 
 	virtual bool init(const BarrelInfo &info, 
-		const cocos2d::Vec2 &direction, bool from_hound);
+					const cocos2d::Vec2 &direction, 
+					Entity *target);
 
 	int				m_projectileType;
 	cocos2d::Vec2	m_direction;
@@ -30,7 +32,7 @@ protected:
 
 	Circle			m_boundingCircle;
 
-	bool			m_isFromHound;
+	Entity*			m_target;
 };
 
 #endif //__HOUND_PROJECTILE_H__

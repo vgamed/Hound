@@ -13,10 +13,10 @@ Bullet::~Bullet(void)
 
 Projectile* Bullet::create(const BarrelInfo &info, 
 						   const cocos2d::Vec2 &direction, 
-						   bool from_hound)
+						   Entity *target)
 {
 	auto ret = new Bullet();
-	if (ret!=nullptr && ret->init(info, direction, from_hound))
+	if (ret!=nullptr && ret->init(info, direction, target))
 	{
 		ret->autorelease();
 		return ret;

@@ -7,7 +7,7 @@ class Missile :	public Projectile
 {
 public:
 	static Projectile* create(const BarrelInfo &info, 
-		const cocos2d::Vec2 &direction, bool from_hound);
+		const cocos2d::Vec2 &direction, Entity *target);
 
 	void update(float dt);
 

@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "EntityStateFactory.h"
+#include "Battlefield.h"
 
 USING_NS_CC;
 
@@ -76,7 +77,7 @@ bool Enemy::init(const EnemyInfo &info)
 	auto scale = Director::getInstance()->getContentScaleFactor();
 	for (const auto &winfo : info.weapons)
 	{
-		auto weapon = Weapon::create(winfo, false);
+		auto weapon = Weapon::create(winfo);
 		if (weapon != nullptr)
 		{
 			m_weapons.push_back(weapon);
@@ -102,4 +103,14 @@ void Enemy::doDamage(float damage)
 		return;
 
 	m_curLife -= damage*(1-m_armor/1000.0f);
+}
+
+void Enemy::selectTarget(void)
+{
+	if ((m_curTarget == nullptr) || m_curTarget->isDead())
+	{
+		CC_ASSERT(getParent()!=nullptr);
+		auto bf = dynamic_cast<Battlefield*>(getParent());
+		m_curTarget = bf->getHound();
+	}
 }

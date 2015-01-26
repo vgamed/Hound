@@ -13,10 +13,10 @@ Missile::~Missile(void)
 
 Projectile* Missile::create(const BarrelInfo &info, 
 							const cocos2d::Vec2 &direction, 
-							bool from_hound)
+							Entity *target)
 {
 	auto ret = new Missile();
-	if (ret!=nullptr && !ret->init(info, direction, from_hound))
+	if (ret!=nullptr && !ret->init(info, direction, target))
 	{
 		ret->autorelease();
 		return ret;
