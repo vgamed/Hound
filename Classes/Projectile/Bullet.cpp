@@ -28,7 +28,8 @@ Projectile* Bullet::create(const BarrelInfo &info,
 void Bullet::update(float dt)
 {
 	// movement update
-	setPosition(getPosition() + (0.5f*m_acceleration*dt*dt+m_speed*dt)*m_direction);
+	m_runtime_speed += m_runtime_acceleration * dt;
+	setPosition(getPosition() + m_runtime_speed*dt*m_runtime_direction);
 
 	// collision detect
 	Projectile::update(dt);

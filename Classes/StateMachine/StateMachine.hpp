@@ -21,7 +21,7 @@ public:
 
 	int getType(void) const { return m_type; }
 
-	bool isDone(void)
+	bool isDone(void) const
 	{ return m_done; }
 
 protected:
@@ -62,14 +62,16 @@ public:
 
 	void update(float dt);
 
-	State<T> &getCurrentState(void)
+	State<T> &getCurrentState(void) const
 	{ return *m_pCurState; }
 
 	State<T> &getPreviousState(void)
 	{ return *m_pPreState; }
 
 	bool isInState(int type) const
-	{ return (m_pCurState->getType() == type); }
+	{ 
+		return (m_pCurState->getType() == type); 
+	}
 
 private:
 	void changeState(State<T> &state);

@@ -170,22 +170,24 @@ void Hound::doDamage(float damage)
 
 void Hound::selectTarget(void)
 {
-	if ((m_curTarget==nullptr) || m_curTarget->isDead())
+	if ((m_curTarget==nullptr) || m_curTarget->isDead() || m_curTarget->isGone())
 	{
 		CC_ASSERT(getParent()!=nullptr);
 		auto bf = dynamic_cast<Battlefield*>(getParent());
 		float min_dist_sq = FLT_MAX;
 		for (auto enemy : bf->getActiveEnemies())
 		{
-			if ((enemy != nullptr) && !enemy->isDead())
+			if ((enemy != nullptr) && !enemy->isDead() && !enemy->isGone())
 			{
 				float dist_sq = getPosition().distanceSquared(enemy->getPosition());
 				if (dist_sq < min_dist_sq)
 				{
 					min_dist_sq = dist_sq;
 					m_curTarget = enemy;
+					return;
 				}
 			}
 		}
+		m_curTarget = nullptr;
 	}
 }

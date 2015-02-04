@@ -76,10 +76,12 @@ struct BarrelInfo
 	float			projectile_damage;
 	float			projectile_speed; //per second
 	float			projectile_acceleration; //per second square
+	float			projectile_steering_accel; //per second square
 
-	float			projectile_runtime_damage;
-	float			projectile_runtime_speed; //per second
-	float			projectile_runtime_acceleration; //per second square
+	float			projectile_final_damage;
+	float			projectile_final_speed; //per second
+	float			projectile_final_acceleration; //per second square
+	float			projectile_final_steering_accel; //per second square
 
 	// animation name or spriteframe name or texture name
 	std::string		projectile_asset_name;
@@ -97,6 +99,7 @@ struct WeaponInfo
 	float			damage;
 	float			speed;	//per second
 	float			acceleration; //per second square
+	float			steering_accel; //per second square
 
 	cocos2d::Vec2	dock_position;
 

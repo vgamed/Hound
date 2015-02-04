@@ -26,9 +26,18 @@ protected:
 					Entity *target);
 
 	int				m_projectileType;
-	cocos2d::Vec2	m_direction;
-	float			m_acceleration;
-	float			m_speed;
+
+	cocos2d::Vec2	m_init_direction;
+	cocos2d::Vec2	m_runtime_direction;
+
+	float			m_init_acceleration;
+	float			m_steering_acceleration;
+	float			m_runtime_acceleration;
+
+	float			m_init_speed;
+	float			m_steering_speed;
+	float			m_runtime_speed;
+
 	float			m_damage;
 
 	Circle			m_boundingCircle;

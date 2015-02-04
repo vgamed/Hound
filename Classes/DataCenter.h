@@ -20,11 +20,27 @@ typedef struct _TripleValue
 	float third;
 } TripleValue;
 
+typedef struct _FourValue
+{
+	_FourValue(void)
+		: first(0.0f)
+		, second(0.0f)
+		, third(0.0f)
+		, fourth(0.0f)
+	{}
+
+	float first;
+	float second;
+	float third;
+	float fourth;
+} FourValue;
+
 typedef std::map<std::string, int> CommonTypeMap;
 typedef std::pair<float, float> PairValue;
 
 typedef std::map<int/*type*/, std::map<int/*level*/, PairValue/*value*/>> TypeLevelPairMap;
 typedef std::map<int/*type*/, std::map<int/*level*/, TripleValue/*value*/>> TypeLevelTripleMap;
+typedef std::map<int/*type*/, std::map<int/*level*/, FourValue/*value*/>> TypeLevelFourMap;
 typedef std::map<int/*type*/, std::map<int/*level*/, float/*value*/>> TypeLevelValueMap;
 typedef std::map<int/*type*/, std::map<int/*type*/, float/*value*/>> TypeTypeValueMap;
 
@@ -43,12 +59,12 @@ public:
 
 	float getHoundMaxLife(int body_type, int level);
 	float getHoundArmor(int armor_type, int level);
-	const TripleValue& getHoundWeaponDSA(int type, int level);
-	const TripleValue& getHoundProjectileDSA(int type, int level);
+	const FourValue& getHoundWeaponDSAT(int type, int level); // DSAT: Damage, Speed, Acceleration, sTeering speed
+	const FourValue& getHoundProjectileDSAT(int type, int level);
 
 	const PairValue& getEnemyMaxLifeArmor(int type, int level);
-	const TripleValue& getEnemyWeaponDSA(int type, int level); // DSA: Damage, Speed, Acceleration
-	const TripleValue& getEnemyProjectileDSA(int type, int level);
+	const FourValue& getEnemyWeaponDSAT(int type, int level);
+	const FourValue& getEnemyProjectileDSAT(int type, int level);
 
 	bool generateDatabase(void);
 
@@ -56,6 +72,7 @@ public:
 	static const cocos2d::Size DESIGN_RESOLUTION;
 	static const PairValue PAIR_ZERO;
 	static const TripleValue TRIPLE_ZERO;
+	static const FourValue FOUR_ZERO;
 
 private:
 	DataCenter(void);
@@ -79,6 +96,7 @@ private:
 	void stringToVec2(const std::string &str, cocos2d::Vec2 &ret);
 	void stringToPairValue(const std::string &str, PairValue &ret);
 	void stringToTripleValue(const std::string &str, TripleValue &ret);
+	void stringToFourValue(const std::string &str, FourValue &ret);
 	void charToString(const char *pstr, std::string &ret)
 	{
 		ret = pstr==nullptr ? "" : pstr;
@@ -89,12 +107,12 @@ private:
 
 	TypeLevelValueMap m_mapHoundMaxLife;
 	TypeLevelValueMap m_mapHoundArmor;
-	TypeLevelTripleMap m_mapHoundWeaponDSA;
-	TypeLevelTripleMap m_mapHoundProjectileDSA;
+	TypeLevelFourMap m_mapHoundWeaponDSAT;
+	TypeLevelFourMap m_mapHoundProjectileDSAT;
 
 	TypeLevelPairMap m_mapEnemyMaxLifeArmor;
-	TypeLevelTripleMap m_mapEnemyWeaponDSA;
-	TypeLevelTripleMap m_mapEnemyProjectileDSA;
+	TypeLevelFourMap m_mapEnemyWeaponDSAT;
+	TypeLevelFourMap m_mapEnemyProjectileDSAT;
 
 	friend class std::auto_ptr<DataCenter>;
 	static std::auto_ptr<DataCenter> s_dataCenter;

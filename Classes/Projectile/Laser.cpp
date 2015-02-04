@@ -18,7 +18,7 @@ Projectile* Laser::create(const BarrelInfo &info,
 {
 	auto ret = new Laser();
 	//speed is treated as damage interval for Laser type barrells
-	if (ret!=nullptr && !ret->init(info, direction, target))
+	if (ret!=nullptr && ret->init(info, direction, target))
 	{
 		ret->autorelease();
 		return ret;

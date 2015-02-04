@@ -42,7 +42,7 @@
 			</Barrells>
 		</Weapon>
 		<Weapon id="2">
-			<Type>WEAPON_TYPE::CANNON</Type>
+			<Type>WEAPON_TYPE::SNAKEEYE</Type>
 			<Level>1</Level>
 			<RotateAngle>-30.00</RotateAngle>
 			<AutoAim>0</AutoAim>
@@ -51,34 +51,34 @@
 			<FiringStop>1000000.00</FiringStop>
 			<Asset>leftgun.png</Asset>
 			<Barrells>
-				<Barrel type="BARREL_TYPE::BULLET">
+				<!--Barrel type="BARREL_TYPE::BULLET">
 					<RotateAngle>0.00</RotateAngle>
 					<FiringInterval>0.05</FiringInterval>
 					<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
 					<ProjectileLevel>1</ProjectileLevel>
 					<ProjectileScale>0.60</ProjectileScale>
 					<Asset>bullet18.png</Asset>
-				</Barrel>
-				<Barrel type="BARREL_TYPE::BULLET">
+				</Barrel-->
+				<Barrel type="BARREL_TYPE::MISSILE">
 					<RotateAngle>-30.00</RotateAngle>
-					<FiringInterval>0.05</FiringInterval>
-					<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+					<FiringInterval>2.0</FiringInterval>
+					<ProjectileType>PROJECTILE_TYPE::MISSILE_NORMAL</ProjectileType>
 					<ProjectileLevel>1</ProjectileLevel>
 					<ProjectileScale>0.60</ProjectileScale>
 					<Asset>bullet18.png</Asset>
 				</Barrel>
-				<Barrel type="BARREL_TYPE::BULLET">
+				<!--Barrel type="BARREL_TYPE::BULLET">
 					<RotateAngle>30.00</RotateAngle>
 					<FiringInterval>0.05</FiringInterval>
 					<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
 					<ProjectileLevel>1</ProjectileLevel>
 					<ProjectileScale>0.60</ProjectileScale>
 					<Asset>bullet18.png</Asset>
-				</Barrel>
+				</Barrel-->
 			</Barrells>
 		</Weapon>
 		<Weapon id="3">
-			<Type>WEAPON_TYPE::CANNON</Type>
+			<Type>WEAPON_TYPE::SNAKEEYE</Type>
 			<Level>1</Level>
 			<RotateAngle>30.00</RotateAngle>
 			<AutoAim>0</AutoAim>
@@ -87,26 +87,26 @@
 			<FiringStop>1000000.00</FiringStop>
 			<Asset>rightgun.png</Asset>
 			<Barrells>
-				<Barrel type="BARREL_TYPE::BULLET">
+				<!--Barrel type="BARREL_TYPE::BULLET">
 					<RotateAngle>0.00</RotateAngle>
 					<FiringInterval>0.05</FiringInterval>
 					<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
 					<ProjectileLevel>1</ProjectileLevel>
 					<ProjectileScale>0.60</ProjectileScale>
 					<Asset>bullet18.png</Asset>
-				</Barrel>
-				<Barrel type="BARREL_TYPE::BULLET">
+				</Barrel-->
+				<!--Barrel type="BARREL_TYPE::BULLET">
 					<RotateAngle>-30.00</RotateAngle>
 					<FiringInterval>0.05</FiringInterval>
 					<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
 					<ProjectileLevel>1</ProjectileLevel>
 					<ProjectileScale>0.60</ProjectileScale>
 					<Asset>bullet18.png</Asset>
-				</Barrel>
-				<Barrel type="BARREL_TYPE::BULLET">
+				</Barrel-->
+				<Barrel type="BARREL_TYPE::MISSILE">
 					<RotateAngle>30.00</RotateAngle>
-					<FiringInterval>0.05</FiringInterval>
-					<ProjectileType>PROJECTILE_TYPE::BULLET_NORMAL</ProjectileType>
+					<FiringInterval>2.0</FiringInterval>
+					<ProjectileType>PROJECTILE_TYPE::MISSILE_NORMAL</ProjectileType>
 					<ProjectileLevel>1</ProjectileLevel>
 					<ProjectileScale>0.60</ProjectileScale>
 					<Asset>bullet18.png</Asset>

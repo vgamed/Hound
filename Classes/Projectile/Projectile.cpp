@@ -6,6 +6,16 @@
 USING_NS_CC;
 
 Projectile::Projectile(void)
+	: m_projectileType((int)PROJECTILE_TYPE::NONE)
+	, m_damage(0.0f)
+	, m_init_direction(Vec2::ZERO)
+	, m_runtime_direction(Vec2::ZERO)
+	, m_init_acceleration(0.0f)
+	, m_runtime_acceleration(0.0f)
+	, m_init_speed(0.0f)
+	, m_runtime_speed(0.0f)
+	, m_target(nullptr)
+
 {
 }
 
@@ -38,12 +48,19 @@ bool Projectile::init(const BarrelInfo &info,
 	}while(0);
 
 	m_projectileType = info.projectile_type;
-	m_direction = direction;
-	m_acceleration = info.projectile_runtime_acceleration;
-	m_speed = info.projectile_runtime_speed;
-	m_damage = info.projectile_runtime_damage;
+	m_damage = info.projectile_final_damage;
 
-	m_direction.normalize();
+	m_steering_speed = 0.0f;
+	m_steering_acceleration = info.projectile_final_steering_accel;
+
+	m_init_speed = info.projectile_final_speed;
+	m_init_acceleration = info.projectile_final_acceleration;
+	m_init_direction = direction;
+	m_init_direction.normalize();
+
+	m_runtime_speed = m_init_speed;
+	m_runtime_acceleration = m_init_acceleration;
+	m_runtime_direction = m_init_direction;
 
 	if (target != nullptr)
 	{
@@ -82,7 +99,7 @@ void Projectile::update(float dt)
 	auto bf = dynamic_cast<Battlefield*>(getParent());
 	CC_ASSERT(bf != nullptr); // orphan projectile is absolutely something should never happen
 
-	if (getBoundingBox().intersectsRect(bf->getBoundingBox()))
+	if ((m_target != nullptr) && getBoundingBox().intersectsRect(bf->getBoundingBox()))
 	{	// detect collision with objects in battlefield
 		CollisionData data;
 		data.who = this;

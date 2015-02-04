@@ -8,6 +8,7 @@ USING_NS_CC;
 std::auto_ptr<DataCenter> DataCenter::s_dataCenter(nullptr);
 const PairValue DataCenter::PAIR_ZERO = std::make_pair(0.0f,0.0f);
 const TripleValue DataCenter::TRIPLE_ZERO = TripleValue();
+const FourValue DataCenter::FOUR_ZERO = FourValue();
 const Size DataCenter::RESOURCE_RESOLUTION = Size(720.0f, 1280.0f);
 const Size DataCenter::DESIGN_RESOLUTION = Size(640.0f, 960.0f);
 
@@ -147,13 +148,13 @@ bool DataCenter::loadHoundStaticData(void)
 {
 	m_mapHoundMaxLife.clear();
 	m_mapHoundArmor.clear();
-	m_mapHoundWeaponDSA.clear();
-	m_mapHoundProjectileDSA.clear();
+	m_mapHoundWeaponDSAT.clear();
+	m_mapHoundProjectileDSAT.clear();
 
 	std::string str = "";
 	float value = 0.0f;
 	PairValue pair_value;
-	TripleValue triple_value;
+	FourValue four_value;
 
 	str = FileUtils::getInstance()->fullPathForFilename("hound_static_data.xml");
 	tinyxml2::XMLDocument doc;
@@ -228,8 +229,8 @@ bool DataCenter::loadHoundStaticData(void)
 			{
 				int level = e_child_3->FindAttribute("value")->IntValue();
 				str = e_child_3->GetText();
-				stringToTripleValue(str, triple_value);
-				m_mapHoundWeaponDSA[weapon_type][level] = triple_value;
+				stringToFourValue(str, four_value);
+				m_mapHoundWeaponDSAT[weapon_type][level] = four_value;
 			}
 		}
 	}
@@ -249,8 +250,8 @@ bool DataCenter::loadHoundStaticData(void)
 			{
 				int level = e_child_3->FindAttribute("value")->IntValue();
 				str = e_child_3->GetText();
-				stringToTripleValue(str, triple_value);
-				m_mapHoundProjectileDSA[proj_type][level] = triple_value;
+				stringToFourValue(str, four_value);
+				m_mapHoundProjectileDSAT[proj_type][level] = four_value;
 			}
 		}
 	}
@@ -261,12 +262,12 @@ bool DataCenter::loadHoundStaticData(void)
 bool DataCenter::loadEnemyStaticData(void)
 {
 	m_mapEnemyMaxLifeArmor.clear();
-	m_mapEnemyWeaponDSA.clear();
-	m_mapEnemyProjectileDSA.clear();
+	m_mapEnemyWeaponDSAT.clear();
+	m_mapEnemyProjectileDSAT.clear();
 
 	std::string str = "";
 	PairValue pair_value;
-	TripleValue triple_value;
+	FourValue four_value;
 
 	str = FileUtils::getInstance()->fullPathForFilename("enemy_static_data.xml");
 	tinyxml2::XMLDocument doc;
@@ -321,8 +322,8 @@ bool DataCenter::loadEnemyStaticData(void)
 			{
 				int level = e_child_3->FindAttribute("value")->IntValue();
 				str = e_child_3->GetText();
-				stringToTripleValue(str, triple_value);
-				m_mapEnemyWeaponDSA[weapon_type][level] = triple_value;
+				stringToFourValue(str, four_value);
+				m_mapEnemyWeaponDSAT[weapon_type][level] = four_value;
 			}
 		}
 	}
@@ -341,8 +342,8 @@ bool DataCenter::loadEnemyStaticData(void)
 			{
 				int level = e_child_3->FindAttribute("value")->IntValue();
 				str = e_child_3->GetText();
-				stringToTripleValue(str, triple_value);
-				m_mapEnemyProjectileDSA[proj_type][level] = triple_value;
+				stringToFourValue(str, four_value);
+				m_mapEnemyProjectileDSAT[proj_type][level] = four_value;
 			}
 		}
 	}
@@ -430,10 +431,11 @@ bool DataCenter::loadHoundInfoFromXml(HoundInfo &info)
 			charToString(e_child_2->FirstChildElement("Type")->GetText(), str);
 			weapon.type = getCommonType(str);
 			e_child_2->FirstChildElement("Level")->QueryUnsignedText(&weapon.level);
-			auto wds = getHoundWeaponDSA(weapon.type, weapon.level);
+			auto wds = getHoundWeaponDSAT(weapon.type, weapon.level);
 			weapon.damage = wds.first;
 			weapon.speed = wds.second;
 			weapon.acceleration = wds.third;
+			weapon.steering_accel = wds.fourth;
 			scaleByDesign(weapon.speed);
 			scaleByDesign(weapon.acceleration);
 			e_child_2->FirstChildElement("RotateAngle")->QueryFloatText(&weapon.rotate_angle);
@@ -462,15 +464,18 @@ bool DataCenter::loadHoundInfoFromXml(HoundInfo &info)
 					e_child_4->FirstChildElement("ProjectileLevel")->QueryIntText(&barrel.projectile_level);
 					e_child_4->FirstChildElement("ProjectileScale")->QueryFloatText(&barrel.projectile_scale_xy);
 					scaleByDesign(barrel.projectile_scale_xy);
-					auto pds = getHoundProjectileDSA(barrel.projectile_type, barrel.projectile_level);
+					auto pds = getHoundProjectileDSAT(barrel.projectile_type, barrel.projectile_level);
 					barrel.projectile_damage = pds.first;
 					barrel.projectile_speed = pds.second;
 					barrel.projectile_acceleration = pds.third;
+					barrel.projectile_steering_accel = pds.fourth;
 					scaleByDesign(barrel.projectile_speed);
 					scaleByDesign(barrel.projectile_acceleration);
-					barrel.projectile_runtime_damage = barrel.projectile_damage + weapon.damage;
-					barrel.projectile_runtime_speed = barrel.projectile_speed + weapon.speed;
-					barrel.projectile_runtime_acceleration = barrel.projectile_acceleration + weapon.acceleration;
+					scaleByDesign(barrel.projectile_steering_accel);
+					barrel.projectile_final_damage = barrel.projectile_damage + weapon.damage;
+					barrel.projectile_final_speed = barrel.projectile_speed + weapon.speed;
+					barrel.projectile_final_acceleration = barrel.projectile_acceleration + weapon.acceleration;
+					barrel.projectile_final_steering_accel = barrel.projectile_steering_accel + weapon.steering_accel;
 					charToString(e_child_4->FirstChildElement("Asset")->GetText(), barrel.projectile_asset_name);
 
 					weapon.barrells.push_back(barrel);
@@ -657,7 +662,7 @@ bool DataCenter::loadPlayerInfo(PlayerInfo &info)
 		// get weapon damage and speed
 		for (auto &weapon : info.hound.weapons)
 		{
-			auto wds = DataCenter::getInstance()->getHoundWeaponDSA(
+			auto wds = DataCenter::getInstance()->getHoundWeaponDSAT(
 				weapon.type, weapon.level);
 			weapon.damage = wds.first;
 			weapon.speed = wds.second;
@@ -665,7 +670,7 @@ bool DataCenter::loadPlayerInfo(PlayerInfo &info)
 			// get projectile damage and speed
 			for (auto &barrel : weapon.barrells)
 			{
-				auto pds = DataCenter::getInstance()->getHoundProjectileDSA(
+				auto pds = DataCenter::getInstance()->getHoundProjectileDSAT(
 					barrel.projectile_type, barrel.projectile_level);
 				barrel.projectile_damage = pds.first;
 				barrel.projectile_speed = pds.second;
@@ -816,12 +821,14 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 					charToString(e_child_5->FirstChildElement("Type")->GetText(), str);
 					weapon.type = getCommonType(str);
 					e_child_5->FirstChildElement("Level")->QueryUnsignedText(&weapon.level);
-					auto wds = getEnemyWeaponDSA(weapon.type, weapon.level);
+					auto wds = getEnemyWeaponDSAT(weapon.type, weapon.level);
 					weapon.damage = wds.first;
 					weapon.speed = wds.second;
 					weapon.acceleration = wds.third;
+					weapon.steering_accel = wds.fourth;
 					scaleByDesign(weapon.speed);
 					scaleByDesign(weapon.acceleration);
+					scaleByDesign(weapon.steering_accel);
 					e_child_5->FirstChildElement("RotateAngle")->QueryFloatText(&weapon.rotate_angle);
 					e_child_5->FirstChildElement("AutoAim")->QueryBoolText(&weapon.auto_aim);
 					charToString(e_child_5->FirstChildElement("DockAt")->GetText(), str);
@@ -847,15 +854,16 @@ bool DataCenter::loadLevelInfo(int id, LevelInfo &info)
 							e_child_7->FirstChildElement("ProjectileLevel")->QueryIntText(&barrel.projectile_level);
 							e_child_7->FirstChildElement("ProjectileScale")->QueryFloatText(&barrel.projectile_scale_xy);
 							scaleByDesign(barrel.projectile_scale_xy);
-							auto pds = getEnemyProjectileDSA(barrel.projectile_type, barrel.projectile_level);
+							auto pds = getEnemyProjectileDSAT(barrel.projectile_type, barrel.projectile_level);
 							barrel.projectile_damage = pds.first;
 							barrel.projectile_speed = pds.second;
 							barrel.projectile_acceleration = pds.third;
+							barrel.projectile_steering_accel = pds.fourth;
 							scaleByDesign(barrel.projectile_speed);
 							scaleByDesign(barrel.projectile_acceleration);
-							barrel.projectile_runtime_damage = barrel.projectile_damage + weapon.damage;
-							barrel.projectile_runtime_speed = barrel.projectile_speed + weapon.speed;
-							barrel.projectile_runtime_acceleration = barrel.projectile_acceleration + weapon.acceleration;
+							barrel.projectile_final_damage = barrel.projectile_damage + weapon.damage;
+							barrel.projectile_final_speed = barrel.projectile_speed + weapon.speed;
+							barrel.projectile_final_acceleration = barrel.projectile_acceleration + weapon.acceleration;
 							scaleByDesign(barrel.projectile_speed);
 							charToString(e_child_7->FirstChildElement("Asset")->GetText(), barrel.projectile_asset_name);
 
@@ -1066,38 +1074,38 @@ float DataCenter::getHoundArmor(int armor_type, int level)
 	return it2->second;
 }
 
-const TripleValue& DataCenter::getHoundWeaponDSA(int type, int level)
+const FourValue& DataCenter::getHoundWeaponDSAT(int type, int level)
 {
-	TypeLevelTripleMap::iterator it = m_mapHoundWeaponDSA.find(type);
-	if (it == m_mapHoundWeaponDSA.end())
+	TypeLevelFourMap::iterator it = m_mapHoundWeaponDSAT.find(type);
+	if (it == m_mapHoundWeaponDSAT.end())
 	{
-		CCLOG("Error: getHoundWeaponDSA => Could not find armor type %d.", type);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getHoundWeaponDSAT => Could not find armor type %d.", type);
+		return FOUR_ZERO;
 	}
 
-	std::map<int, TripleValue>::iterator it2 = it->second.find(level);
+	std::map<int, FourValue>::iterator it2 = it->second.find(level);
 	if (it2 == it->second.end())
 	{
-		CCLOG("Error: getHoundWeaponDSA => Could not find level %d.", level);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getHoundWeaponDSAT => Could not find level %d.", level);
+		return FOUR_ZERO;
 	}
 
 	return it2->second;
 }
-const TripleValue& DataCenter::getHoundProjectileDSA(int type, int level)
+const FourValue& DataCenter::getHoundProjectileDSAT(int type, int level)
 {
-	TypeLevelTripleMap::iterator it = m_mapHoundProjectileDSA.find(type);
-	if (it == m_mapHoundProjectileDSA.end())
+	TypeLevelFourMap::iterator it = m_mapHoundProjectileDSAT.find(type);
+	if (it == m_mapHoundProjectileDSAT.end())
 	{
-		CCLOG("Error: getHoundProjectileDSA => Could not find armor type %d.", type);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getHoundProjectileDSAT => Could not find armor type %d.", type);
+		return FOUR_ZERO;
 	}
 
-	std::map<int, TripleValue>::iterator it2 = it->second.find(level);
+	std::map<int, FourValue>::iterator it2 = it->second.find(level);
 	if (it2 == it->second.end())
 	{
-		CCLOG("Error: getHoundProjectileDSA => Could not find level %d.", level);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getHoundProjectileDSAT => Could not find level %d.", level);
+		return FOUR_ZERO;
 	}
 
 	return it2->second;
@@ -1121,38 +1129,38 @@ const PairValue& DataCenter::getEnemyMaxLifeArmor(int type, int level)
 
 	return it2->second;
 }
-const TripleValue& DataCenter::getEnemyWeaponDSA(int type, int level)
+const FourValue& DataCenter::getEnemyWeaponDSAT(int type, int level)
 {
-	TypeLevelTripleMap::iterator it = m_mapEnemyWeaponDSA.find(type);
-	if (it == m_mapEnemyWeaponDSA.end())
+	TypeLevelFourMap::iterator it = m_mapEnemyWeaponDSAT.find(type);
+	if (it == m_mapEnemyWeaponDSAT.end())
 	{
-		CCLOG("Error: getEnemyWeaponDSA => Could not find Weapon type %d.", type);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getEnemyWeaponDSAT => Could not find Weapon type %d.", type);
+		return FOUR_ZERO;
 	}
 
-	std::map<int, TripleValue>::iterator it2 = it->second.find(level);
+	std::map<int, FourValue>::iterator it2 = it->second.find(level);
 	if (it2 == it->second.end())
 	{
-		CCLOG("Error: getEnemyWeaponDSA => Could not find level %d.", level);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getEnemyWeaponDSAT => Could not find level %d.", level);
+		return FOUR_ZERO;
 	}
 
 	return it2->second;
 }
-const TripleValue& DataCenter::getEnemyProjectileDSA(int type, int level)
+const FourValue& DataCenter::getEnemyProjectileDSAT(int type, int level)
 {
-	TypeLevelTripleMap::iterator it = m_mapEnemyProjectileDSA.find(type);
-	if (it == m_mapEnemyProjectileDSA.end())
+	TypeLevelFourMap::iterator it = m_mapEnemyProjectileDSAT.find(type);
+	if (it == m_mapEnemyProjectileDSAT.end())
 	{
-		CCLOG("Error: getEnemyProjectileDSA => Could not find Projectile type %d.", type);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getEnemyProjectileDSAT => Could not find Projectile type %d.", type);
+		return FOUR_ZERO;
 	}
 
-	std::map<int, TripleValue>::iterator it2 = it->second.find(level);
+	std::map<int, FourValue>::iterator it2 = it->second.find(level);
 	if (it2 == it->second.end())
 	{
-		CCLOG("Error: getEnemyProjectileDSA => Could not find level %d.", level);
-		return TRIPLE_ZERO;
+		CCLOG("Error: getEnemyProjectileDSAT => Could not find level %d.", level);
+		return FOUR_ZERO;
 	}
 
 	return it2->second;
@@ -1236,4 +1244,40 @@ void DataCenter::stringToTripleValue(const std::string &str, TripleValue &ret)
 	ret.first = 0.0f;
 	ret.second = 0.0f;
 	ret.third = 0.0f;
+}
+
+void DataCenter::stringToFourValue(const std::string &str, FourValue &ret)
+{
+	do{
+		std::size_t pos = str.find(',');
+		if (pos == std::string::npos)
+		{
+			break;
+		}
+		tinyxml2::XMLUtil::ToFloat(str.substr(0,pos).c_str(), &ret.first);
+
+		std::string str1 = str.substr(pos+1);
+		pos = str1.find(',');
+		if (pos == std::string::npos)
+		{
+			break;
+		}
+		tinyxml2::XMLUtil::ToFloat(str1.substr(0,pos).c_str(), &ret.second);
+
+		std::string str2 = str1.substr(pos+1);
+		pos = str2.find(',');
+		if (pos == std::string::npos)
+		{
+			break;
+		}
+		tinyxml2::XMLUtil::ToFloat(str2.substr(0,pos).c_str(), &ret.third);
+		tinyxml2::XMLUtil::ToFloat(str2.substr(pos+1).c_str(), &ret.fourth);
+
+		return;
+	}while(0);
+	
+	ret.first = 0.0f;
+	ret.second = 0.0f;
+	ret.third = 0.0f;
+	ret.fourth = 0.0f;
 }

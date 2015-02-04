@@ -107,10 +107,25 @@ void Enemy::doDamage(float damage)
 
 void Enemy::selectTarget(void)
 {
-	if ((m_curTarget == nullptr) || m_curTarget->isDead())
+	if ((m_curTarget != nullptr) && !m_curTarget->isDead())
 	{
+		return;
+	}
+	else
+	{
+		if (m_curTarget != nullptr)
+		{
+			m_curTarget->release();
+			m_curTarget = nullptr;
+		}
+
 		CC_ASSERT(getParent()!=nullptr);
 		auto bf = dynamic_cast<Battlefield*>(getParent());
-		m_curTarget = bf->getHound();
+		Entity *hound = bf->getHound();
+		if (hound != nullptr && !hound->isDead())
+		{
+			m_curTarget = hound;
+			m_curTarget->retain();
+		}
 	}
 }

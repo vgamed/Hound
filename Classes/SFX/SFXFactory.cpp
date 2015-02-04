@@ -19,7 +19,7 @@ SFXExplosion* SFXFactory::createProjectileSFX(int type)
 	case (int)PROJECTILE_TYPE::LASER_NORMAL:
 		return nullptr;
 	case (int)PROJECTILE_TYPE::MISSILE_NORMAL:
-		return nullptr;
+		return BulletExplosion::createWithSpriteFrames("a_", 1, 8, 0.5f, 1.0f);
 	default:
 		return nullptr;
 	}

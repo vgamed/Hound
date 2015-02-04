@@ -110,6 +110,12 @@ public:
 		return m_stateMachine.isInState((int)STATE_TYPE::DEAD);
 	}
 
+	bool isGone(void) const
+	{
+		return (m_stateMachine.isInState((int)STATE_TYPE::LEAVE) &&
+				m_stateMachine.getCurrentState().isDone());
+	}
+
 protected:
 	Entity(void)
 		: m_type(ENTITY_TYPE::NONE)
